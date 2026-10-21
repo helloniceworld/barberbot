@@ -1,163 +1,125 @@
-# 💈 "Culture Barbershop" Telegram Boti
+# 💈 Culture Barbershop — Telegram Web App & Dual-Bot Ecosystem
 
-Zamonaviy **aiogram 3.x** va **Railway PostgreSQL** bazasi asosida yaratilgan, to'liq avtomatlashtirilgan Barbershop telegram boti.
-
-* **Bot Username:** [@culturebarbersbot](https://t.me/culturebarbersbot)
-* **Kutubxona:** Python `aiogram 3.x`, `asyncpg`, `python-dotenv`
-* **Ma'lumotlar bazasi:** Railway PostgreSQL (Asinxron ulanish pooli bilan)
+Ushbu loyiha **Culture Barbershop** uchun maxsus ishlab chiqilgan bo'lib, o'zida ikkita ixtisoslashgan Telegram bot va Figma dizayni asosida 1:1 formatda yaratilgan hashamatli **Telegram Web App (Mini App)** tizimini birlashtiradi.
 
 ---
 
-## 📁 Loyiha Strukturasi
+## 🌟 Loyiha Arxitekturasi
 
-```text
+```
+                          ┌──────────────────────────┐
+                          │   PostgreSQL (Railway)   │
+                          └─────────────┬────────────┘
+                                        │
+           ┌────────────────────────────┼───────────────────────────┐
+           │                            │                           │
+           ▼                            ▼                           ▼
+┌──────────────────────┐   ┌───────────────────────────┐   ┌──────────────────────┐
+│  @culturebarbersbot  │   │    FastAPI & Web App      │   │   @culturestaffbot   │
+│   (Mijozlar Boti)    │   │  (1:1 Figma Luxury App)   │   │  (Sartaroshlar Boti) │
+└──────────────────────┘   └───────────────────────────┘   └──────────────────────┘
+       Mijoz bron                 Web App interfeysi             Usta Telegramiga
+        qiladi                    va REST API'lar               to'g'ridan-to'g'ri
+                                                                   buyurtma boradi
+```
+
+### 1. 🤖 Mijozlar Boti: `@culturebarbersbot`
+- **Token:** `8993710605:AAFS2jVBH_KxGWWquVPLvQtkijth7gSwJBY`
+- **Vazifasi:**
+  - Mijozlarni kutib olish va **"💈 Bron qilish (Web App)"** tugmasi orqali Mini App interfeysini ochish.
+  - Mijoz o'zining barcha bronlarini ko'rishi va bekor qilishi mumkin bo'lgan **"Mening bronlarim"** bo'limi.
+  - Manzil, ish vaqti (10:00 - 22:00) va aloqa ma'lumotlari.
+  - **Avtomatik bildirishnomalar:** Usta buyurtmani qabul qilganida yoki rad etganida mijozga real-vaqtda xabar keladi.
+
+### 2. ✂️ Sartaroshlar Boti: `@culturestaffbot`
+- **Token:** `8887166444:AAFpOdLjgM7q3mrXI1oFGCSv6obWvuW93Jw`
+- **Vazifasi:**
+  - Har bir sartarosh `/start` bosganda o'z profilini (masalan: *Abduvali (TOP)*, *Jasur (PRO)*, *Niyozali (VIP)*) tanlab, Telegram ID sini profilga biriktiradi.
+  - **Yangi bron xabari:** Mijoz Web App yoki bot orqali bron qilishi bilan, aynan tanlangan ustaning botdagi shaxsiy chatiga quyidagi formatda bildirishnoma boradi:
+    - 🗓 Sana va Vaqt
+    - ✂️ Xizmatlar
+    - 💰 Jami summa
+    - 👤 Mijoz ismi, telefon raqami va Telegram profili
+    - `[ ✅ Qabul qilish ]` va `[ ❌ Rad etish ]` tugmalari
+  - Usta `✅ Qabul qilish` tugmasini bosishi bilanoq, mijozning `@culturebarbersbot`iga tasdiqlash xabari avtomatik yuboriladi.
+  - **Kun tartibi va statistika:**
+    - `📅 Bugungi navbatlar`
+    - `🗓 Ertangi navbatlar`
+    - `📋 Faol bronlar`
+    - `📊 Statistika` (bugungi tushum, mijozlar soni, umumiy natijalar)
+
+### 3. 📱 Telegram Web App (Mini App) — Figma 1:1 Dizayn
+- **Figma manbasi:** [Luxury Barbershop App Design](https://www.figma.com/make/hAXwLgAPSlnQI6QF4KqUk2/Luxury-Barbershop-App-Design?t=i4V2sGAhazFcLuWm-20&fullscreen=1)
+- **Dizayn xususiyatlari:**
+  - **Ranglar:** Obsidian qora (`#0C0C0E`), chuqur grafit (`#141418`), hashamatli oltin (`#D4AF37`, `#E5A93C`) va glowing effektlar.
+  - **Tipografika:** *Playfair Display* (sarlavhalar) va *Plus Jakarta Sans* (interfeys).
+  - **1-qadam (Step 1):** *Choose your level of craft* — 4 toifadagi kartochkalar:
+    - **PRO Barber** (✦ Standard Excellence — from 80 000 UZS)
+    - **TOP Barber** (★ POPULAR nishonli, tilla ramkali — from 120 000 UZS)
+    - **VIP Barber** (👑 Signature Luxury — from 180 000 UZS)
+    - **BRAND Barber** (💎 Artistic Director — from 250 000 UZS)
+  - **2-qadam (Step 2):** *Select your Barber* — Tanlangan toifadagi tajribali ustalarni ko'rish va tanlash.
+  - **3-qadam (Step 3):** *Choose Services* — Ko'p tanlovli (multi-select) xizmatlar, jonli narx hisoblagich.
+  - **4-qadam (Step 4):** *Select Date & Time* — Gorizontal kunlar lentasi va dinamik bo'sh vaqt slotlari (band vaqtlar bloklanadi).
+  - **5-qadam (Step 5):** *Booking Summary & Contact* — Telegram foydalanuvchi ma'lumotlarini avtomatik to'ldirish va tasdiqlash.
+  - **6-qadam (Step 6):** Hashamatli animatsion tilla chek va qabul qilinganlik holati.
+  - **Mening bronlarim:** Istalgan vaqtda yuqori o'ng burchakdagi profil ikonkasi orqali barcha bronlarni ko'rish va bekor qilish.
+
+---
+
+## 🛠 Fayllar Tuzilishi
+
+```
 barberbot/
-├── .env                  # Maxfiy tokenlar va DB URL (Lokal muhit)
+├── .env                  # Maxfiy kalitlar va sozlamalar
 ├── .env.example          # Namuna sozlamalar
-├── .gitignore            # Git uchun e'tiborsiz qoldiriladigan fayllar
-├── requirements.txt      # Kerakli Python kutubxonalari
-├── config.py             # Loyiha konfiguratsiyasi va ish soatlari
-├── database.py           # PostgreSQL jadvallari, CRUD va asinxron mantiq
-├── keyboards.py          # Inline va Reply klaviaturalar
-├── main.py               # Asosiy ishga tushiruvchi fayl (Entrypoint)
-├── handlers/
+├── config.py             # Global konstantalar, toifalar va narxlar
+├── database.py           # PostgreSQL asyncpg boshqaruvi va modellar
+├── services.py           # Ikkala bot o'rtasidagi xabarnomalar xizmati
+├── bots/
 │   ├── __init__.py
-│   ├── client.py         # Mijozlar uchun: /start, toifalar, xizmatlar, vaqt tanlash, bron
-│   └── barber.py         # Masterlar uchun: /barber, /bronlar, tasdiqlash/bekor qilish
-└── .vscode/
-    ├── extensions.json   # Tavsiya etilgan VS Code plaginlari
-    └── settings.json     # Python venv avtomatik tanlanishi sozlamasi
+│   ├── client_bot.py     # @culturebarbersbot boshqaruvi
+│   └── staff_bot.py      # @culturestaffbot (ustalar boti) boshqaruvi
+├── api/
+│   ├── __init__.py
+│   └── routes.py         # REST API endpointlari (/api/slots, /api/book, ...)
+├── web/
+│   ├── index.html        # Telegram Web App HTML
+│   ├── css/
+│   │   └── style.css     # Figma 1:1 hashamatli dizayn tizimi
+│   └── js/
+│       └── app.js        # Telegram WebApp SDK va interaktiv bron oqimi
+├── main.py               # Web server + 2 ta botni birgalikda ishga tushiruvchi markaziy fayl
+├── requirements.txt      # Python kutubxonalari
+└── Procfile              # Railway / Cloud deploy fayli
 ```
 
 ---
 
-## 🛠 1. VS Code uchun Sozlamalar va Extension'lar
+## 🚀 Ishga Tushirish Qo'llanmasi
 
-Loyiha papkasida ochganingizda VS Code quyidagi extension'larni avtomatik tavsiya qiladi (`.vscode/extensions.json`):
+### 1. Talablar
+- Python 3.10 yoki undan yuqori
+- PostgreSQL ma'lumotlar bazasi (Railway ulanishi allaqachon tayyor)
 
-1. **Python (`ms-python.python`)**: Python tilini qo'llab-quvvatlash, sintaksisni tekshirish va ishga tushirish uchun.
-2. **Pylance (`ms-python.vscode-pylance`)**: Juda tezkor autocompletion, tur tekshiruvi va kod tahlili uchun.
-3. **Database Client (`cweijan.vscode-postgresql-client2`)**: Railway PostgreSQL bazasiga to'g'ridan-to'g'ri VS Code ichidan ulanib, jadvallarni vizual ko'rish va boshqarish uchun.
-4. **DotENV (`mikestead.dotenv`)**: `.env` fayllaridagi o'zgaruvchilarni chiroyli ranglar bilan ajratib ko'rsatish uchun.
-
----
-
-## 🚀 2. Kompyuterda Ishga Tushirish (Local Run)
-
-### 1-qadam: Virtual muhit (venv) yaratish va faollashtirish
-VS Code terminalida (`Ctrl + ~`):
-
-**Windows PowerShell:**
-```powershell
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-```
-
-*(Agar skriptlarni ishga tushirish bloklangan bo'lsa: `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`)*
-
-**Linux / macOS:**
+### 2. O'rnatish
 ```bash
-python3 -m venv venv
-source venv/bin/activate
-```
+# Virtual muhitni faollashtirish
+.\venv\Scripts\activate
 
-### 2-qadam: Kerakli kutubxonalarni o'rnatish
-```powershell
+# Kutubxonalarni o'rnatish
 pip install -r requirements.txt
 ```
 
-### 3-qadam: `.env` sozlamalarini tekshirish
-Loyiha ildizidagi `.env` faylida quyidagi ma'lumotlar kiritilgan:
-```env
-BOT_TOKEN=8993710605:AAFS2jVBH_KxGWWquVPLvQtkijth7gSwJBY
-BOT_USERNAME=culturebarbersbot
-
-# Kompyuterdan test qilish uchun (Public URL):
-DATABASE_URL=postgresql://postgres:auIPwtnYVuVuXQYkZfvQgHqOyXbPxWlC@hayabusa.proxy.rlwy.net:23861/railway
-
-# Railway serverida deploy qilganda (Internal URL):
-# DATABASE_URL=postgresql://postgres:auIPwtnYVuVuXQYkZfvQgHqOyXbPxWlC@postgres.railway.internal:5432/railway
-```
-
-### 4-qadam: Botni ishga tushirish
-```powershell
+### 3. Server va Botlarni Ishga Tushirish
+Bitta buyruq orqali Web server, Mijoz boti va Xodimlar boti parallel ravishda ishga tushadi:
+```bash
 python main.py
 ```
 
-Konsolda quyidagi xabar paydo bo'ladi:
-```text
-💈 Culture Barbershop Telegram boti ishga tushirilmoqda...
-✅ PostgreSQL bazasi sozlamalari va jadvallari muvaffaqiyatli tayyorlandi.
-🚀 Bot to'liq tayyor va yangilanishlarni qabul qilishni boshladi!
-```
-
----
-
-## 💈 3. Bot Funksionalliklari va Ishlash Tartibi
-
-### 👤 Mijozlar Uchun:
-1. **/start buyrug'i:**
-   - Mijoz ma'lumotlari avtomatik ravishda `clients` jadvaliga kiritiladi yoki yangilanadi.
-   - Master toifalari chiroyli Inline tugmalar ko'rinishida taqdim etiladi:
-     - `⭐️ PRO Masterlar`
-     - `🔥 TOP Masterlar`
-     - `👑 VIP Masterlar`
-     - `📋 Mening bronlarim`
-     - `ℹ️ Biz haqimizda / Manzil`
-2. **Master va Xizmat tanlash:**
-   - Tanlangan toifaga tegishli ustalar ro'yxati chiqadi (`barbers` jadvalidan).
-   - Usta tanlangach, narxlari usta toifasiga moslashtirilgan xizmatlar menyusi chiqadi (`services` jadvalidan).
-3. **Sana va Bo'sh vaqtlarni tanlash:**
-   - Yaqin 5 kunlik sanalar chiqadi (Bugun, Ertaga va keyingi kunlar).
-   - Sana tanlangach, masterning o'sha kungi jadvali tekshiriladi:
-     - Bo'sh vaqtlar: `🟢 10:00`, `🟢 11:00` kabi yashil va bosiladigan holatda bo'ladi.
-     - Band vaqtlar: `❌ 14:00 (Band)` deb chiqadi va bosish bloklanadi (foydalanuvchiga *"Bu vaqt allaqachon band"* xabarnomasi chiqadi).
-4. **Tasdiqlash va Kontakt:**
-   - Agar mijoz birinchi marta bron qilayotgan bo'lsa, telefon raqamini yuborish so'raladi.
-   - Bron yakuniy tasdiqlanganda `appointments` jadvaliga `pending` (kutilmoqda) holatida saqlanadi.
-5. **Mening bronlarim:**
-   - Mijoz istalgan vaqt o'zining kelgusi bronlarini ko'rishi va kerak bo'lsa bekor qilishi mumkin.
-
----
-
-### ✂️ Masterlar Uchun (Usta Kabineti):
-1. **/barber buyrug'i (Akkauntni bog'lash):**
-   - Har bir master o'z Telegram akkauntini bazadagi o'z ismi bilan 1 marta bog'lab oladi.
-   - Bot ustalarni ro'yxat qilib chiqaradi (masalan: `💈 Jasur (PRO)`, `💈 Abduvali (TOP)`, `💈 Niyozali (VIP)`).
-   - Usta o'z ismini bossa, uning `telegram_id` raqami bazada ushbu ustaga biriktiriladi.
-2. **Yangi bron bildirishnomasi:**
-   - Mijoz vaqt tanlab tasdiqlashi bilanoq, tegishli masterga Telegram orqali xabar boradi:
-     ```text
-     🔔 YANGI BRON! (#12)
-     👤 Mijoz: Ali Valiyev (@ali_valiyev)
-     📞 Tel: +998901234567
-     ✂️ Xizmat: Soch va Soqol kompleksi (120 000 so'm)
-     📅 Sana: 2026-10-21
-     ⏰ Vaqt: 14:00
-     ```
-   - Master uchun ikkita interaktiv tugma chiqadi:
-     - `✅ Tasdiqlash`
-     - `❌ Bekor qilish`
-   - Master `✅ Tasdiqlash` ni bossa:
-     - Bazadagi holat `confirmed` ga o'zgaradi.
-     - Mijozga darhol quvonchli bildirishnoma boradi: *"Sizning broningiz usta tomonidan TASDIQLANDI!"*.
-   - Master `❌ Bekor qilish` ni bossa:
-     - Bazadagi holat `cancelled` ga o'zgaradi va vaqt sloti yana boshqa mijozlar uchun bo'shaydi.
-     - Mijozga usta bronni qabul qila olmaganligi xabar qilinadi.
-3. **/bronlar buyrug'i (Kunlik jadval):**
-   - Master o'zining bugungi va ertangi kungi qabullarini, mijozlar ismlari, telefon raqamlari va holatini bitta ro'yxatda ko'radi.
-
----
-
-## ☁️ 4. Railway Serveriga Deploy Qilish (24/7 Ishlash)
-
-Railway platformasida botni 24/7 rejimida to'xtovsiz ishlatish uchun:
-
-1. Ushbu loyihani GitHub repozitoriyingizga push qiling (`git push origin main`).
-2. [Railway.app](https://railway.app) ga kiring va yangi Service sifatida o'sha GitHub repozitoriyani tanlang.
-3. **Variables** (Muhit o'zgaruvchilari) bo'limida quyidagilarni kiriting:
-   - `BOT_TOKEN` = `8993710605:AAFS2jVBH_KxGWWquVPLvQtkijth7gSwJBY`
-   - `BOT_USERNAME` = `culturebarbersbot`
-   - `DATABASE_URL` = `postgresql://postgres:auIPwtnYVuVuXQYkZfvQgHqOyXbPxWlC@postgres.railway.internal:5432/railway`
-     *(Railway ichki tarmog'ida tezroq va xavfsizroq ishlashi uchun Internal URL ishlatiladi)*
-4. Railway avtomatik ravishda `requirements.txt` ni o'rnatadi va `python main.py` orqali botni 24/7 ishga tushiradi!
+### 4. Railway orqali Deploy qilish
+1. Ushbu repozitoriyni GitHub ga yuklang.
+2. Railway da loyiha ochib, GitHub repoga ulang.
+3. `.env` dagi barcha o'zgaruvchilarni Railway **Variables** bo'limiga qo'shing.
+4. Railway taqdim etgan domen manzilini (masalan: `https://culturebarbershop.up.railway.app`) `WEBAPP_URL` sifatida o'rnating.
+5. BotFather da `@culturebarbersbot` uchun Menu Button sifatida shu WebApp URL ni sozlang.

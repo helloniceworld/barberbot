@@ -1,90 +1,175 @@
 import asyncio
 import logging
 import sys
+import os
+from contextlib import asynccontextmanager
 
-from aiogram import Bot, Dispatcher
-from aiogram.enums import ParseMode
-from aiogram.client.default import DefaultBotProperties
-from aiogram.types import BotCommand
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+
+from aiogram import Dispatcher
 
 import config
 import database
-from handlers import client, barber
+import services
+from api.routes import router as api_router
+from bots.client_bot import router as client_router
+from bots.staff_bot import router as staff_router
 
-# Windows konsolida emojilar xatosiz chiqishi uchun UTF-8 o'rnatish
-if sys.platform == "win32":
-    try:
-        sys.stdout.reconfigure(encoding="utf-8")
-        sys.stderr.reconfigure(encoding="utf-8")
-    except Exception:
-        pass
+# ================== LOGGING SOZLAMALARI ==================
+try:
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8')
+    if hasattr(sys.stderr, 'reconfigure'):
+        sys.stderr.reconfigure(encoding='utf-8')
+except Exception:
+    pass
 
-# Logging sozlamalari
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    format="%(asctime)s | %(levelname)-7s | %(name)s : %(message)s",
     handlers=[
         logging.StreamHandler(sys.stdout)
     ]
 )
-logger = logging.getLogger("culture_barber_bot")
+logger = logging.getLogger("culture_main")
 
 
-async def set_bot_commands(bot: Bot):
-    """
-    Telegram bot buyruqlar menyusini o'rnatish
-    """
-    commands = [
-        BotCommand(command="start", description="💈 Bosh menyu / Bron qilish"),
-        BotCommand(command="barber", description="✂️ Master kabineti (Usta hisobini ulash)"),
-        BotCommand(command="bronlar", description="📋 Kunlik jadval (Masterlar uchun)"),
-    ]
-    await bot.set_my_commands(commands)
+# ================== FASTAPI ILOVASI ==================
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup: Ma'lumotlar bazasini initsializatsiya qilish
+    logger.info("Ma'lumotlar bazasi initsializatsiyasi boshlandi...")
+    await database.init_db(config.DATABASE_URL)
+    logger.info("Baza tayyor.")
+    yield
+    # Shutdown
+    logger.info("Server to'xtatilmoqda...")
+
+app = FastAPI(
+    title="Culture Barbershop API & WebApp",
+    version="2.0.0",
+    lifespan=lifespan
+)
+
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Statik fayllar (CSS, JS, Rasmlar)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+WEB_DIR = os.path.join(BASE_DIR, "web")
+
+app.mount("/static", StaticFiles(directory=WEB_DIR), name="static")
+
+# API marshrutlari
+app.include_router(api_router)
+
+
+# Asosiy sahifa - Telegram Web App Mini App
+@app.get("/")
+async def serve_webapp():
+    index_path = os.path.join(WEB_DIR, "index.html")
+    return FileResponse(index_path)
+
+
+# Health check
+@app.get("/health")
+async def health_check():
+    return {"status": "ok", "service": "Culture Barbershop Multi-Bot & WebApp"}
+
+
+# ================== ASOSIY ASINXRON FUNKSIYA ==================
+
+async def run_client_bot(dp: Dispatcher, bot):
+    try:
+        logger.info(f"Mijoz boti (@{config.CLIENT_BOT_USERNAME}) polling boshlandi...")
+        await dp.start_polling(bot, allowed_updates=["message", "callback_query"])
+    except asyncio.CancelledError:
+        logger.info("Mijoz boti to'xtatildi.")
+    except Exception as e:
+        logger.error(f"Mijoz botida xatolik: {e}")
+
+
+async def run_staff_bot(dp: Dispatcher, bot):
+    try:
+        logger.info(f"Xodimlar boti (@{config.STAFF_BOT_USERNAME}) polling boshlandi...")
+        await dp.start_polling(bot, allowed_updates=["message", "callback_query"])
+    except asyncio.CancelledError:
+        logger.info("Xodimlar boti to'xtatildi.")
+    except Exception as e:
+        logger.error(f"Xodimlar botida xatolik: {e}")
+
+
+async def run_web_server():
+    server_config = uvicorn.Config(
+        app=app,
+        host=config.HOST,
+        port=config.PORT,
+        log_level="info",
+        access_log=False
+    )
+    server = uvicorn.Server(server_config)
+    logger.info(f"Web server ishga tushmoqda: http://{config.HOST}:{config.PORT}")
+    await server.serve()
 
 
 async def main():
-    logger.info("=" * 50)
-    logger.info("💈 Culture Barbershop Telegram boti ishga tushirilmoqda...")
-    logger.info(f"Bot Username: @{config.BOT_USERNAME}")
-    logger.info("=" * 50)
+    logger.info("=" * 60)
+    logger.info("💈 CULTURE BARBERSHOP MULTI-BOT & WEBAPP ISHGA TUSHMOQDA...")
+    logger.info(f"💈 Client Bot: @{config.CLIENT_BOT_USERNAME}")
+    logger.info(f"💈 Staff Bot:  @{config.STAFF_BOT_USERNAME}")
+    logger.info(f"💈 Web App:    {config.WEBAPP_URL}")
+    logger.info("=" * 60)
 
-    # 1. PostgreSQL bazasini ishga tushirish
+    # 1. Baza ulanishini tekshirish
+    await database.init_db(config.DATABASE_URL)
+
+    # 2. Botlarni olish
+    c_bot = services.get_client_bot()
+    s_bot = services.get_staff_bot()
+
+    # 3. Dispatcherlarni sozlash
+    client_dp = Dispatcher()
+    client_dp.include_router(client_router)
+
+    staff_dp = Dispatcher()
+    staff_dp.include_router(staff_router)
+
+    # 4. Eski kutilayotgan update'larni tozalash (drop pending updates)
     try:
-        await database.init_db(config.DATABASE_URL)
+        await c_bot.delete_webhook(drop_pending_updates=True)
+        await s_bot.delete_webhook(drop_pending_updates=True)
     except Exception as e:
-        logger.critical(f"❌ Ma'lumotlar bazasiga ulanishda jiddiy xatolik: {e}")
-        return
+        logger.warning(f"Webhook tozalashda ogohlantirish: {e}")
 
-    # 2. Bot va Dispatcher obyektlarini yaratish
-    bot = Bot(
-        token=config.BOT_TOKEN,
-        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-    )
-    dp = Dispatcher()
-
-    # 3. Routerlarni ro'yxatdan o'tkazish
-    dp.include_router(client.router)
-    dp.include_router(barber.router)
-
-    # 4. Bot buyruqlarini o'rnatish
-    await set_bot_commands(bot)
-
-    # 5. Eski to'planib qolgan yangilanishlarni tozalash (Drop pending updates)
-    await bot.delete_webhook(drop_pending_updates=True)
-
-    logger.info("🚀 Bot to'liq tayyor va yangilanishlarni qabul qilishni boshladi!")
-    
+    # 5. Hammasini bir vaqtda ishga tushirish (Web Server + Client Bot + Staff Bot)
     try:
-        await dp.start_polling(bot)
+        await asyncio.gather(
+            run_web_server(),
+            run_client_bot(client_dp, c_bot),
+            run_staff_bot(staff_dp, s_bot)
+        )
     finally:
-        logger.info("Bot to'xtatilmoqda...")
-        await database.close_db()
-        await bot.session.close()
-        logger.info("Bot to'liq to'xtatildi.")
+        logger.info("Resurslar tozalanmoqda...")
+        await c_bot.session.close()
+        await s_bot.session.close()
+        pool = await database.get_pool()
+        await pool.close()
+        logger.info("Barcha xizmatlar to'xtatildi.")
 
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
     except (KeyboardInterrupt, SystemExit):
-        logger.info("Bot qo'lda to'xtatildi.")
+        logger.info("Tizim foydalanuvchi tomonidan to'xtatildi.")

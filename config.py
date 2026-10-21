@@ -1,22 +1,35 @@
 import os
 from dotenv import load_dotenv
 
-# .env faylini yuklash
 load_dotenv()
 
-# Bot sozlamalari
-BOT_TOKEN = os.getenv("BOT_TOKEN", "8993710605:AAFS2jVBH_KxGWWquVPLvQtkijth7gSwJBY")
-BOT_USERNAME = os.getenv("BOT_USERNAME", "culturebarbersbot")
+# ================== BOT TOKENS ==================
+# 1. Mijozlar uchun bot (@culturebarbersbot)
+CLIENT_BOT_TOKEN = os.getenv("CLIENT_BOT_TOKEN", "8993710605:AAFS2jVBH_KxGWWquVPLvQtkijth7gSwJBY").strip()
+CLIENT_BOT_USERNAME = os.getenv("CLIENT_BOT_USERNAME", "culturebarbersbot").strip()
 
-# PostgreSQL Database URL
-# Mahalliy test uchun (Public URL): postgresql://postgres:auIPwtnYVuVuXQYkZfvQgHqOyXbPxWlC@hayabusa.proxy.rlwy.net:23861/railway
-# Railway serverda (Internal URL): postgresql://postgres:auIPwtnYVuVuXQYkZfvQgHqOyXbPxWlC@postgres.railway.internal:5432/railway
+# 2. Xodimlar va Sartaroshlar uchun bot (@culturestaffbot)
+STAFF_BOT_TOKEN = os.getenv("STAFF_BOT_TOKEN", "8887166444:AAFpOdLjgM7q3mrXI1oFGCSv6obWvuW93Jw").strip()
+STAFF_BOT_USERNAME = os.getenv("STAFF_BOT_USERNAME", "culturestaffbot").strip()
+
+# ================== DATABASE ==================
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
     "postgresql://postgres:auIPwtnYVuVuXQYkZfvQgHqOyXbPxWlC@hayabusa.proxy.rlwy.net:23861/railway"
-)
+).strip()
 
-# Barbershop ish vaqtlari (har 1 soatlik slotlar)
+# ================== WEB APP & SERVER ==================
+WEBAPP_URL = os.getenv("WEBAPP_URL", "http://localhost:8000").strip()
+PORT = int(os.getenv("PORT", "8000"))
+HOST = os.getenv("HOST", "0.0.0.0")
+
+# ================== BARBERSHOP SETTINGS ==================
+SHOP_NAME = "Culture Barbershop"
+SHOP_ADDRESS = "Toshkent shahri, Amir Temur shoh ko'chasi 42"
+SHOP_PHONE = "+998 90 000 00 00"
+SHOP_LOCATION_URL = "https://maps.google.com"
+
+# Ish vaqti slotlari (har 1 soatlik slot)
 WORK_HOURS = [
     "10:00",
     "11:00",
@@ -28,12 +41,46 @@ WORK_HOURS = [
     "17:00",
     "18:00",
     "19:00",
-    "20:00"
+    "20:00",
+    "21:00"
 ]
 
-# Master toifalari
+# Master toifalari (Figma dizayni bo'yicha)
 CATEGORIES = {
-    "PRO": "⭐️ PRO Master",
-    "TOP": "🔥 TOP Master",
-    "VIP": "👑 VIP Master"
+    "PRO": {
+        "id": "PRO",
+        "name": "PRO Barber",
+        "badge": None,
+        "subtitle": "Standard Excellence",
+        "description": "Everyday style & classic cuts",
+        "base_price": 80000,
+        "icon": "✦"
+    },
+    "TOP": {
+        "id": "TOP",
+        "name": "TOP Barber",
+        "badge": "POPULAR",
+        "subtitle": "Master Experience",
+        "description": "Advanced precision & custom styling",
+        "base_price": 120000,
+        "icon": "★"
+    },
+    "VIP": {
+        "id": "VIP",
+        "name": "VIP Barber",
+        "badge": "SIGNATURE",
+        "subtitle": "Signature Luxury",
+        "description": "Master cut, premium beard care & spa",
+        "base_price": 180000,
+        "icon": "👑"
+    },
+    "BRAND": {
+        "id": "BRAND",
+        "name": "BRAND Barber",
+        "badge": "EXCLUSIVE",
+        "subtitle": "Artistic Director",
+        "description": "Exclusive full package & VIP lounge",
+        "base_price": 250000,
+        "icon": "💎"
+    }
 }
