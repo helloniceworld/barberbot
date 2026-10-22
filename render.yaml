@@ -17,5 +17,7 @@ services:
         value: culturestaffbot
       - key: DATABASE_URL
         value: postgresql://postgres:auIPwtnYVuVuXQYkZfvQgHqOyXbPxWlC@hayabusa.proxy.rlwy.net:23861/railway
+      - key: WEBAPP_URL
+        value: https://culture-barbershop.onrender.com
       - key: PORT
         value: 8000
