@@ -5,7 +5,7 @@ load_dotenv()
 
 # ================== BOT TOKENS ==================
 # 1. Mijozlar uchun bot (@culturebarbersbot)
-CLIENT_BOT_TOKEN = os.getenv("CLIENT_BOT_TOKEN", "8993710605:AAFS2jVBH_KxGWWquVPLvQtkijth7gSwJBY").strip()
+CLIENT_BOT_TOKEN = os.getenv("CLIENT_BOT_TOKEN", "8993710605:AAHYkEM9HxVduNZ602fbyaiVikQg71ZoXgI").strip()
 CLIENT_BOT_USERNAME = os.getenv("CLIENT_BOT_USERNAME", "culturebarbersbot").strip()
 
 # 2. Xodimlar va Sartaroshlar uchun bot (@culturestaffbot)
