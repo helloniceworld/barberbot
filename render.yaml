@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: culture-barbershop
+    runtime: python
+    plan: free
+    region: frankfurt
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    envVars:
+      - key: CLIENT_BOT_TOKEN
+        value: 8993710605:AAFS2jVBH_KxGWWquVPLvQtkijth7gSwJBY
+      - key: CLIENT_BOT_USERNAME
+        value: culturebarbersbot
+      - key: STAFF_BOT_TOKEN
+        value: 8887166444:AAFpOdLjgM7q3mrXI1oFGCSv6obWvuW93Jw
+      - key: STAFF_BOT_USERNAME
+        value: culturestaffbot
+      - key: DATABASE_URL
+        value: postgresql://postgres:auIPwtnYVuVuXQYkZfvQgHqOyXbPxWlC@hayabusa.proxy.rlwy.net:23861/railway
+      - key: PORT
+        value: 8000

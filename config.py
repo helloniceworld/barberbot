@@ -19,7 +19,12 @@ DATABASE_URL = os.getenv(
 ).strip()
 
 # ================== WEB APP & SERVER ==================
-WEBAPP_URL = os.getenv("WEBAPP_URL", "http://localhost:8000").strip()
+# Render avtomatik ravishda RENDER_EXTERNAL_URL beradi (masalan: https://barberbot.onrender.com)
+render_url = os.getenv("RENDER_EXTERNAL_URL", "").strip()
+if render_url and not render_url.startswith("http"):
+    render_url = f"https://{render_url}"
+
+WEBAPP_URL = os.getenv("WEBAPP_URL", "").strip() or render_url or "http://localhost:8000"
 PORT = int(os.getenv("PORT", "8000"))
 HOST = os.getenv("HOST", "0.0.0.0")
 
