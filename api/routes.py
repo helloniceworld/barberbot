@@ -24,11 +24,17 @@ class BookingRequest(BaseModel):
     service_ids: List[int]
     appointment_date: str  # YYYY-MM-DD
     appointment_time: str  # HH:MM
+    points_used: int = 0
 
 
 class CancelRequest(BaseModel):
     appointment_id: int
     telegram_id: Optional[int] = None
+
+
+class RedeemRequest(BaseModel):
+    telegram_id: int
+    reward_id: int
 
 
 # ================== ENDPOINTLAR ==================
@@ -123,6 +129,7 @@ async def book_appointment(data: BookingRequest):
 
     # 5. Mijozni ro'yxatga olish / yangilash
     client_id = None
+    client_loyalty_points = 0
     if data.telegram_id:
         client = await database.get_or_create_client(
             telegram_id=data.telegram_id,
@@ -131,6 +138,17 @@ async def book_appointment(data: BookingRequest):
             phone_number=data.client_phone
         )
         client_id = client['id']
+        client_loyalty_points = client.get('loyalty_points', 0) or 0
+
+    # 5.1 Ballar hisobidan chegirma hisoblash
+    points_to_use = 0
+    discount_amount = 0
+    if data.points_used > 0 and client_id:
+        # Mijozda bor balldan va jami to'lovdan ko'p bo'lmagan qismini ishlatish
+        points_to_use = min(data.points_used, client_loyalty_points, total_price)
+        discount_amount = points_to_use
+
+    payable_price = total_price - discount_amount
 
     # 6. Appointments jadvaliga yozish
     appointment = await database.create_appointment(
@@ -139,15 +157,17 @@ async def book_appointment(data: BookingRequest):
         service_id=data.service_ids[0] if data.service_ids else None,
         appointment_date=app_date,
         appointment_time=app_time,
-        total_price=total_price,
+        total_price=payable_price,
         client_name=data.client_name,
         client_phone=data.client_phone,
         client_username=data.client_username,
-        service_ids=data.service_ids
+        service_ids=data.service_ids,
+        points_used=points_to_use,
+        discount_amount=discount_amount
     )
 
     app_id = appointment['id']
-    logger.info(f"Yangi bron yaratildi: #{app_id} | Usta: {barber['name']} | Mijoz: {data.client_name}")
+    logger.info(f"Yangi bron yaratildi: #{app_id} | Usta: {barber['name']} | Mijoz: {data.client_name} | Chegirma: {discount_amount} | To'lov: {payable_price}")
 
     # 7. Ustaga @culturestaffbot orqali xabar yuborish
     try:
@@ -169,7 +189,10 @@ async def book_appointment(data: BookingRequest):
         "category": barber['category'],
         "date": data.appointment_date,
         "time": data.appointment_time,
-        "total_price": total_price
+        "total_price": payable_price,
+        "original_price": total_price,
+        "discount_amount": discount_amount,
+        "points_used": points_to_use
     }
 
 
@@ -218,3 +241,39 @@ async def cancel_booking(data: CancelRequest):
         logger.error(f"Ustaga bekor qilish haqida xabar berishda xato: {e}")
 
     return {"success": True, "message": "Bron muvaffaqiyatli bekor qilindi."}
+
+
+# ================== SODIQLIK DASTURI (LOYALTY) ENDPOINTLARI ==================
+
+@router.get("/loyalty/profile")
+async def get_loyalty_profile(telegram_id: int = Query(...)):
+    """
+    Mijozning sodiqlik klubi profili, ballari, darajasi va tranzaksiyalar tarixi
+    """
+    profile = await database.get_loyalty_profile(telegram_id)
+    return profile
+
+
+@router.get("/loyalty/rewards")
+async def get_loyalty_rewards():
+    """
+    Ballarga almashtirish mumkin bo'lgan sovg'alar va mahsulotlar ro'yxati (Vosk, moy, va boshqalar)
+    """
+    rewards = await database.get_loyalty_rewards()
+    return rewards
+
+
+@router.post("/loyalty/redeem")
+async def redeem_reward(data: RedeemRequest):
+    """
+    Ballarni sovg'aga almashtirish va promokod olish
+    """
+    try:
+        res = await database.redeem_reward(data.telegram_id, data.reward_id)
+        return res
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        logger.error(f"Sovg'ani almashtirishda xatolik: {e}")
+        raise HTTPException(status_code=500, detail="Sovg'ani almashtirishda server xatosi yuz berdi")
+

@@ -222,6 +222,12 @@ async def cb_staff_done(query: CallbackQuery):
     await query.message.edit_text(new_text, reply_markup=None)
     await query.answer("Xizmat yakunlandi!")
 
+    # Mijozga keshbek berilgani haqida xabarnoma
+    try:
+        await services.notify_client_cashback_earned(app_id)
+    except Exception as e:
+        logger.error(f"Keshbek bildirishnomasini yuborishda xatolik: {e}")
+
 
 @router.callback_query(F.data.startswith("staff_cancel_"))
 async def cb_staff_cancel(query: CallbackQuery):

@@ -47,10 +47,11 @@ def get_client_main_keyboard() -> InlineKeyboardMarkup:
 
     # 3. Qo'shimcha xizmatlar
     rows.append([
-        InlineKeyboardButton(text="📋 Mening bronlarim", callback_data="client_my_bookings"),
-        InlineKeyboardButton(text="📍 Manzil & Vaqt", callback_data="client_info_location")
+        InlineKeyboardButton(text="🎁 Sodiqlik klubi & Ballar", callback_data="client_loyalty_view"),
+        InlineKeyboardButton(text="📋 Mening bronlarim", callback_data="client_my_bookings")
     ])
     rows.append([
+        InlineKeyboardButton(text="📍 Manzil & Vaqt", callback_data="client_info_location"),
         InlineKeyboardButton(text="📞 Bog'lanish", callback_data="client_info_contact")
     ])
 
@@ -417,6 +418,60 @@ async def cb_client_cancel_yes(query: CallbackQuery):
     ])
     await query.message.edit_text(text, reply_markup=kb)
     await query.answer("Bron bekor qilindi.")
+
+
+# ================== SODIQLIK KLUBLARI & BALLAR ==================
+
+@router.callback_query(F.data == "client_loyalty_view")
+async def cb_client_loyalty_view(query: CallbackQuery):
+    user_id = query.from_user.id
+    profile = await database.get_loyalty_profile(user_id)
+    points = profile.get('points', 0)
+    tier_name = profile.get('tier_name', 'Bronze Member')
+    cashback_rate = profile.get('cashback_rate', 5)
+
+    points_str = f"{points:,}".replace(",", " ")
+
+    # Sovg'alar ro'yxatini olish
+    rewards = await database.get_loyalty_rewards()
+    rewards_text = ""
+    for r in rewards[:4]:
+        rewards_text += f"• {r.get('icon', '🎁')} <b>{r['name']}</b> — {r['points_cost']:,} ball\n".replace(",", " ")
+
+    # Faol promokodlar bormi?
+    redemptions = profile.get('active_redemptions', [])
+    active_codes_text = ""
+    if redemptions:
+        active_codes_text = "\n🎟 <b>Sizning olingan sovg'alaringiz (Promokodlar):</b>\n"
+        for red in redemptions:
+            active_codes_text += f"• {red['reward_name']} — Kod: <code>{red['code']}</code>\n"
+
+    text = (
+        f"👑 <b>CULTURE VIP SODIQLIK KLUBLI</b>\n\n"
+        f"👤 <b>Mijoz:</b> {query.from_user.full_name}\n"
+        f"⭐️ <b>Balansingiz:</b> <code>{points_str}</code> ball (<b>{points_str} UZS</b>)\n"
+        f"🎖 <b>Darajangiz:</b> {tier_name}\n"
+        f"💸 <b>Keshbek miqdori:</b> Har bir tashrifdan {cashback_rate}%\n\n"
+        f"💡 <b>Ballardan foydalanish qoidalari:</b>\n"
+        f"1. <b>Chegirma sifatida:</b> 1 ball = 1 UZS chegirma. Bron qilishda umumiy summadan ayirishingiz mumkin!\n"
+        f"2. <b>Sovg'alarga almashtirish:</b>\n{rewards_text}"
+        f"{active_codes_text}\n"
+        f"<i>Sovg'alarni olish va ballarni ishlatish uchun Web App dan foydalaning:</i>"
+    )
+
+    buttons = []
+    if config.WEBAPP_URL and config.WEBAPP_URL.startswith("https://"):
+        buttons.append([
+            InlineKeyboardButton(
+                text="🎁 Web App da ballarni ishlatish",
+                web_app=WebAppInfo(url=config.WEBAPP_URL)
+            )
+        ])
+    buttons.append([InlineKeyboardButton(text="⬅️ Bosh menyu", callback_data="client_back_home")])
+
+    kb = InlineKeyboardMarkup(inline_keyboard=buttons)
+    await query.message.edit_text(text, reply_markup=kb)
+    await query.answer()
 
 
 # ================== MA'LUMOT TUGMALARI ==================

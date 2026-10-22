@@ -56,7 +56,17 @@ async def notify_barber_new_booking(appointment_id: int) -> bool:
         if srv_list:
             services_text = ", ".join(s['name'] for s in srv_list)
 
+    points_used = app.get('points_used') or 0
+    discount_amount = app.get('discount_amount') or 0
     total_price_formatted = f"{app['total_price']:,}".replace(",", " ")
+    if discount_amount > 0:
+        original_price = app['total_price'] + discount_amount
+        orig_formatted = f"{original_price:,}".replace(",", " ")
+        disc_formatted = f"{discount_amount:,}".replace(",", " ")
+        price_display = f"<b>{total_price_formatted} UZS</b> (Asl narx: {orig_formatted} UZS | ⭐ Chegirma: -{disc_formatted} UZS)"
+    else:
+        price_display = f"<b>{total_price_formatted} UZS</b>"
+
     date_str = app['appointment_date'].strftime("%d.%m.%Y")
     time_str = app['appointment_time'].strftime("%H:%M")
 
@@ -69,7 +79,7 @@ async def notify_barber_new_booking(appointment_id: int) -> bool:
         f"🗓 <b>Sana:</b> {date_str}\n"
         f"⏰ <b>Vaqt:</b> {time_str}\n"
         f"✂️ <b>Xizmat:</b> {services_text}\n"
-        f"💰 <b>Jami summa:</b> {total_price_formatted} UZS\n\n"
+        f"💰 <b>To'lov:</b> {price_display}\n\n"
         f"👤 <b>Mijoz:</b> {client_name}\n"
         f"📞 <b>Telefon:</b> {client_phone}\n"
         f"💬 <b>Telegram:</b> {client_username}\n\n"
@@ -108,7 +118,17 @@ async def notify_client_new_booking(appointment_id: int) -> bool:
         if srv_list:
             services_text = ", ".join(s['name'] for s in srv_list)
 
+    points_used = app.get('points_used') or 0
+    discount_amount = app.get('discount_amount') or 0
     total_price_formatted = f"{app['total_price']:,}".replace(",", " ")
+    if discount_amount > 0:
+        original_price = app['total_price'] + discount_amount
+        orig_formatted = f"{original_price:,}".replace(",", " ")
+        disc_formatted = f"{discount_amount:,}".replace(",", " ")
+        price_display = f"<b>{total_price_formatted} UZS</b> (Asl narx: {orig_formatted} UZS | ⭐ Chegirma: -{disc_formatted} UZS)"
+    else:
+        price_display = f"<b>{total_price_formatted} UZS</b>"
+
     date_str = app['appointment_date'].strftime("%d.%m.%Y")
     time_str = app['appointment_time'].strftime("%H:%M")
 
@@ -118,7 +138,7 @@ async def notify_client_new_booking(appointment_id: int) -> bool:
         f"🗓 <b>Sana:</b> {date_str}\n"
         f"⏰ <b>Vaqt:</b> {time_str}\n"
         f"✂️ <b>Xizmat:</b> {services_text}\n"
-        f"💰 <b>Jami summa:</b> {total_price_formatted} UZS\n\n"
+        f"💰 <b>To'lov:</b> {price_display}\n\n"
         f"<i>Usta buyurtmangizni ko'rib chiqmoqda. Tasdiqlanishi bilan sizga xabar beramiz.</i>"
     )
 
@@ -151,7 +171,17 @@ async def notify_client_booking_confirmed(appointment_id: int) -> bool:
 
     date_str = app['appointment_date'].strftime("%d.%m.%Y")
     time_str = app['appointment_time'].strftime("%H:%M")
+    
+    points_used = app.get('points_used') or 0
+    discount_amount = app.get('discount_amount') or 0
     total_price_formatted = f"{app['total_price']:,}".replace(",", " ")
+    if discount_amount > 0:
+        original_price = app['total_price'] + discount_amount
+        orig_formatted = f"{original_price:,}".replace(",", " ")
+        disc_formatted = f"{discount_amount:,}".replace(",", " ")
+        price_display = f"<b>{total_price_formatted} UZS</b> (Asl narx: {orig_formatted} UZS | ⭐ Chegirma: -{disc_formatted} UZS)"
+    else:
+        price_display = f"<b>{total_price_formatted} UZS</b>"
 
     text = (
         f"🎉 <b>BRONINGIZ TASDIQLANDI! #BRON-{app['id']}</b>\n\n"
@@ -159,9 +189,9 @@ async def notify_client_booking_confirmed(appointment_id: int) -> bool:
         f"🗓 <b>Sana:</b> {date_str}\n"
         f"⏰ <b>Vaqt:</b> {time_str}\n"
         f"✂️ <b>Xizmat:</b> {services_text}\n"
-        f"💰 <b>Summa:</b> {total_price_formatted} UZS\n"
+        f"💰 <b>To'lov summasi:</b> {price_display}\n"
         f"📍 <b>Manzil:</b> {config.SHOP_ADDRESS}\n\n"
-        f"Sizni belgilangan vaqtda kutamiz! Iltimos, oz vaqtida kelishingizni so'raymiz."
+        f"Sizni belgilangan vaqtda kutamiz! Iltimos, o'z vaqtida kelishingizni so'raymiz."
     )
 
     try:
@@ -170,6 +200,45 @@ async def notify_client_booking_confirmed(appointment_id: int) -> bool:
         return True
     except Exception as e:
         logger.error(f"Mijozga tasdiq xabarini yuborishda xatolik: {e}")
+        return False
+
+
+async def notify_client_cashback_earned(appointment_id: int) -> bool:
+    """
+    Xizmat ko'rsatilgach, mijozga keshbek berilganligi haqida @culturebarbersbot orqali xabar yuboradi.
+    """
+    app = await database.get_appointment_by_id(appointment_id)
+    if not app or not app.get('client_telegram_id'):
+        return False
+
+    client_tg_id = app['client_telegram_id']
+    profile = await database.get_loyalty_profile(client_tg_id)
+    points_earned = int((app['total_price'] or 0) * 0.05)
+    current_points = profile.get('points', 0) if profile else 0
+
+    points_str = f"{points_earned:,}".replace(",", " ")
+    balance_str = f"{current_points:,}".replace(",", " ")
+
+    text = (
+        f"⭐️ <b>KESHBEK VA BALLAR TAQDIM ETILDI! #BRON-{app['id']}</b>\n\n"
+        f"Culture Barbershop ga tashrifingiz uchun rahmat!\n"
+        f"Ushbu tashrif uchun hisobingizga <b>+{points_str} ball</b> (5% keshbek) o'tkazildi.\n\n"
+        f"💳 <b>Sizning balansingiz:</b> <code>{balance_str}</code> ball\n"
+        f"🎖 <b>Darajangiz:</b> {profile.get('tier_name', 'Member')}\n\n"
+        f"<i>💡 To'plangan ballarni keyingi safar to'lovda ishlatishingiz (1 ball = 1 UZS chegirma) "
+        f"yoki maxsus sovg'alarga (soch voski, soqol moyi, yuz spa) almashtirishingiz mumkin!</i>"
+    )
+
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="🎁 Sodiqlik klubi & Sovg'alar", callback_data="client_loyalty_view")]
+    ])
+
+    try:
+        c_bot = get_client_bot()
+        await c_bot.send_message(chat_id=client_tg_id, text=text, reply_markup=kb)
+        return True
+    except Exception as e:
+        logger.error(f"Mijozga keshbek xabari yuborishda xatolik: {e}")
         return False
 
 

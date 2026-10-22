@@ -14,7 +14,12 @@ const app = {
     selectedTime: null,
     allBarbers: [],
     allServices: [],
-    myBookings: []
+    myBookings: [],
+    loyaltyProfile: null,
+    loyaltyRewards: [],
+    usePointsDiscount: false,
+    discountAmount: 0,
+    pointsUsed: 0
   },
 
   // Telegram User Data
@@ -61,8 +66,10 @@ const app = {
     // 4. Fetch initial data from server
     this.fetchData();
 
-    // 5. Check user bookings
+    // 5. Fetch Loyalty & Bookings
+    this.fetchLoyaltyRewards();
     if (this.user.id) {
+      this.fetchLoyaltyProfile();
       this.fetchMyBookings();
     }
   },
@@ -122,6 +129,37 @@ const app = {
       if (e.target.id === 'bookingsDrawer') {
         this.closeBookingsDrawer();
       }
+    });
+
+    // Header Loyalty button -> Loyalty Drawer
+    document.getElementById('openLoyaltyBtn')?.addEventListener('click', () => {
+      this.haptic('light');
+      this.openLoyaltyDrawer();
+    });
+
+    document.getElementById('closeLoyaltyBtn')?.addEventListener('click', () => {
+      this.closeLoyaltyDrawer();
+    });
+
+    document.getElementById('loyaltyDrawer')?.addEventListener('click', (e) => {
+      if (e.target.id === 'loyaltyDrawer') {
+        this.closeLoyaltyDrawer();
+      }
+    });
+
+    // Loyalty Tabs switching
+    const loyaltyTabs = document.querySelectorAll('.loyalty-tab');
+    loyaltyTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabKey = tab.getAttribute('data-tab');
+        this.switchLoyaltyTab(tabKey);
+      });
+    });
+
+    // Points discount toggle on Step 5
+    const pointsToggle = document.getElementById('usePointsToggle');
+    pointsToggle?.addEventListener('change', (e) => {
+      this.onTogglePointsDiscount(e.target.checked);
     });
 
     // Success Screen buttons
@@ -477,14 +515,42 @@ const app = {
   },
 
   // ================= STEP 5: SUMMARY & SUBMISSION =================
+  onTogglePointsDiscount(isChecked) {
+    this.haptic('light');
+    this.state.usePointsDiscount = isChecked;
+    this.renderSummary();
+  },
+
   renderSummary() {
     const barber = this.state.selectedBarber;
-    const total = this.state.selectedServices.reduce((sum, s) => sum + s.currentPrice, 0);
+    const totalServicesPrice = this.state.selectedServices.reduce((sum, s) => sum + s.currentPrice, 0);
+
+    let finalPrice = totalServicesPrice;
+    let discount = 0;
+
+    const availablePoints = this.state.loyaltyProfile?.points || 0;
+
+    if (this.state.usePointsDiscount && availablePoints > 0) {
+      discount = Math.min(availablePoints, totalServicesPrice);
+      finalPrice = totalServicesPrice - discount;
+      this.state.pointsUsed = discount;
+      this.state.discountAmount = discount;
+
+      const discountRow = document.getElementById('sumDiscountRow');
+      const discountVal = document.getElementById('sumDiscountVal');
+      if (discountRow) discountRow.style.display = 'flex';
+      if (discountVal) discountVal.textContent = `-${discount.toLocaleString('ru-RU')} UZS`;
+    } else {
+      this.state.pointsUsed = 0;
+      this.state.discountAmount = 0;
+      const discountRow = document.getElementById('sumDiscountRow');
+      if (discountRow) discountRow.style.display = 'none';
+    }
 
     document.getElementById('sumBarberName').textContent = barber?.name || '—';
     document.getElementById('sumBarberCategory').textContent = barber ? `${barber.category} Barber` : '—';
     document.getElementById('sumDateTime').textContent = `${this.state.selectedDate} | ${this.state.selectedTime}`;
-    document.getElementById('sumTotalPrice').textContent = `${total.toLocaleString('ru-RU')} UZS`;
+    document.getElementById('sumTotalPrice').textContent = `${finalPrice.toLocaleString('ru-RU')} UZS`;
 
     const servicesContainer = document.getElementById('sumServicesList');
     if (servicesContainer) {
@@ -525,7 +591,8 @@ const app = {
       barber_id: this.state.selectedBarber.id,
       service_ids: this.state.selectedServices.map(s => s.id),
       appointment_date: this.state.selectedDate,
-      appointment_time: this.state.selectedTime
+      appointment_time: this.state.selectedTime,
+      points_used: this.state.usePointsDiscount ? this.state.pointsUsed : 0
     };
 
     const confirmBtn = document.getElementById('confirmBookingBtn');
@@ -564,15 +631,21 @@ const app = {
             <span class="receipt-label">Sana va Vaqt:</span>
             <span class="receipt-val">${data.date} • ${data.time}</span>
           </div>
+          ${data.discount_amount > 0 ? `
           <div class="receipt-row">
-            <span class="receipt-label">Jami summa:</span>
-            <span class="receipt-val" style="color: var(--gold-primary);">${data.total_price.toLocaleString('ru-RU')} UZS</span>
+            <span class="receipt-label">⭐ Ballar chegirmasi:</span>
+            <span class="receipt-val" style="color: #4CAF50;">-${data.discount_amount.toLocaleString('ru-RU')} UZS</span>
+          </div>` : ''}
+          <div class="receipt-row">
+            <span class="receipt-label">Jami to'lov:</span>
+            <span class="receipt-val" style="color: var(--gold-primary); font-weight: 800;">${data.total_price.toLocaleString('ru-RU')} UZS</span>
           </div>
         `;
       }
 
       this.goToStep('stepSuccess');
       if (this.user.id) {
+        this.fetchLoyaltyProfile();
         this.fetchMyBookings();
       }
     } catch (e) {
@@ -690,6 +763,243 @@ const app = {
     } catch (e) {
       this.showToast(e.message || 'Xatolik');
     }
+  },
+
+  // ================= LOYALTY CLUB & REWARDS =================
+  openLoyaltyDrawer() {
+    const drawer = document.getElementById('loyaltyDrawer');
+    if (!drawer) return;
+    drawer.classList.add('active');
+    if (this.user.id) {
+      this.fetchLoyaltyProfile();
+    }
+  },
+
+  closeLoyaltyDrawer() {
+    const drawer = document.getElementById('loyaltyDrawer');
+    if (drawer) drawer.classList.remove('active');
+  },
+
+  switchLoyaltyTab(tabKey) {
+    this.haptic('light');
+    document.querySelectorAll('.loyalty-tab').forEach(t => {
+      t.classList.toggle('active', t.getAttribute('data-tab') === tabKey);
+    });
+    document.querySelectorAll('.loyalty-tab-content').forEach(c => {
+      c.classList.remove('active');
+    });
+    if (tabKey === 'shop') document.getElementById('tabContentShop')?.classList.add('active');
+    else if (tabKey === 'my-gifts') document.getElementById('tabContentMyGifts')?.classList.add('active');
+    else if (tabKey === 'history') document.getElementById('tabContentHistory')?.classList.add('active');
+  },
+
+  async fetchLoyaltyProfile() {
+    if (!this.user.id) return;
+    try {
+      const res = await fetch(`/api/loyalty/profile?telegram_id=${this.user.id}`);
+      if (res.ok) {
+        const profile = await res.json();
+        this.state.loyaltyProfile = profile;
+        this.renderLoyaltyProfile();
+      }
+    } catch (e) {
+      console.warn('Loyalty profile fetch error:', e);
+    }
+  },
+
+  renderLoyaltyProfile() {
+    const p = this.state.loyaltyProfile;
+    if (!p) return;
+
+    const points = p.points || 0;
+    const pointsStr = points.toLocaleString('ru-RU');
+
+    // Header badge
+    const headerPts = document.getElementById('headerPointsVal');
+    if (headerPts) headerPts.textContent = pointsStr;
+
+    // VIP Metal Card
+    const vipBalNum = document.getElementById('vipBalanceNum');
+    if (vipBalNum) vipBalNum.textContent = pointsStr;
+
+    const vipBalEq = document.getElementById('vipBalanceEq');
+    if (vipBalEq) vipBalEq.textContent = `= ${pointsStr} UZS chegirma`;
+
+    const vipHolder = document.getElementById('vipHolderName');
+    if (vipHolder) vipHolder.textContent = p.full_name || this.user.name || 'Culture VIP';
+
+    const vipTier = document.getElementById('vipTierBadge');
+    if (vipTier) vipTier.textContent = `${p.tier} VIP`;
+
+    const vipCashback = document.getElementById('vipCashbackRate');
+    if (vipCashback) vipCashback.textContent = `${p.cashback_rate}% har tashrifdan`;
+
+    // Step 5 Points toggle info
+    const discountDesc = document.getElementById('pointsDiscountDesc');
+    if (discountDesc) {
+      discountDesc.textContent = `Mavjud: ${pointsStr} ball (1 ball = 1 UZS chegirma)`;
+    }
+
+    // My gifts count
+    const activeGifts = p.active_redemptions || [];
+    const countEl = document.getElementById('myGiftsCount');
+    if (countEl) countEl.textContent = activeGifts.length;
+
+    // Render lists
+    this.renderLoyaltyShop();
+    this.renderMyGifts(activeGifts);
+    this.renderLoyaltyHistory(p.transactions || []);
+  },
+
+  async fetchLoyaltyRewards() {
+    try {
+      const res = await fetch('/api/loyalty/rewards');
+      if (res.ok) {
+        this.state.loyaltyRewards = await res.json();
+        this.renderLoyaltyShop();
+      }
+    } catch (e) {
+      console.warn('Loyalty rewards fetch error:', e);
+    }
+  },
+
+  renderLoyaltyShop() {
+    const container = document.getElementById('loyaltyRewardsList');
+    if (!container) return;
+
+    if (!this.state.loyaltyRewards || this.state.loyaltyRewards.length === 0) {
+      container.innerHTML = '<div class="drawer-empty">Hozircha sovg\'alar mavjud emas.</div>';
+      return;
+    }
+
+    const userPoints = this.state.loyaltyProfile?.points || 0;
+
+    container.innerHTML = '';
+    this.state.loyaltyRewards.forEach(r => {
+      const canAfford = userPoints >= r.points_cost;
+      const card = document.createElement('div');
+      card.className = 'reward-card';
+      card.innerHTML = `
+        <div class="reward-left">
+          <div class="reward-icon-box">${r.icon || '🎁'}</div>
+          <div class="reward-details">
+            <span class="reward-name">${r.name}</span>
+            <span class="reward-desc">${r.description || ''}</span>
+            <span class="reward-cost-tag">⭐ ${r.points_cost.toLocaleString('ru-RU')} ball</span>
+          </div>
+        </div>
+        <div class="reward-action-box">
+          <button class="reward-btn" data-id="${r.id}" ${canAfford ? '' : 'disabled'}>
+            ${canAfford ? 'Almashtirish' : 'Yetarli emas'}
+          </button>
+        </div>
+      `;
+
+      if (canAfford) {
+        card.querySelector('.reward-btn')?.addEventListener('click', () => {
+          this.redeemReward(r.id, r.name, r.points_cost);
+        });
+      }
+
+      container.appendChild(card);
+    });
+  },
+
+  async redeemReward(rewardId, rewardName, cost) {
+    if (!this.user.id) {
+      this.showToast('Telegram orqali kirilmagan');
+      return;
+    }
+
+    const confirmMsg = `"${rewardName}" sovg'asini ${cost.toLocaleString('ru-RU')} ballga almashtirishni tasdiqlaysizmi?`;
+    if (!confirm(confirmMsg)) return;
+
+    try {
+      const res = await fetch('/api/loyalty/redeem', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          telegram_id: this.user.id,
+          reward_id: rewardId
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'Almashtirishda xatolik');
+
+      this.haptic('success');
+      this.showToast(`🎉 Tabriklaymiz! Kod: #${data.code}`);
+      await this.fetchLoyaltyProfile();
+      this.switchLoyaltyTab('my-gifts');
+    } catch (e) {
+      this.haptic('error');
+      this.showToast(e.message || 'Xatolik yuz berdi');
+    }
+  },
+
+  renderMyGifts(gifts) {
+    const container = document.getElementById('loyaltyMyGiftsList');
+    if (!container) return;
+
+    if (!gifts || gifts.length === 0) {
+      container.innerHTML = '<div class="drawer-empty">Sizda hali olingan sovg\'alar mavjud emas.</div>';
+      return;
+    }
+
+    container.innerHTML = '';
+    gifts.forEach(g => {
+      const item = document.createElement('div');
+      item.className = 'voucher-card';
+      item.innerHTML = `
+        <div class="voucher-top">
+          <span class="voucher-name">${g.reward_name}</span>
+          <span class="voucher-status-badge">Faol</span>
+        </div>
+        <div class="voucher-code-row">
+          <span class="voucher-code">#${g.code}</span>
+          <button class="voucher-copy-btn" data-code="${g.code}">Nusxa olish</button>
+        </div>
+        <div style="font-size: 11px; color: var(--text-muted);">
+          Sana: ${g.created_at} • Sartaroshxonada ko'rsating
+        </div>
+      `;
+
+      item.querySelector('.voucher-copy-btn')?.addEventListener('click', () => {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(g.code);
+        }
+        this.showToast(`Kod nusxalandi: #${g.code}`);
+      });
+
+      container.appendChild(item);
+    });
+  },
+
+  renderLoyaltyHistory(history) {
+    const container = document.getElementById('loyaltyHistoryList');
+    if (!container) return;
+
+    if (!history || history.length === 0) {
+      container.innerHTML = '<div class="drawer-empty">Tarix mavjud emas.</div>';
+      return;
+    }
+
+    container.innerHTML = '';
+    history.forEach(tx => {
+      const isPos = tx.points > 0;
+      const ptsFormatted = (isPos ? '+' : '') + tx.points.toLocaleString('ru-RU') + ' ball';
+
+      const item = document.createElement('div');
+      item.className = 'history-item';
+      item.innerHTML = `
+        <div class="history-item-left">
+          <span class="history-desc">${tx.description || tx.type}</span>
+          <span class="history-date">${tx.created_at}</span>
+        </div>
+        <span class="history-pts ${isPos ? 'positive' : 'negative'}">${ptsFormatted}</span>
+      `;
+      container.appendChild(item);
+    });
   }
 };
 
