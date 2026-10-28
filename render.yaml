@@ -12,7 +12,7 @@ services:
       - key: CLIENT_BOT_USERNAME
         value: culturebarbersbot
       - key: STAFF_BOT_TOKEN
-        value: 8887166444:AAFpOdLjgM7q3mrXI1oFGCSv6obWvuW93Jw
+        value: 8887166444:AAHRK7kUUGOE8Z56C_ZAEGDn7gmEPs62LTE
       - key: STAFF_BOT_USERNAME
         value: culturestaffbot
       - key: DATABASE_URL

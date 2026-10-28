@@ -9,7 +9,7 @@ CLIENT_BOT_TOKEN = os.getenv("CLIENT_BOT_TOKEN", "8993710605:AAHYkEM9HxVduNZ602f
 CLIENT_BOT_USERNAME = os.getenv("CLIENT_BOT_USERNAME", "culturebarbersbot").strip()
 
 # 2. Xodimlar va Sartaroshlar uchun bot (@culturestaffbot)
-STAFF_BOT_TOKEN = os.getenv("STAFF_BOT_TOKEN", "8887166444:AAFpOdLjgM7q3mrXI1oFGCSv6obWvuW93Jw").strip()
+STAFF_BOT_TOKEN = os.getenv("STAFF_BOT_TOKEN", "8887166444:AAHRK7kUUGOE8Z56C_ZAEGDn7gmEPs62LTE").strip()
 STAFF_BOT_USERNAME = os.getenv("STAFF_BOT_USERNAME", "culturestaffbot").strip()
 
 # ================== DATABASE ==================

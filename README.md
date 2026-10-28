@@ -32,7 +32,7 @@ Ushbu loyiha **Culture Barbershop** uchun maxsus ishlab chiqilgan bo'lib, o'zida
   - **Avtomatik bildirishnomalar:** Usta buyurtmani qabul qilganida yoki rad etganida mijozga real-vaqtda xabar keladi.
 
 ### 2. ✂️ Sartaroshlar Boti: `@culturestaffbot`
-- **Token:** `8887166444:AAFpOdLjgM7q3mrXI1oFGCSv6obWvuW93Jw`
+- **Token:** `8887166444:AAHRK7kUUGOE8Z56C_ZAEGDn7gmEPs62LTE`
 - **Vazifasi:**
   - Har bir sartarosh `/start` bosganda o'z profilini (masalan: *Abduvali (TOP)*, *Jasur (PRO)*, *Niyozali (VIP)*) tanlab, Telegram ID sini profilga biriktiradi.
   - **Yangi bron xabari:** Mijoz Web App yoki bot orqali bron qilishi bilan, aynan tanlangan ustaning botdagi shaxsiy chatiga quyidagi formatda bildirishnoma boradi:
