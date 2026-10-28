@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Culture Barbershop | Olmaliq</title>
+  <meta name="description" content="Culture Barbershop — Olmaliqdagi premial va hashamatli barbershop. PRO, TOP va VIP sartaroshlar. Onlayn yozilish.">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:title" content="Culture Barbershop | Olmaliq">
+  <meta property="og:description" content="Olmaliqdagi zamonaviy va hashamatli barbershop. PRO, TOP, VIP toifalar. Onlayn yoziling!">
+  <meta property="og:image" content="images/logo.jpg">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts: Cinzel (Display), Onest (Body), Playfair Display, Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Onest:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/landing.css?v=2.6">
+</head>
+<body>
+
+  <!-- ================= LUXURY ENTRANCE PRELOADER ================= -->
+  <div id="preloader" class="preloader" role="dialog" aria-modal="true" aria-label="Culture Barbershop Intro">
+    <div class="preloader-curtain preloader-curtain-top" aria-hidden="true"></div>
+    <div class="preloader-curtain preloader-curtain-bottom" aria-hidden="true"></div>
+    <div class="preloader-glow-ambient" aria-hidden="true"></div>
+    
+    <div class="preloader-content">
+      <div class="preloader-emblem">
+        <div class="preloader-ring-outer" aria-hidden="true"></div>
+        <div class="preloader-ring-inner" aria-hidden="true"></div>
+        <div class="preloader-logo-frame">
+          <img src="images/logo.jpg" alt="Culture Barbershop" class="preloader-logo">
+          <div class="preloader-sheen" aria-hidden="true"></div>
+        </div>
+      </div>
+      
+      <div class="preloader-text-group">
+        <h1 class="preloader-brand">CULTURE</h1>
+        <div class="preloader-divider" aria-hidden="true">
+          <span class="p-line"></span>
+          <span class="p-star">✦</span>
+          <span class="p-line"></span>
+        </div>
+        <p class="preloader-tagline" data-landing-i18n="preloader_tagline">PREMIAL BARBERSHOP &bull; OLMALIQ</p>
+      </div>
+
+      <div class="preloader-track-wrap">
+        <div class="preloader-track" aria-hidden="true">
+          <div class="preloader-bar" id="preloaderBar"></div>
+        </div>
+        <div class="preloader-meta">
+          <span class="preloader-status" id="preloaderStatus" data-landing-i18n="preloader_loading">Tayyorlanmoqda...</span>
+          <span class="preloader-counter" id="preloaderPct">0%</span>
+        </div>
+      </div>
+
+      <button class="preloader-skip" id="preloaderSkip" type="button" data-landing-i18n="preloader_skip">O‘tkazib yuborish &rsaquo;</button>
+    </div>
+  </div>
+
+  <!-- BARBER POLE TOP STRIPE -->
+  <div class="pole" aria-hidden="true"></div>
+
+  <!-- MAIN LANDING PAGE CONTAINER -->
+  <div class="page">
+    
+    <!-- TOP NAVIGATION BAR -->
+    <header class="bar">
+      <a class="bar-brand" href="#top">
+        <img src="images/logo.jpg" alt="Culture Barbershop" class="bar-logo-img">
+        <span class="bar-name">Culture</span>
+      </a>
+
+      <div class="bar-right">
+        <nav class="bar-links" aria-label="Sahifa bo'limlari">
+          <a href="#narxlar" data-landing-i18n="nav_prices">Narxlar</a>
+          <a href="#yozilish" data-landing-i18n="nav_booking">Yozilish</a>
+          <a class="opt" href="#manzil" data-landing-i18n="nav_location">Manzil</a>
+          <a class="opt" href="https://www.instagram.com/culture.olmaliq" target="_blank" rel="noopener">Instagram</a>
+        </nav>
+
+        <!-- Language Switcher: UZ / RU -->
+        <div class="lang-toggle-wrap">
+          <button class="lang-toggle-btn active" id="landingLangUz" type="button">UZ</button>
+          <button class="lang-toggle-btn" id="landingLangRu" type="button">RU</button>
+        </div>
+
+        <a class="nav-cta-btn btn-open-booking" href="https://culture-barbershop.onrender.com/" data-landing-i18n="nav_book_btn">Onlayn yozilish</a>
+      </div>
+    </header>
+
+    <!-- MAIN BODY -->
+    <main id="top">
+      
+      <!-- ================= HERO & SHAVE-THE-WORDMARK CANVAS ================= -->
+      <section aria-labelledby="hero-title">
+        <h1 id="hero-title" class="sr-only">Culture barbershop, Olmaliq</h1>
+        
+        <div class="stage" id="stage">
+          <canvas class="base" id="cBase" aria-hidden="true"></canvas>
+          <canvas class="top" id="cTop" aria-hidden="true"></canvas>
+          <div class="clipper" id="clipper" aria-hidden="true"></div>
+        </div>
+
+        <p class="lockup" aria-hidden="true">BARBERSHOP</p>
+
+        <div class="hero-foot">
+          <p class="hero-line" data-landing-i18n="hero_line">Professional parvarish. Sizning uslubingiz.</p>
+          <div class="hero-act">
+            <a class="btn btn-open-booking" href="https://culture-barbershop.onrender.com/" data-landing-i18n="hero_book_btn">Onlayn yozilish</a>
+            <button class="linkbtn" id="clearAll" type="button" data-landing-i18n="hero_clear_btn">Hammasini tozalash</button>
+          </div>
+        </div>
+
+        <div class="hero-meta">
+          <span id="hint" data-landing-i18n="hero_hint">Yozuv soqol bilan qoplangan. Chapga va o‘ngga suring.</span>
+          <span id="pct">Tozalandi: 0%</span>
+        </div>
+      </section>
+
+      <!-- ================= ABOUT SECTION ================= -->
+      <section class="sec" aria-labelledby="about-h">
+        <div class="about-grid">
+          <h2 class="h2" id="about-h" data-landing-i18n="about_title">More than a haircut</h2>
+          <p data-landing-i18n="about_desc">Culture Olmaliqdagi zamonaviy va hashamatli barbershop. Barber darajasini o‘zingiz tanlaysiz: PRO, TOP yoki VIP. Xizmatlarni belgilab, qulay vaqtga yoziling va navbatda turmang.</p>
+        </div>
+      </section>
+
+      <!-- ================= PRICE TABLE SECTION (18 SERVICES) ================= -->
+      <section class="sec" id="narxlar" aria-labelledby="menu-h">
+        <h2 class="h2" id="menu-h" data-landing-i18n="prices_title">Narxlar</h2>
+        <p class="tier-note" id="tierNote"></p>
+        
+        <div class="ptable" id="ptable" data-tier="1">
+          <div class="phead">
+            <span data-landing-i18n="prices_table_service">Xizmat</span>
+            <button class="tier" type="button" data-i="0" aria-pressed="false">PRO</button>
+            <button class="tier" type="button" data-i="1" aria-pressed="true">TOP</button>
+            <button class="tier" type="button" data-i="2" aria-pressed="false">VIP</button>
+          </div>
+
+          <!-- ASOSIY XIZMATLAR (6 SERVICES) -->
+          <div class="pcat">
+            <span class="pcat-title" data-landing-i18n="cat_main">Asosiy xizmatlar</span>
+            <span class="pcat-line"></span>
+          </div>
+          <div class="prow" data-s="soch_kesish">
+            <span class="sname">Soch kesish</span>
+            <span class="pr" data-tier-col="0">75 000</span>
+            <span class="pr" data-tier-col="1">95 000</span>
+            <span class="pr" data-tier-col="2">125 000</span>
+          </div>
+          <div class="prow" data-s="soqol_olish">
+            <span class="sname">Soqol tekislash / olish</span>
+            <span class="pr" data-tier-col="0">50 000</span>
+            <span class="pr" data-tier-col="1">65 000</span>
+            <span class="pr" data-tier-col="2">85 000</span>
+          </div>
+          <div class="prow" data-s="soch_soqol">
+            <span class="sname">Soch + Soqol</span>
+            <span class="pr" data-tier-col="0">110 000</span>
+            <span class="pr" data-tier-col="1">140 000</span>
+            <span class="pr" data-tier-col="2">190 000</span>
+          </div>
+          <div class="prow" data-s="bolalar_soch">
+            <span class="sname">Bolalar sochi (10 yoshgacha)</span>
+            <span class="pr" data-tier-col="0">60 000</span>
+            <span class="pr" data-tier-col="1">75 000</span>
+            <span class="pr" data-tier-col="2">95 000</span>
+          </div>
+          <div class="prow" data-s="mashinka_soch">
+            <span class="sname">Mashinkada olish</span>
+            <span class="pr" data-tier-col="0">45 000</span>
+            <span class="pr" data-tier-col="1">55 000</span>
+            <span class="pr" data-tier-col="2">70 000</span>
+          </div>
+          <div class="prow" data-s="feyd_kantovka">
+            <span class="sname">Feyd / Kantovka</span>
+            <span class="pr" data-tier-col="0">40 000</span>
+            <span class="pr" data-tier-col="1">50 000</span>
+            <span class="pr" data-tier-col="2">65 000</span>
+          </div>
+
+          <!-- QO'SHIMCHA XIZMATLAR (7 SERVICES) -->
+          <div class="pcat">
+            <span class="pcat-title" data-landing-i18n="cat_extra">Qo'shimcha xizmatlar</span>
+            <span class="pcat-line"></span>
+          </div>
+          <div class="prow" data-s="bosh_yuvish">
+            <span class="sname">Bosh yuvish va styling</span>
+            <span class="pr" data-tier-col="0">25 000</span>
+            <span class="pr" data-tier-col="1">30 000</span>
+            <span class="pr" data-tier-col="2">40 000</span>
+          </div>
+          <div class="prow" data-s="soch_boyash">
+            <span class="sname">Soch bo'yash / Kamuflyaj</span>
+            <span class="pr" data-tier-col="0">80 000</span>
+            <span class="pr" data-tier-col="1">100 000</span>
+            <span class="pr" data-tier-col="2">130 000</span>
+          </div>
+          <div class="prow" data-s="soqol_kamuflyaj">
+            <span class="sname">Soqol kamuflyaji</span>
+            <span class="pr" data-tier-col="0">45 000</span>
+            <span class="pr" data-tier-col="1">55 000</span>
+            <span class="pr" data-tier-col="2">70 000</span>
+          </div>
+          <div class="prow" data-s="vosk">
+            <span class="sname">Vosk (burun, quloq)</span>
+            <span class="pr" data-tier-col="0">20 000</span>
+            <span class="pr" data-tier-col="1">25 000</span>
+            <span class="pr" data-tier-col="2">30 000</span>
+          </div>
+          <div class="prow" data-s="qora_niqob">
+            <span class="sname">Qora niqob (Black mask)</span>
+            <span class="pr" data-tier-col="0">35 000</span>
+            <span class="pr" data-tier-col="1">45 000</span>
+            <span class="pr" data-tier-col="2">55 000</span>
+          </div>
+          <div class="prow" data-s="yuz_parvarishi">
+            <span class="sname">Yuz parvarishi (skrab + massaj)</span>
+            <span class="pr" data-tier-col="0">50 000</span>
+            <span class="pr" data-tier-col="1">65 000</span>
+            <span class="pr" data-tier-col="2">85 000</span>
+          </div>
+          <div class="prow" data-s="qosh_tekislash">
+            <span class="sname">Qosh tekislash</span>
+            <span class="pr" data-tier-col="0">15 000</span>
+            <span class="pr" data-tier-col="1">20 000</span>
+            <span class="pr" data-tier-col="2">25 000</span>
+          </div>
+
+          <!-- KOMPLEKS XIZMATLAR (5 SERVICES) -->
+          <div class="pcat">
+            <span class="pcat-title" data-landing-i18n="cat_complex">Kompleks xizmatlar</span>
+            <span class="pcat-line"></span>
+          </div>
+          <div class="prow" data-s="complex_standart">
+            <span class="sname">Culture Standart (Soch + Soqol + Vosk)</span>
+            <span class="pr" data-tier-col="0">125 000</span>
+            <span class="pr" data-tier-col="1">155 000</span>
+            <span class="pr" data-tier-col="2">205 000</span>
+          </div>
+          <div class="prow" data-s="complex_premium">
+            <span class="sname">Culture Premium (Soch + Soqol + Niqob + Vosk)</span>
+            <span class="pr" data-tier-col="0">155 000</span>
+            <span class="pr" data-tier-col="1">195 000</span>
+            <span class="pr" data-tier-col="2">255 000</span>
+          </div>
+          <div class="prow" data-s="complex_vip_spa">
+            <span class="sname">VIP SPA (To'liq parvarish + Spa + Massaj)</span>
+            <span class="pr" data-tier-col="0">210 000</span>
+            <span class="pr" data-tier-col="1">260 000</span>
+            <span class="pr" data-tier-col="2">330 000</span>
+          </div>
+          <div class="prow" data-s="ota_bola">
+            <span class="sname">Ota va O'g'il (Soch kesimi)</span>
+            <span class="pr" data-tier-col="0">120 000</span>
+            <span class="pr" data-tier-col="1">150 000</span>
+            <span class="pr" data-tier-col="2">200 000</span>
+          </div>
+          <div class="prow" data-s="kuyov_turi">
+            <span class="sname">Kuyov to'plami (Full Groom Package)</span>
+            <span class="pr" data-tier-col="0">250 000</span>
+            <span class="pr" data-tier-col="1">320 000</span>
+            <span class="pr" data-tier-col="2">420 000</span>
+          </div>
+
+          <!-- PRICE FOOTER -->
+          <div class="pfoot">
+            <p data-landing-i18n="prices_footnote">Narxlar so‘mda ko‘rsatilgan. Daraja nomini bossangiz, ustun ajralib turadi.</p>
+            <a class="btn ptable-cta btn-open-booking" href="https://culture-barbershop.onrender.com/" data-landing-i18n="booking_act_btn">Yozilish</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ROADMAP & BOOKING SECTION ================= -->
+      <section class="sec" id="yozilish" aria-labelledby="book-h">
+        <div class="book">
+          <div>
+            <h2 class="h2" id="book-h" data-landing-i18n="booking_title">Onlayn yozilish</h2>
+            <p class="lede" data-landing-i18n="booking_desc">Yozilish qulay interaktiv ilovada ochiladi. Barbershopning bron tizimi barcha bo‘sh vaqtlarni real vaqt rejimida ko‘rsatadi.</p>
+            <div class="book-act">
+              <a class="btn btn-open-booking" href="https://culture-barbershop.onrender.com/" data-landing-i18n="booking_act_btn">Yozilish</a>
+              <a class="btn quiet" href="https://t.me/culturebarbersbot" target="_blank" rel="noopener" data-landing-i18n="booking_bot_btn">Telegram bot</a>
+            </div>
+            <p class="book-url">culture-barbershop.onrender.com</p>
+          </div>
+          
+          <ol class="steps">
+            <li data-landing-i18n="step_1">Barber darajasini tanlang: PRO, TOP yoki VIP.</li>
+            <li data-landing-i18n="step_2">Shu darajadagi professional ustalardan birini tanlang.</li>
+            <li data-landing-i18n="step_3">Kerakli xizmatlarni belgilang, jami narx avtomatik hisoblanadi.</li>
+            <li data-landing-i18n="step_4">Sana va qulay vaqtni tanlab, ismingiz va raqamingizni yozing. Usta tasdiqlashi bilan botdan xabar olasiz.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ================= LOCATION & CONTACTS ================= -->
+      <section class="sec" id="manzil" aria-labelledby="visit-h">
+        <h2 class="h2" id="visit-h" data-landing-i18n="location_title">Qayerda va qachon</h2>
+        <div class="visit-grid">
+          <div>
+            <h3 data-landing-i18n="loc_city_title">Shahar</h3>
+            <p data-landing-i18n="loc_city_desc">Olmaliq shahri. Aniq manzil va yo'nalish Instagram sahifamizda.</p>
+          </div>
+          <div>
+            <h3 data-landing-i18n="loc_hours_title">Ish vaqti</h3>
+            <p data-landing-i18n="loc_hours_desc">Har kuni 10:00 dan 22:00 gacha dam olish kunlarisiz.</p>
+          </div>
+          <div>
+            <h3 data-landing-i18n="loc_contact_title">Bog‘lanish</h3>
+            <p><a href="https://www.instagram.com/culture.olmaliq" target="_blank" rel="noopener">@culture.olmaliq</a> yoki <a href="https://t.me/culturebarbersbot" target="_blank" rel="noopener">@culturebarbersbot</a></p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="foot">
+      <span data-landing-i18n="footer_text">Culture barbershop, Olmaliq</span>
+      <a href="https://www.instagram.com/culture.olmaliq" target="_blank" rel="noopener">@culture.olmaliq</a>
+    </footer>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/landing.js?v=2.6"></script>
+</body>
+</html>

@@ -68,21 +68,24 @@ app.add_middleware(
 # Statik fayllar (CSS, JS, Rasmlar)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 WEB_DIR = os.path.join(BASE_DIR, "web")
+WEBSITE_DIR = os.path.join(BASE_DIR, "website")
 
 app.mount("/static", StaticFiles(directory=WEB_DIR), name="static")
+if os.path.exists(WEBSITE_DIR):
+    app.mount("/site", StaticFiles(directory=WEBSITE_DIR, html=True), name="site")
 
 # API marshrutlari
 app.include_router(api_router)
 
 
-# Asosiy sahifa - To'liq Barbershop Veb-sayti
+# Asosiy sahifa - Telegram Web App (To'liq bron qilish ilovasi)
 @app.get("/")
 async def serve_webapp():
     index_path = os.path.join(WEB_DIR, "index.html")
     return FileResponse(index_path)
 
 
-# Standalone Booking Web App
+# Standalone Booking Web App (/booking va /app)
 @app.get("/booking")
 @app.get("/app")
 async def serve_standalone_booking():

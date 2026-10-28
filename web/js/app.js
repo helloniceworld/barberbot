@@ -552,6 +552,13 @@ const app = {
       if (servicesRes.ok) {
         this.state.allServices = await servicesRes.json();
       }
+
+      // Pre-select category if specified in URL query params
+      const urlParams = new URLSearchParams(window.location.search);
+      const catParam = (urlParams.get('category') || urlParams.get('tier') || urlParams.get('cat') || '').toUpperCase();
+      if (['PRO', 'TOP', 'VIP'].includes(catParam)) {
+        this.selectCategory(catParam);
+      }
     } catch (e) {
       console.error('Data fetch error:', e);
       this.showToast(this.t('loading'));
