@@ -1,30 +1,48 @@
 /**
  * Culture Barbershop - Telegram Web App Interactive Booking Logic
  * Multilingual (UZ / RU), Dynamic 18 Services, 3 Tiers (PRO, TOP, VIP)
+ * Obsidian & Gold Luxury Aesthetic
  */
 
 const tg = window.Telegram?.WebApp;
 
 const I18N = {
   uz: {
+    // Header & Meta
+    app_title: "Culture Barbershop",
+    profile_title: "Mening bronlarim",
+    currency: "UZS",
+    
+    // Step 1: Craft category selection
     step1_eyebrow: "1-BOSQICH (4 TADAN)",
     step1_title: "Sartarosh toifasini tanlang",
     step1_desc: "O'zingizga mos bo'lgan mahorat darajasini tanlang",
+    tier_pro_name: "PRO Barber",
     tier_pro_sub: "Standart sifat",
     tier_pro_desc: "Kundalik uslub va klassik soch turmaklari",
     tier_pro_price: "75 000 UZS dan",
     badge_popular: "OMMABOP",
+    tier_top_name: "TOP Barber",
     tier_top_sub: "Tajribali usta",
     tier_top_desc: "Yuqori aniqlik va individual uslub",
     tier_top_price: "95 000 UZS dan",
     badge_signature: "PREMIUM",
+    tier_vip_name: "VIP Barber",
     tier_vip_sub: "Eksklyuziv parvarish",
     tier_vip_desc: "Mualliflik soch kesimi, soqol parvarishi va spa",
     tier_vip_price: "125 000 UZS dan",
+
+    // Step 2: Barbers
     step2_eyebrow: "2-BOSQICH (4 TADAN)",
     step2_title: "Sartaroshni tanlang",
     step2_desc: "O'z mahoratiga ega ustalardan birini tanlang",
     btn_back: "Orqaga",
+    years_exp: "yil tajriba",
+    select_btn: "Tanlash",
+    selected_btn: "Tanlandi",
+    no_barbers: "Ushbu toifada hozircha ustalar mavjud emas.",
+
+    // Step 3: Services
     step3_eyebrow: "3-BOSQICH (4 TADAN)",
     step3_title: "Xizmatlarni tanlang",
     step3_desc: "Bir yoki bir nechta xizmat turini tanlang",
@@ -35,8 +53,12 @@ const I18N = {
     group_main: "Asosiy xizmatlar",
     group_extra: "Qo'shimcha xizmatlar",
     group_complex: "Kompleks xizmatlar",
+    no_services: "Xizmatlar topilmadi",
     mins: "daqiqa",
+    services_selected: "{n} ta xizmat tanlandi",
     btn_continue: "Davom etish",
+
+    // Step 4: Date & Time
     step4_eyebrow: "4-BOSQICH (4 TADAN)",
     step4_title: "Sana va Vaqtni tanlang",
     step4_desc: "O'zingizga qulay bo'sh vaqt oralig'ini tanlang",
@@ -44,6 +66,12 @@ const I18N = {
     available_slots: "Mavjud vaqtlar",
     time_not_selected: "Vaqt tanlanmagan",
     btn_to_confirm: "Tasdiqlashga o'tish",
+    today: "Bugun",
+    tomorrow: "Erta",
+    days_short: ['Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan'],
+    months_short: ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyun', 'Iyul', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek'],
+
+    // Step 5: Confirmation
     pill_review: "Ko'rib chiqish",
     step5_title: "Buyurtma ma'lumotlari",
     step5_desc: "Buyurtma ma'lumotlarini tekshiring va tasdiqlang",
@@ -59,6 +87,8 @@ const I18N = {
     input_phone_placeholder: "+998 90 123 45 67",
     btn_submit_booking: "TASDIQLASH VA BRON QILISH",
     submitting: "Saqlanmoqda...",
+
+    // Step 6: Success
     success_title: "Muvaffaqiyatli bron qilindi!",
     success_desc: "Sizning buyurtmangiz qabul qilindi. Sartarosh so'rovni qabul qilishi bilanoq <b>@culturebarbersbot</b> orqali xabarnoma olasiz.",
     receipt_id: "Buyurtma ID:",
@@ -67,6 +97,8 @@ const I18N = {
     receipt_total: "Jami to'lov:",
     btn_my_bookings: "Mening bronlarim",
     btn_close: "Yopish",
+
+    // Drawer: Bookings
     my_bookings_title: "Mening bronlarim",
     no_bookings: "Sizda hali hech qanday bron mavjud emas.",
     status_pending: "Kutilmoqda ⏳",
@@ -74,41 +106,52 @@ const I18N = {
     status_completed: "Bajarilgan 💈",
     status_cancelled: "Bekor qilingan ❌",
     cancel_btn: "Bekor qilish",
-    cancel_confirm: "buyurtmasini bekor qilishni tasdiqlaysizmi?",
-    booking_cancelled: "Bron bekor qilindi",
+    cancel_confirm: "#{id} raqamli buyurtmani bekor qilishni tasdiqlaysizmi?",
+    booking_cancelled: "Bron muvaffaqiyatli bekor qilindi",
+
+    // Errors & Loading
     err_select_service: "Kamida bitta xizmatni tanlang",
     err_name_req: "Iltimos, ismingizni kiriting",
     err_phone_req: "Iltimos, to'g'ri telefon raqam kiriting",
     loading: "Yuklanmoqda...",
-    slots_loading: "Vaqtlar yuklanmoqda...",
-    select_btn: "Tanlash",
-    selected_btn: "Tanlandi",
-    years_exp: "yil tajriba",
-    services_selected: "{n} xizmat tanlandi",
-    today: "Bugun",
-    tomorrow: "Erta",
-    days_short: ['Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan'],
-    months_short: ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyun', 'Iyul', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek']
+    slots_loading: "Bo'sh vaqtlar tekshirilmoqda..."
   },
   ru: {
+    // Header & Meta
+    app_title: "Culture Barbershop",
+    profile_title: "Мои записи",
+    currency: "сум",
+
+    // Step 1: Craft category selection
     step1_eyebrow: "ШАГ 1 ИЗ 4",
     step1_title: "Выберите категорию мастера",
     step1_desc: "Выберите подходящий для вас уровень мастерства",
+    tier_pro_name: "PRO Barber",
     tier_pro_sub: "Стандартное качество",
     tier_pro_desc: "Повседневный стиль и классические стрижки",
     tier_pro_price: "от 75 000 сум",
     badge_popular: "ХИТ",
-    tier_top_sub: "Мастерский опыт",
+    tier_top_name: "TOP Barber",
+    tier_top_sub: "Опытный мастер",
     tier_top_desc: "Высокая точность и индивидуальный стиль",
     tier_top_price: "от 95 000 сум",
     badge_signature: "ПРЕМИУМ",
+    tier_vip_name: "VIP Barber",
     tier_vip_sub: "Премиум уход",
-    tier_vip_desc: "Авторская стрижка, премиум борода и спа",
+    tier_vip_desc: "Авторская стрижка, моделирование бороды и спа",
     tier_vip_price: "от 125 000 сум",
+
+    // Step 2: Barbers
     step2_eyebrow: "ШАГ 2 ИЗ 4",
     step2_title: "Выберите мастера",
     step2_desc: "Выберите одного из наших профессиональных барберов",
     btn_back: "Назад",
+    years_exp: "г. опыта",
+    select_btn: "Выбрать",
+    selected_btn: "Выбрано",
+    no_barbers: "В данной категории мастеров пока нет.",
+
+    // Step 3: Services
     step3_eyebrow: "ШАГ 3 ИЗ 4",
     step3_title: "Выберите услуги",
     step3_desc: "Выберите одну или несколько необходимых услуг",
@@ -119,15 +162,25 @@ const I18N = {
     group_main: "Основные услуги",
     group_extra: "Дополнительные услуги",
     group_complex: "Комплексные услуги",
+    no_services: "Услуги не найдены",
     mins: "мин",
+    services_selected: "Выбрано услуг: {n}",
     btn_continue: "Продолжить",
+
+    // Step 4: Date & Time
     step4_eyebrow: "ШАГ 4 ИЗ 4",
     step4_title: "Выберите дату и время",
-    step4_desc: "Выберите удобный для вас свободный интервал времени",
+    step4_desc: "Выберите удобный свободный интервал времени",
     pill_datetime: "Дата и время",
     available_slots: "Доступное время",
     time_not_selected: "Время не выбрано",
     btn_to_confirm: "Перейти к подтверждению",
+    today: "Сегодня",
+    tomorrow: "Завтра",
+    days_short: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+    months_short: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+
+    // Step 5: Confirmation
     pill_review: "Проверка",
     step5_title: "Детали записи",
     step5_desc: "Проверьте данные бронирования и подтвердите запись",
@@ -143,14 +196,18 @@ const I18N = {
     input_phone_placeholder: "+998 90 123 45 67",
     btn_submit_booking: "ПОДТВЕРДИТЬ И ЗАБРОНИРОВАТЬ",
     submitting: "Бронирование...",
+
+    // Step 6: Success
     success_title: "Запись успешно оформлена!",
-    success_desc: "Ваша заявка принята. Как только мастер подтвердит бронь, вы получите уведомление в боте <b>@culturebarbersbot</b>.",
+    success_desc: "Ваша заявка принята. Как только мастер подтвердит запись, вы получите уведомление в боте <b>@culturebarbersbot</b>.",
     receipt_id: "ID брони:",
     receipt_barber: "Барбер:",
     receipt_datetime: "Дата и время:",
     receipt_total: "Итого к оплате:",
     btn_my_bookings: "Мои записи",
     btn_close: "Закрыть",
+
+    // Drawer: Bookings
     my_bookings_title: "Мои записи",
     no_bookings: "У вас пока нет активных записей.",
     status_pending: "В ожидании ⏳",
@@ -158,21 +215,15 @@ const I18N = {
     status_completed: "Выполнено 💈",
     status_cancelled: "Отменено ❌",
     cancel_btn: "Отменить",
-    cancel_confirm: "Вы действительно хотите отменить запись?",
+    cancel_confirm: "Вы действительно хотите отменить бронь #{id}?",
     booking_cancelled: "Запись успешно отменена",
+
+    // Errors & Loading
     err_select_service: "Выберите хотя бы одну услугу",
     err_name_req: "Пожалуйста, введите ваше имя",
     err_phone_req: "Пожалуйста, введите корректный номер телефона",
     loading: "Загрузка...",
-    slots_loading: "Загрузка времени...",
-    select_btn: "Выбрать",
-    selected_btn: "Выбрано",
-    years_exp: "г. опыта",
-    services_selected: "Выбрано услуг: {n}",
-    today: "Сегодня",
-    tomorrow: "Завтра",
-    days_short: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-    months_short: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
+    slots_loading: "Загрузка доступного времени..."
   }
 };
 
@@ -200,7 +251,7 @@ const app = {
 
   t(key, params = {}) {
     const dict = I18N[this.state.lang] || I18N.uz;
-    let val = dict[key] || I18N.uz[key] || key;
+    let val = dict[key] ?? I18N.uz[key] ?? key;
     if (typeof val === 'string') {
       for (const [k, v] of Object.entries(params)) {
         val = val.replace(`{${k}}`, v);
@@ -250,16 +301,16 @@ const app = {
     // 4. Setup dates in carousel
     this.initDateCarousel();
 
-    // 5. Fetch initial data from server
+    // 5. Apply translations to current DOM
+    this.applyTranslations();
+
+    // 6. Fetch initial data from server
     this.fetchData();
 
-    // 6. Check user bookings
+    // 7. Check user bookings
     if (this.user.id) {
       this.fetchMyBookings();
     }
-
-    // Apply translations
-    this.applyTranslations();
   },
 
   // Haptic Feedback Helper
@@ -278,41 +329,71 @@ const app = {
     const uzBtn = document.getElementById('langBtnUz');
     const ruBtn = document.getElementById('langBtnRu');
 
-    uzBtn?.addEventListener('click', () => this.setLanguage('uz'));
-    ruBtn?.addEventListener('click', () => this.setLanguage('ru'));
+    uzBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.setLanguage('uz');
+    });
+
+    ruBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.setLanguage('ru');
+    });
 
     this.updateLanguageButtons();
   },
 
   setLanguage(lang) {
-    if (this.state.lang === lang) return;
     this.haptic('light');
     this.state.lang = lang;
     localStorage.setItem('culture_lang', lang);
+
+    // Update active button state
     this.updateLanguageButtons();
+
+    // Apply translations to all static elements
     this.applyTranslations();
+
+    // Re-render date carousel with localized day and month names
     this.initDateCarousel();
 
-    // Re-render current step if needed
+    // Re-render currently active views
+    if (this.state.selectedCategory) {
+      const pill = document.getElementById('selectedTierPill');
+      if (pill) {
+        pill.textContent = `${this.state.selectedCategory} BARBER`;
+      }
+      this.renderBarbers(this.state.selectedCategory);
+    }
+
     if (this.state.selectedBarber) {
       this.renderServices(this.state.selectedBarber.category);
     }
-    if (this.state.selectedCategory) {
-      this.renderBarbers(this.state.selectedCategory);
-    }
+
     this.renderSummary();
+    this.updateServicesSummary();
+    this.updateDateTimeSummary();
+
+    if (document.getElementById('bookingsDrawer')?.classList.contains('active')) {
+      this.renderMyBookingsList();
+    }
   },
 
   updateLanguageButtons() {
     const uzBtn = document.getElementById('langBtnUz');
     const ruBtn = document.getElementById('langBtnRu');
     if (uzBtn && ruBtn) {
-      uzBtn.classList.toggle('active', this.state.lang === 'uz');
-      ruBtn.classList.toggle('active', this.state.lang === 'ru');
+      if (this.state.lang === 'uz') {
+        uzBtn.classList.add('active');
+        ruBtn.classList.remove('active');
+      } else {
+        ruBtn.classList.add('active');
+        uzBtn.classList.remove('active');
+      }
     }
   },
 
   applyTranslations() {
+    // 1. Text content
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
       if (key) {
@@ -320,11 +401,21 @@ const app = {
       }
     });
 
-    // Update input placeholders
-    const nameInput = document.getElementById('clientNameInput');
-    const phoneInput = document.getElementById('clientPhoneInput');
-    if (nameInput) nameInput.placeholder = this.t('input_name_placeholder');
-    if (phoneInput) phoneInput.placeholder = this.t('input_phone_placeholder');
+    // 2. Placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      if (key) {
+        el.placeholder = this.t(key);
+      }
+    });
+
+    // 3. Titles / tooltips
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+      const key = el.getAttribute('data-i18n-title');
+      if (key) {
+        el.title = this.t(key);
+      }
+    });
 
     this.updateServicesSummary();
     this.updateDateTimeSummary();
@@ -492,7 +583,7 @@ const app = {
     if (filtered.length === 0) {
       container.innerHTML = `
         <div style="grid-column: span 2; text-align: center; color: var(--text-muted); padding: 40px 10px;">
-          ${this.state.lang === 'ru' ? 'В данной категории мастеров пока нет.' : 'Ushbu toifada hozircha ustalar mavjud emas.'}
+          ${this.t('no_barbers')}
         </div>
       `;
       return;
@@ -519,7 +610,7 @@ const app = {
             <span>${barber.experience_years || 3} ${this.t('years_exp')}</span>
           </div>
         </div>
-        <button class="barber-select-btn">${isSelected ? this.t('selected_btn') : this.t('select_btn')}</button>
+        <button class="barber-select-btn" type="button">${isSelected ? this.t('selected_btn') : this.t('select_btn')}</button>
       `;
 
       card.addEventListener('click', () => {
@@ -561,7 +652,7 @@ const app = {
     if (services.length === 0) {
       container.innerHTML = `
         <div style="text-align: center; color: var(--text-muted); padding: 40px 10px;">
-          ${this.state.lang === 'ru' ? 'Услуги не найдены' : 'Xizmatlar topilmadi'}
+          ${this.t('no_services')}
         </div>
       `;
       return;
@@ -582,7 +673,7 @@ const app = {
 
       const price = srv[catCol] || srv.price_pro || 75000;
       const isChecked = this.state.selectedServices.some(s => s.id === srv.id);
-      const priceFormatted = `${price.toLocaleString('ru-RU')} UZS`;
+      const priceFormatted = `${price.toLocaleString('ru-RU')} ${this.t('currency')}`;
 
       // Localized service name
       const serviceName = (this.state.lang === 'ru' ? (srv.name_ru || srv.name) : (srv.name_uz || srv.name)) || srv.name;
@@ -638,7 +729,7 @@ const app = {
     const btn = document.getElementById('toDateTimeBtn');
 
     if (countEl) countEl.textContent = this.t('services_selected', { n: count });
-    if (totalEl) totalEl.textContent = `${total.toLocaleString('ru-RU')} UZS`;
+    if (totalEl) totalEl.textContent = `${total.toLocaleString('ru-RU')} ${this.t('currency')}`;
 
     if (btn) {
       btn.disabled = (count === 0);
@@ -716,6 +807,7 @@ const app = {
         const isSelected = this.state.selectedTime === hour;
 
         const btn = document.createElement('button');
+        btn.type = 'button';
         btn.className = `slot-btn ${isSelected ? 'selected' : ''}`;
         btn.textContent = hour;
         btn.disabled = !isAvail;
@@ -746,7 +838,7 @@ const app = {
     const btn = document.getElementById('toConfirmBtn');
 
     const total = this.state.selectedServices.reduce((sum, s) => sum + s.currentPrice, 0);
-    if (totalEl) totalEl.textContent = `${total.toLocaleString('ru-RU')} UZS`;
+    if (totalEl) totalEl.textContent = `${total.toLocaleString('ru-RU')} ${this.t('currency')}`;
 
     if (this.state.selectedDate && this.state.selectedTime) {
       if (infoEl) infoEl.textContent = `${this.state.selectedDate} • ${this.state.selectedTime}`;
@@ -769,8 +861,8 @@ const app = {
 
     if (nameEl) nameEl.textContent = barber?.name || '—';
     if (catEl) catEl.textContent = barber ? `${barber.category} Barber` : '—';
-    if (dtEl) dtEl.textContent = `${this.state.selectedDate} | ${this.state.selectedTime}`;
-    if (priceEl) priceEl.textContent = `${total.toLocaleString('ru-RU')} UZS`;
+    if (dtEl) dtEl.textContent = `${this.state.selectedDate || '—'} | ${this.state.selectedTime || '—'}`;
+    if (priceEl) priceEl.textContent = `${total.toLocaleString('ru-RU')} ${this.t('currency')}`;
 
     const servicesContainer = document.getElementById('sumServicesList');
     if (servicesContainer) {
@@ -779,7 +871,7 @@ const app = {
         const serviceName = (this.state.lang === 'ru' ? (s.name_ru || s.name) : (s.name_uz || s.name)) || s.name;
         const item = document.createElement('span');
         item.className = 'summary-service-tag';
-        item.textContent = `• ${serviceName} (${s.currentPrice.toLocaleString('ru-RU')} UZS)`;
+        item.textContent = `• ${serviceName} (${s.currentPrice.toLocaleString('ru-RU')} ${this.t('currency')})`;
         servicesContainer.appendChild(item);
       });
     }
@@ -858,7 +950,7 @@ const app = {
           </div>
           <div class="receipt-row">
             <span class="receipt-label">${this.t('receipt_total')}</span>
-            <span class="receipt-val" style="color: var(--gold-primary); font-weight: 800;">${data.total_price.toLocaleString('ru-RU')} UZS</span>
+            <span class="receipt-val" style="color: var(--gold-primary); font-weight: 800;">${data.total_price.toLocaleString('ru-RU')} ${this.t('currency')}</span>
           </div>
         `;
       }
@@ -942,9 +1034,9 @@ const app = {
         <div class="item-details">
           <div><b>${this.t('label_barber')}</b> ${b.barber_name} (${b.barber_category})</div>
           <div><b>${this.t('label_datetime')}</b> ${b.appointment_date} • ${b.appointment_time}</div>
-          <div><b>${this.t('receipt_total')}</b> ${b.total_price.toLocaleString('ru-RU')} UZS</div>
+          <div><b>${this.t('receipt_total')}</b> ${b.total_price.toLocaleString('ru-RU')} ${this.t('currency')}</div>
         </div>
-        ${canCancel ? `<button class="item-cancel-btn" data-id="${b.id}">${this.t('cancel_btn')}</button>` : ''}
+        ${canCancel ? `<button class="item-cancel-btn" data-id="${b.id}" type="button">${this.t('cancel_btn')}</button>` : ''}
       `;
 
       if (canCancel) {
