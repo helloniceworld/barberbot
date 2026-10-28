@@ -1,334 +1,1533 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uz">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Culture Barbershop | Olmaliq</title>
-  <meta name="description" content="Culture Barbershop — Olmaliqdagi premial va hashamatli barbershop. PRO, TOP va VIP sartaroshlar. Onlayn yozilish.">
-
-  <!-- Open Graph / Social Sharing -->
+  <meta name="description" content="Culture Barbershop — Olmaliqdagi zamonaviy va hashamatli barbershop. PRO, TOP va VIP sartaroshlar. Onlayn yozilish.">
   <meta property="og:title" content="Culture Barbershop | Olmaliq">
-  <meta property="og:description" content="Olmaliqdagi zamonaviy va hashamatli barbershop. PRO, TOP, VIP toifalar. Onlayn yoziling!">
+  <meta property="og:description" content="Professional parvarish. Sizning uslubingiz. Onlayn yoziling!">
   <meta property="og:image" content="images/logo.jpg">
   <meta property="og:type" content="website">
 
-  <!-- Google Fonts: Cinzel (Display), Onest (Body), Playfair Display, Plus Jakarta Sans -->
+  <!-- Google Fonts: Cinzel & Onest -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Onest:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/landing.css?v=2.6">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Onest:wght@400;500;600;700&display=swap">
+
+  <style>
+  /* =====================================================
+     CULTURE BARBERSHOP — OBSIDIAN & SILVER ATELIER PALETTE
+     Inspired by printed price list & artisanal craft
+     ===================================================== */
+  :root {
+    --bg: #0C0C0D;
+    --panel: #151517;
+    --fg: #ECECEE;
+    --muted: #9A9AA1;
+    --line: #2A2A2E;
+    --accent: #CFCFD6;
+    --accent-gold: #D4AF37;
+    --accent-ink: #0C0C0D;
+    --letter: #ECECEE;
+    --stub-base: #2B2B2F;
+    --stub-a: #5C5C63;
+    --stub-b: #19191B;
+    --font-display: "Cinzel", "Trajan Pro", "Times New Roman", serif;
+    --font-body: "Onest", "Segoe UI", system-ui, sans-serif;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .page { max-width: 1240px; margin: 0 auto; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* ================= ENTRANCE PRELOADER ================= */
+  .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    background: #08080A;
+    cursor: pointer;
+  }
+  .preloader.preloader-finished {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  .preloader-curtain {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 50.5%;
+    background: #08080A;
+    z-index: 1;
+    transition: transform 0.85s cubic-bezier(0.77, 0, 0.175, 1);
+    will-change: transform;
+  }
+  .preloader-curtain-top {
+    top: 0;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.45);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.8);
+  }
+  .preloader-curtain-bottom {
+    bottom: 0;
+    border-top: 1px solid rgba(212, 175, 55, 0.45);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.8);
+  }
+  .preloader-glow-ambient {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 45%, rgba(212, 175, 55, 0.18) 0%, rgba(212, 175, 55, 0.04) 38%, rgba(8, 8, 10, 0) 72%);
+    z-index: 2;
+    pointer-events: none;
+    animation: preloaderPulseGlow 3s ease-in-out infinite alternate;
+  }
+  .preloader-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    max-width: 440px;
+    width: 100%;
+    transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s cubic-bezier(0.4, 0, 0.2, 1), filter 0.45s ease;
+  }
+  .preloader-emblem {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 22px;
+  }
+  .preloader-ring-outer {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1.5px dashed rgba(212, 175, 55, 0.5);
+    animation: preloaderSpin 14s linear infinite;
+  }
+  .preloader-ring-inner {
+    position: absolute;
+    inset: 7px;
+    border-radius: 50%;
+    border: 1px solid rgba(212, 175, 55, 0.8);
+    box-shadow: 0 0 18px rgba(212, 175, 55, 0.28), inset 0 0 12px rgba(212, 175, 55, 0.15);
+    animation: preloaderSpinRev 10s linear infinite;
+  }
+  .preloader-logo-frame {
+    position: relative;
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 24px rgba(212, 175, 55, 0.3);
+    border: 1.5px solid rgba(212, 175, 55, 0.9);
+    background: #101012;
+  }
+  .preloader-logo { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .preloader-sheen {
+    position: absolute;
+    top: -50%;
+    left: -120%;
+    width: 60%;
+    height: 200%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.05) 20%, rgba(255, 235, 170, 0.65) 50%, rgba(255, 255, 255, 0.05) 80%, transparent 100%);
+    transform: rotate(30deg);
+    animation: preloaderSheen 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    pointer-events: none;
+  }
+  .preloader-brand {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 7vw, 42px);
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 0.32em;
+    text-indent: 0.32em;
+    color: #ECECEE;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F5DEB3 30%, #D4AF37 75%, #B38728 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 14px rgba(212, 175, 55, 0.35));
+    animation: preloaderBrandTracking 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .preloader-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 180px;
+    margin: 10px auto 8px auto;
+    opacity: 0.8;
+  }
+  .preloader-divider .p-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.7), transparent);
+  }
+  .preloader-divider .p-star {
+    font-size: 11px;
+    color: var(--accent-gold);
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.8);
+  }
+  .preloader-tagline {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: #A0A0AA;
+    margin: 0 0 26px 0;
+  }
+  .preloader-track-wrap { width: 220px; max-width: 80%; margin: 0 auto; }
+  .preloader-track {
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+  }
+  .preloader-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #996515 0%, #D4AF37 60%, #FFF3B0 100%);
+    border-radius: 999px;
+    box-shadow: 0 0 12px #D4AF37, 0 0 20px rgba(212, 175, 55, 0.6);
+    transition: width 0.12s ease-out;
+  }
+  .preloader-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 11px;
+    font-family: var(--font-body);
+    letter-spacing: 0.08em;
+    color: #7D7D87;
+  }
+  .preloader-status { font-weight: 500; }
+  .preloader-counter { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--accent-gold); }
+  .preloader-skip {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #777782;
+    font-family: var(--font-body);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    margin-top: 22px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 999px;
+  }
+  .preloader-skip:hover {
+    color: var(--accent-gold);
+    border-color: rgba(212, 175, 55, 0.35);
+    background: rgba(212, 175, 55, 0.06);
+  }
+  .preloader.preloader-dismiss .preloader-curtain-top { transform: translateY(-100%); }
+  .preloader.preloader-dismiss .preloader-curtain-bottom { transform: translateY(100%); }
+  .preloader.preloader-dismiss .preloader-content {
+    opacity: 0;
+    transform: scale(1.05);
+    filter: blur(4px);
+    pointer-events: none;
+  }
+  .preloader.preloader-dismiss .preloader-glow-ambient { opacity: 0; transition: opacity 0.5s ease; }
+
+  @keyframes preloaderSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes preloaderSpinRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+  @keyframes preloaderSheen { 0% { left: -120%; } 32%, 100% { left: 180%; } }
+  @keyframes preloaderPulseGlow { from { opacity: 0.6; transform: scale(0.97); } to { opacity: 1; transform: scale(1.05); } }
+  @keyframes preloaderBrandTracking {
+    from { letter-spacing: 0.18em; opacity: 0; transform: translateY(8px); }
+    to { letter-spacing: 0.32em; opacity: 1; transform: translateY(0); }
+  }
+
+  /* ================= SITE STYLES ================= */
+  .pole { height: 10px; background: repeating-linear-gradient(135deg, var(--accent) 0 14px, var(--panel) 14px 28px, var(--muted) 28px 42px); }
+  .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; padding-block: 16px; }
+  .bar-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .bar-logo-img {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 1.5px solid rgba(212, 175, 55, 0.6); object-fit: cover;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.25);
+  }
+  .bar-name { font-family: var(--font-display); font-weight: 700; font-size: 22px; letter-spacing: 0.14em; text-decoration: none; color: #FFF; }
+  .bar-right { display: flex; align-items: center; gap: 20px; }
+  .bar-links { display: flex; align-items: center; gap: 22px; font-size: 15px; }
+  .bar-links a { text-decoration: none; color: var(--muted); transition: color 0.2s ease; }
+  .bar-links a:hover { color: var(--fg); }
+  @media (max-width: 640px) { .bar-links a.opt { display: none; } }
+
+  /* Language Switcher */
+  .lang-toggle-wrap {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 9999px;
+    padding: 3px 6px;
+    gap: 2px;
+  }
+  .lang-toggle-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .lang-toggle-btn.active {
+    background: var(--accent-gold);
+    color: #000;
+    font-weight: 700;
+  }
+
+  .nav-cta-btn {
+    display: inline-block;
+    background: var(--accent-gold);
+    color: #000;
+    font: 700 14px/1 var(--font-body);
+    padding: 10px 18px;
+    border-radius: 2px;
+    text-decoration: none;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: filter 0.2s ease;
+  }
+  .nav-cta-btn:hover { filter: brightness(1.15); }
+  @media (max-width: 520px) { .nav-cta-btn { display: none; } }
+
+  /* Hero Section */
+  .stage { position: relative; width: 100%; touch-action: pan-y; cursor: crosshair; margin-top: 12px; }
+  .stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .stage .top { transition: opacity 0.7s ease; }
+  .stage.is-done .top { opacity: 0; pointer-events: none; }
+  .clipper {
+    position: absolute; left: 0; top: 0; width: 26px; opacity: 0; pointer-events: none; border-radius: 2px;
+    background:
+      linear-gradient(var(--accent), var(--accent)) right / 14px 100% no-repeat,
+      repeating-linear-gradient(to bottom, var(--accent) 0 5px, transparent 5px 9px) left / 12px 100% no-repeat;
+  }
+  .clipper.on { opacity: 1; }
+  .lockup { text-align: center; font-weight: 500; font-size: clamp(12px, 1.7vw, 20px); letter-spacing: 0.7em; padding-left: 0.7em; margin: 6px 0 0; color: var(--muted); }
+  .hero-foot { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 20px 48px; align-items: end; padding-block: 36px 0; }
+  .hero-line { font-size: clamp(19px, 2.2vw, 24px); line-height: 1.4; max-width: 30ch; margin: 0; }
+  .hero-act { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; justify-content: flex-end; }
+  .btn {
+    display: inline-block; background: var(--accent); color: var(--accent-ink); font: 600 17px/1 var(--font-body);
+    padding: 16px 26px; border: 0; border-radius: 2px; text-decoration: none; cursor: pointer;
+  }
+  .btn:hover { filter: brightness(1.1); }
+  .btn.gold { background: var(--accent-gold); color: #0C0C0D; }
+  .btn.quiet { background: transparent; color: var(--fg); border: 1.5px solid var(--line); padding: 14.5px 24.5px; }
+  .btn.quiet:hover { border-color: var(--fg); filter: none; }
+  .linkbtn { background: none; border: 0; padding: 4px 0; color: var(--muted); font: 500 15px var(--font-body); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+  .linkbtn:hover { color: var(--fg); }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 6px 20px; padding-block: 14px 0; color: var(--muted); font-size: 15px; font-variant-numeric: tabular-nums; }
+  @media (max-width: 760px) {
+    .hero-foot { grid-template-columns: minmax(0, 1fr); }
+    .hero-act { justify-content: flex-start; }
+  }
+
+  /* Marquee */
+  .marq { overflow: hidden; padding-top: clamp(56px, 9vw, 110px); }
+  .marq-track { display: flex; gap: 0.7em; width: max-content; white-space: nowrap; font-family: var(--font-display); font-weight: 700; font-size: clamp(48px, 9vw, 132px); line-height: 1.05; letter-spacing: 0.02em; }
+  .marq-track span { color: transparent; -webkit-text-stroke: 1.5px var(--muted); }
+  .marq-track span:nth-child(even) { color: var(--fg); -webkit-text-stroke: 0; }
+
+  /* Sections */
+  .sec { padding-block: clamp(64px, 10vw, 128px) 0; }
+  .h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 4.6vw, 60px); line-height: 1.08; letter-spacing: 0.03em; margin: 0; text-wrap: balance; }
+  .lede { color: var(--muted); margin: 18px 0 0; max-width: 46ch; }
+  .about-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px 64px; align-items: end; }
+  .about-grid p { margin: 0; max-width: 44ch; }
+  .about-side { display: flex; gap: 22px; align-items: stretch; }
+  .polebig {
+    flex: 0 0 16px; min-height: 120px; border-radius: 8px;
+    background: repeating-linear-gradient(135deg, var(--accent) 0 8px, var(--panel) 8px 16px, var(--muted) 16px 24px);
+    background-position: 0 calc(var(--off, 0) * 1px);
+  }
+  @media (max-width: 800px) { .about-grid { grid-template-columns: minmax(0, 1fr); } }
+
+  /* 3D Straight Razor Section */
+  .razor { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 32px 48px; align-items: center; }
+  .razor .btn { margin-top: 22px; }
+  .razor-stage { position: relative; aspect-ratio: 1.5; min-height: 280px; max-width: 100%; touch-action: pan-y; cursor: grab; }
+  .razor-stage:active { cursor: grabbing; }
+  .razor-stage canvas { display: block; width: 100%; height: 100%; }
+  @media (max-width: 800px) { .razor { grid-template-columns: minmax(0, 1fr); } }
+
+  /* Price Table */
+  .tier-note { min-height: 3.3em; margin: 18px 0 0; max-width: 60ch; color: var(--muted); }
+  .ptable { margin-top: 28px; }
+  .phead, .prow { display: grid; grid-template-columns: minmax(0, 1fr) repeat(3, minmax(56px, 96px)); gap: 0 10px; align-items: center; }
+  .phead { padding-bottom: 12px; border-bottom: 2px solid var(--fg); }
+  .phead span { color: var(--muted); font-size: 15px; }
+  .tier {
+    background: transparent; color: var(--muted); border: 1.5px solid var(--line); border-radius: 2px; padding: 9px 2px;
+    font: 700 16px/1 var(--font-display); letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s ease;
+  }
+  .tier:hover { color: var(--fg); border-color: var(--fg); }
+  .tier[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .pgroup { margin: 0; padding: 34px 0 10px; font-weight: 600; font-size: 15px; letter-spacing: 0.04em; color: var(--muted); border-bottom: 1px solid var(--line); }
+  .prow { padding: 13px 0; border-bottom: 1px solid var(--line); }
+  .pn { min-width: 0; }
+  .pv { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); font-size: 16px; }
+  .ptable[data-tier="0"] .c0, .ptable[data-tier="1"] .c1, .ptable[data-tier="2"] .c2 { color: var(--fg); font-weight: 600; }
+  .note { color: var(--muted); font-size: 14px; margin: 16px 0 0; }
+  @media (max-width: 520px) {
+    .phead, .prow { gap: 0 4px; grid-template-columns: minmax(0, 1fr) repeat(3, minmax(50px, 1fr)); }
+    .pv { font-size: 14px; }
+    .pn { font-size: 15px; padding-right: 6px; }
+  }
+
+  /* Booking Section */
+  .book { background: var(--panel); padding: clamp(24px, 4vw, 56px); border-radius: 2px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 36px 56px; }
+  @media (max-width: 860px) { .book { grid-template-columns: minmax(0, 1fr); } }
+  .steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 16px; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 14px; align-items: baseline; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+  .steps li::before { content: counter(s); font-family: var(--font-display); font-weight: 700; font-size: 26px; line-height: 1; color: var(--muted); }
+  .book-act { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+  .book-url { margin: 14px 0 0; color: var(--muted); font-size: 14px; word-break: break-all; }
+
+  /* Location Section */
+  .visit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 28px 40px; margin-top: 36px; border-top: 2px solid var(--fg); padding-top: 28px; }
+  .visit-grid h3 { font-family: var(--font-display); font-weight: 700; font-size: 22px; letter-spacing: 0.06em; margin: 0 0 6px; }
+  .visit-grid p { margin: 0; color: var(--muted); }
+
+  /* Footer */
+  .foot { margin-top: clamp(64px, 10vw, 120px); padding-block: 24px 40px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; color: var(--muted); font-size: 15px; }
+
+  /* Motion Elements */
+  .prog { position: fixed; left: 0; right: 0; top: env(safe-area-inset-top, 0px); height: 3px; background: var(--accent-gold); transform: scaleX(0); transform-origin: left center; z-index: 40; pointer-events: none; }
+  .ring { position: fixed; left: 0; top: 0; width: 34px; height: 34px; border: 1.5px solid #fff; border-radius: 50%; mix-blend-mode: difference; pointer-events: none; opacity: 0; z-index: 50; }
+  @media (hover: none), (pointer: coarse) { .ring { display: none; } }
+  .sw { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+  .sc { display: inline-block; will-change: transform; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stage .top { transition: none; }
+    .prog, .ring { display: none; }
+  }
+  </style>
 </head>
 <body>
 
-  <!-- ================= LUXURY ENTRANCE PRELOADER ================= -->
-  <div id="preloader" class="preloader" role="dialog" aria-modal="true" aria-label="Culture Barbershop Intro">
-    <div class="preloader-curtain preloader-curtain-top" aria-hidden="true"></div>
-    <div class="preloader-curtain preloader-curtain-bottom" aria-hidden="true"></div>
-    <div class="preloader-glow-ambient" aria-hidden="true"></div>
-    
-    <div class="preloader-content">
-      <div class="preloader-emblem">
-        <div class="preloader-ring-outer" aria-hidden="true"></div>
-        <div class="preloader-ring-inner" aria-hidden="true"></div>
-        <div class="preloader-logo-frame">
-          <img src="images/logo.jpg" alt="Culture Barbershop" class="preloader-logo">
-          <div class="preloader-sheen" aria-hidden="true"></div>
-        </div>
-      </div>
-      
-      <div class="preloader-text-group">
-        <h1 class="preloader-brand">CULTURE</h1>
-        <div class="preloader-divider" aria-hidden="true">
-          <span class="p-line"></span>
-          <span class="p-star">✦</span>
-          <span class="p-line"></span>
-        </div>
-        <p class="preloader-tagline" data-landing-i18n="preloader_tagline">PREMIAL BARBERSHOP &bull; OLMALIQ</p>
-      </div>
+<!-- TOP SCROLL PROGRESS BAR -->
+<div class="prog" id="prog" aria-hidden="true"></div>
 
-      <div class="preloader-track-wrap">
-        <div class="preloader-track" aria-hidden="true">
-          <div class="preloader-bar" id="preloaderBar"></div>
-        </div>
-        <div class="preloader-meta">
-          <span class="preloader-status" id="preloaderStatus" data-landing-i18n="preloader_loading">Tayyorlanmoqda...</span>
-          <span class="preloader-counter" id="preloaderPct">0%</span>
-        </div>
-      </div>
+<!-- MAGNETIC MOUSE CURSOR RING -->
+<div class="ring" id="ring" aria-hidden="true"></div>
 
-      <button class="preloader-skip" id="preloaderSkip" type="button" data-landing-i18n="preloader_skip">O‘tkazib yuborish &rsaquo;</button>
+<!-- ================= LUXURY ENTRANCE PRELOADER ================= -->
+<div id="preloader" class="preloader" role="dialog" aria-modal="true" aria-label="Culture Barbershop Intro">
+  <div class="preloader-curtain preloader-curtain-top" aria-hidden="true"></div>
+  <div class="preloader-curtain preloader-curtain-bottom" aria-hidden="true"></div>
+  <div class="preloader-glow-ambient" aria-hidden="true"></div>
+  
+  <div class="preloader-content">
+    <div class="preloader-emblem">
+      <div class="preloader-ring-outer" aria-hidden="true"></div>
+      <div class="preloader-ring-inner" aria-hidden="true"></div>
+      <div class="preloader-logo-frame">
+        <img src="images/logo.jpg" alt="Culture Barbershop" class="preloader-logo">
+        <div class="preloader-sheen" aria-hidden="true"></div>
+      </div>
     </div>
-  </div>
-
-  <!-- BARBER POLE TOP STRIPE -->
-  <div class="pole" aria-hidden="true"></div>
-
-  <!-- MAIN LANDING PAGE CONTAINER -->
-  <div class="page">
     
-    <!-- TOP NAVIGATION BAR -->
-    <header class="bar">
-      <a class="bar-brand" href="#top">
-        <img src="images/logo.jpg" alt="Culture Barbershop" class="bar-logo-img">
-        <span class="bar-name">Culture</span>
-      </a>
-
-      <div class="bar-right">
-        <nav class="bar-links" aria-label="Sahifa bo'limlari">
-          <a href="#narxlar" data-landing-i18n="nav_prices">Narxlar</a>
-          <a href="#yozilish" data-landing-i18n="nav_booking">Yozilish</a>
-          <a class="opt" href="#manzil" data-landing-i18n="nav_location">Manzil</a>
-          <a class="opt" href="https://www.instagram.com/culture.olmaliq" target="_blank" rel="noopener">Instagram</a>
-        </nav>
-
-        <!-- Language Switcher: UZ / RU -->
-        <div class="lang-toggle-wrap">
-          <button class="lang-toggle-btn active" id="landingLangUz" type="button">UZ</button>
-          <button class="lang-toggle-btn" id="landingLangRu" type="button">RU</button>
-        </div>
-
-        <a class="nav-cta-btn btn-open-booking" href="https://culture-barbershop.onrender.com/" data-landing-i18n="nav_book_btn">Onlayn yozilish</a>
+    <div class="preloader-text-group">
+      <h1 class="preloader-brand">CULTURE</h1>
+      <div class="preloader-divider" aria-hidden="true">
+        <span class="p-line"></span>
+        <span class="p-star">✦</span>
+        <span class="p-line"></span>
       </div>
-    </header>
+      <p class="preloader-tagline" id="preloaderTagline">PREMIAL BARBERSHOP &bull; OLMALIQ</p>
+    </div>
 
-    <!-- MAIN BODY -->
-    <main id="top">
-      
-      <!-- ================= HERO & SHAVE-THE-WORDMARK CANVAS ================= -->
-      <section aria-labelledby="hero-title">
-        <h1 id="hero-title" class="sr-only">Culture barbershop, Olmaliq</h1>
-        
-        <div class="stage" id="stage">
-          <canvas class="base" id="cBase" aria-hidden="true"></canvas>
-          <canvas class="top" id="cTop" aria-hidden="true"></canvas>
-          <div class="clipper" id="clipper" aria-hidden="true"></div>
-        </div>
+    <div class="preloader-track-wrap">
+      <div class="preloader-track" aria-hidden="true">
+        <div class="preloader-bar" id="preloaderBar"></div>
+      </div>
+      <div class="preloader-meta">
+        <span class="preloader-status" id="preloaderStatus">Tayyorlanmoqda...</span>
+        <span class="preloader-counter" id="preloaderPct">0%</span>
+      </div>
+    </div>
 
-        <p class="lockup" aria-hidden="true">BARBERSHOP</p>
-
-        <div class="hero-foot">
-          <p class="hero-line" data-landing-i18n="hero_line">Professional parvarish. Sizning uslubingiz.</p>
-          <div class="hero-act">
-            <a class="btn btn-open-booking" href="https://culture-barbershop.onrender.com/" data-landing-i18n="hero_book_btn">Onlayn yozilish</a>
-            <button class="linkbtn" id="clearAll" type="button" data-landing-i18n="hero_clear_btn">Hammasini tozalash</button>
-          </div>
-        </div>
-
-        <div class="hero-meta">
-          <span id="hint" data-landing-i18n="hero_hint">Yozuv soqol bilan qoplangan. Chapga va o‘ngga suring.</span>
-          <span id="pct">Tozalandi: 0%</span>
-        </div>
-      </section>
-
-      <!-- ================= ABOUT SECTION ================= -->
-      <section class="sec" aria-labelledby="about-h">
-        <div class="about-grid">
-          <h2 class="h2" id="about-h" data-landing-i18n="about_title">More than a haircut</h2>
-          <p data-landing-i18n="about_desc">Culture Olmaliqdagi zamonaviy va hashamatli barbershop. Barber darajasini o‘zingiz tanlaysiz: PRO, TOP yoki VIP. Xizmatlarni belgilab, qulay vaqtga yoziling va navbatda turmang.</p>
-        </div>
-      </section>
-
-      <!-- ================= PRICE TABLE SECTION (18 SERVICES) ================= -->
-      <section class="sec" id="narxlar" aria-labelledby="menu-h">
-        <h2 class="h2" id="menu-h" data-landing-i18n="prices_title">Narxlar</h2>
-        <p class="tier-note" id="tierNote"></p>
-        
-        <div class="ptable" id="ptable" data-tier="1">
-          <div class="phead">
-            <span data-landing-i18n="prices_table_service">Xizmat</span>
-            <button class="tier" type="button" data-i="0" aria-pressed="false">PRO</button>
-            <button class="tier" type="button" data-i="1" aria-pressed="true">TOP</button>
-            <button class="tier" type="button" data-i="2" aria-pressed="false">VIP</button>
-          </div>
-
-          <!-- ASOSIY XIZMATLAR (6 SERVICES) -->
-          <div class="pcat">
-            <span class="pcat-title" data-landing-i18n="cat_main">Asosiy xizmatlar</span>
-            <span class="pcat-line"></span>
-          </div>
-          <div class="prow" data-s="soch_kesish">
-            <span class="sname">Soch kesish</span>
-            <span class="pr" data-tier-col="0">75 000</span>
-            <span class="pr" data-tier-col="1">95 000</span>
-            <span class="pr" data-tier-col="2">125 000</span>
-          </div>
-          <div class="prow" data-s="soqol_olish">
-            <span class="sname">Soqol tekislash / olish</span>
-            <span class="pr" data-tier-col="0">50 000</span>
-            <span class="pr" data-tier-col="1">65 000</span>
-            <span class="pr" data-tier-col="2">85 000</span>
-          </div>
-          <div class="prow" data-s="soch_soqol">
-            <span class="sname">Soch + Soqol</span>
-            <span class="pr" data-tier-col="0">110 000</span>
-            <span class="pr" data-tier-col="1">140 000</span>
-            <span class="pr" data-tier-col="2">190 000</span>
-          </div>
-          <div class="prow" data-s="bolalar_soch">
-            <span class="sname">Bolalar sochi (10 yoshgacha)</span>
-            <span class="pr" data-tier-col="0">60 000</span>
-            <span class="pr" data-tier-col="1">75 000</span>
-            <span class="pr" data-tier-col="2">95 000</span>
-          </div>
-          <div class="prow" data-s="mashinka_soch">
-            <span class="sname">Mashinkada olish</span>
-            <span class="pr" data-tier-col="0">45 000</span>
-            <span class="pr" data-tier-col="1">55 000</span>
-            <span class="pr" data-tier-col="2">70 000</span>
-          </div>
-          <div class="prow" data-s="feyd_kantovka">
-            <span class="sname">Feyd / Kantovka</span>
-            <span class="pr" data-tier-col="0">40 000</span>
-            <span class="pr" data-tier-col="1">50 000</span>
-            <span class="pr" data-tier-col="2">65 000</span>
-          </div>
-
-          <!-- QO'SHIMCHA XIZMATLAR (7 SERVICES) -->
-          <div class="pcat">
-            <span class="pcat-title" data-landing-i18n="cat_extra">Qo'shimcha xizmatlar</span>
-            <span class="pcat-line"></span>
-          </div>
-          <div class="prow" data-s="bosh_yuvish">
-            <span class="sname">Bosh yuvish va styling</span>
-            <span class="pr" data-tier-col="0">25 000</span>
-            <span class="pr" data-tier-col="1">30 000</span>
-            <span class="pr" data-tier-col="2">40 000</span>
-          </div>
-          <div class="prow" data-s="soch_boyash">
-            <span class="sname">Soch bo'yash / Kamuflyaj</span>
-            <span class="pr" data-tier-col="0">80 000</span>
-            <span class="pr" data-tier-col="1">100 000</span>
-            <span class="pr" data-tier-col="2">130 000</span>
-          </div>
-          <div class="prow" data-s="soqol_kamuflyaj">
-            <span class="sname">Soqol kamuflyaji</span>
-            <span class="pr" data-tier-col="0">45 000</span>
-            <span class="pr" data-tier-col="1">55 000</span>
-            <span class="pr" data-tier-col="2">70 000</span>
-          </div>
-          <div class="prow" data-s="vosk">
-            <span class="sname">Vosk (burun, quloq)</span>
-            <span class="pr" data-tier-col="0">20 000</span>
-            <span class="pr" data-tier-col="1">25 000</span>
-            <span class="pr" data-tier-col="2">30 000</span>
-          </div>
-          <div class="prow" data-s="qora_niqob">
-            <span class="sname">Qora niqob (Black mask)</span>
-            <span class="pr" data-tier-col="0">35 000</span>
-            <span class="pr" data-tier-col="1">45 000</span>
-            <span class="pr" data-tier-col="2">55 000</span>
-          </div>
-          <div class="prow" data-s="yuz_parvarishi">
-            <span class="sname">Yuz parvarishi (skrab + massaj)</span>
-            <span class="pr" data-tier-col="0">50 000</span>
-            <span class="pr" data-tier-col="1">65 000</span>
-            <span class="pr" data-tier-col="2">85 000</span>
-          </div>
-          <div class="prow" data-s="qosh_tekislash">
-            <span class="sname">Qosh tekislash</span>
-            <span class="pr" data-tier-col="0">15 000</span>
-            <span class="pr" data-tier-col="1">20 000</span>
-            <span class="pr" data-tier-col="2">25 000</span>
-          </div>
-
-          <!-- KOMPLEKS XIZMATLAR (5 SERVICES) -->
-          <div class="pcat">
-            <span class="pcat-title" data-landing-i18n="cat_complex">Kompleks xizmatlar</span>
-            <span class="pcat-line"></span>
-          </div>
-          <div class="prow" data-s="complex_standart">
-            <span class="sname">Culture Standart (Soch + Soqol + Vosk)</span>
-            <span class="pr" data-tier-col="0">125 000</span>
-            <span class="pr" data-tier-col="1">155 000</span>
-            <span class="pr" data-tier-col="2">205 000</span>
-          </div>
-          <div class="prow" data-s="complex_premium">
-            <span class="sname">Culture Premium (Soch + Soqol + Niqob + Vosk)</span>
-            <span class="pr" data-tier-col="0">155 000</span>
-            <span class="pr" data-tier-col="1">195 000</span>
-            <span class="pr" data-tier-col="2">255 000</span>
-          </div>
-          <div class="prow" data-s="complex_vip_spa">
-            <span class="sname">VIP SPA (To'liq parvarish + Spa + Massaj)</span>
-            <span class="pr" data-tier-col="0">210 000</span>
-            <span class="pr" data-tier-col="1">260 000</span>
-            <span class="pr" data-tier-col="2">330 000</span>
-          </div>
-          <div class="prow" data-s="ota_bola">
-            <span class="sname">Ota va O'g'il (Soch kesimi)</span>
-            <span class="pr" data-tier-col="0">120 000</span>
-            <span class="pr" data-tier-col="1">150 000</span>
-            <span class="pr" data-tier-col="2">200 000</span>
-          </div>
-          <div class="prow" data-s="kuyov_turi">
-            <span class="sname">Kuyov to'plami (Full Groom Package)</span>
-            <span class="pr" data-tier-col="0">250 000</span>
-            <span class="pr" data-tier-col="1">320 000</span>
-            <span class="pr" data-tier-col="2">420 000</span>
-          </div>
-
-          <!-- PRICE FOOTER -->
-          <div class="pfoot">
-            <p data-landing-i18n="prices_footnote">Narxlar so‘mda ko‘rsatilgan. Daraja nomini bossangiz, ustun ajralib turadi.</p>
-            <a class="btn ptable-cta btn-open-booking" href="https://culture-barbershop.onrender.com/" data-landing-i18n="booking_act_btn">Yozilish</a>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= ROADMAP & BOOKING SECTION ================= -->
-      <section class="sec" id="yozilish" aria-labelledby="book-h">
-        <div class="book">
-          <div>
-            <h2 class="h2" id="book-h" data-landing-i18n="booking_title">Onlayn yozilish</h2>
-            <p class="lede" data-landing-i18n="booking_desc">Yozilish qulay interaktiv ilovada ochiladi. Barbershopning bron tizimi barcha bo‘sh vaqtlarni real vaqt rejimida ko‘rsatadi.</p>
-            <div class="book-act">
-              <a class="btn btn-open-booking" href="https://culture-barbershop.onrender.com/" data-landing-i18n="booking_act_btn">Yozilish</a>
-              <a class="btn quiet" href="https://t.me/culturebarbersbot" target="_blank" rel="noopener" data-landing-i18n="booking_bot_btn">Telegram bot</a>
-            </div>
-            <p class="book-url">culture-barbershop.onrender.com</p>
-          </div>
-          
-          <ol class="steps">
-            <li data-landing-i18n="step_1">Barber darajasini tanlang: PRO, TOP yoki VIP.</li>
-            <li data-landing-i18n="step_2">Shu darajadagi professional ustalardan birini tanlang.</li>
-            <li data-landing-i18n="step_3">Kerakli xizmatlarni belgilang, jami narx avtomatik hisoblanadi.</li>
-            <li data-landing-i18n="step_4">Sana va qulay vaqtni tanlab, ismingiz va raqamingizni yozing. Usta tasdiqlashi bilan botdan xabar olasiz.</li>
-          </ol>
-        </div>
-      </section>
-
-      <!-- ================= LOCATION & CONTACTS ================= -->
-      <section class="sec" id="manzil" aria-labelledby="visit-h">
-        <h2 class="h2" id="visit-h" data-landing-i18n="location_title">Qayerda va qachon</h2>
-        <div class="visit-grid">
-          <div>
-            <h3 data-landing-i18n="loc_city_title">Shahar</h3>
-            <p data-landing-i18n="loc_city_desc">Olmaliq shahri. Aniq manzil va yo'nalish Instagram sahifamizda.</p>
-          </div>
-          <div>
-            <h3 data-landing-i18n="loc_hours_title">Ish vaqti</h3>
-            <p data-landing-i18n="loc_hours_desc">Har kuni 10:00 dan 22:00 gacha dam olish kunlarisiz.</p>
-          </div>
-          <div>
-            <h3 data-landing-i18n="loc_contact_title">Bog‘lanish</h3>
-            <p><a href="https://www.instagram.com/culture.olmaliq" target="_blank" rel="noopener">@culture.olmaliq</a> yoki <a href="https://t.me/culturebarbersbot" target="_blank" rel="noopener">@culturebarbersbot</a></p>
-          </div>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="foot">
-      <span data-landing-i18n="footer_text">Culture barbershop, Olmaliq</span>
-      <a href="https://www.instagram.com/culture.olmaliq" target="_blank" rel="noopener">@culture.olmaliq</a>
-    </footer>
-
+    <button class="preloader-skip" id="preloaderSkip" type="button">O‘tkazib yuborish &rsaquo;</button>
   </div>
+</div>
 
-  <!-- Scripts -->
-  <script src="js/landing.js?v=2.6"></script>
+<!-- BARBER POLE TOP STRIPE -->
+<div class="pole" aria-hidden="true"></div>
+
+<!-- MAIN PAGE CONTAINER -->
+<div class="page">
+  <header class="bar">
+    <a class="bar-brand" href="#top">
+      <img src="images/logo.jpg" alt="Culture Barbershop" class="bar-logo-img">
+      <span class="bar-name">Culture</span>
+    </a>
+
+    <div class="bar-right">
+      <nav class="bar-links" aria-label="Sahifa bo‘limlari">
+        <a href="#narxlar" id="navPrices">Narxlar</a>
+        <a href="#yozilish" id="navBooking">Yozilish</a>
+        <a class="opt" href="#manzil" id="navLocation">Manzil</a>
+        <a class="opt" href="https://www.instagram.com/culture.olmaliq" target="_blank" rel="noopener">Instagram</a>
+      </nav>
+
+      <!-- Language Switcher: UZ / RU -->
+      <div class="lang-toggle-wrap">
+        <button class="lang-toggle-btn active" id="langUzBtn" type="button">UZ</button>
+        <button class="lang-toggle-btn" id="langRuBtn" type="button">RU</button>
+      </div>
+
+      <a class="nav-cta-btn" id="navCtaBtn" href="https://culture-barbershop.onrender.com/" target="_blank" rel="noopener">Onlayn yozilish</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ================= HERO & SHAVE CANVAS ================= -->
+    <section aria-labelledby="h1">
+      <h1 id="h1" class="sr-only">Culture barbershop, Olmaliq</h1>
+      <div class="stage" id="stage">
+        <canvas class="base" id="cBase" aria-hidden="true"></canvas>
+        <canvas class="top" id="cTop" aria-hidden="true"></canvas>
+        <div class="clipper" id="clipper" aria-hidden="true"></div>
+      </div>
+      <p class="lockup" aria-hidden="true">BARBERSHOP</p>
+      
+      <div class="hero-foot">
+        <p class="hero-line" id="heroLine">Professional parvarish. Sizning uslubingiz.</p>
+        <div class="hero-act">
+          <a class="btn gold" id="heroBookBtn" href="https://culture-barbershop.onrender.com/" target="_blank" rel="noopener">Onlayn yozilish</a>
+          <button class="linkbtn" id="clearAll" type="button">Hammasini tozalash</button>
+        </div>
+      </div>
+      
+      <div class="hero-meta">
+        <span id="hint">Yozuv soqol bilan qoplangan. Chapga va o‘ngga suring.</span>
+        <span id="pct">Tozalandi: 0%</span>
+      </div>
+    </section>
+
+    <!-- ================= SCROLLING MARQUEE ================= -->
+    <div class="marq" aria-hidden="true">
+      <div class="marq-track" id="marqTrack">
+        <span>More than a haircut</span><span>More than a haircut</span><span>More than a haircut</span><span>More than a haircut</span><span>More than a haircut</span><span>More than a haircut</span>
+      </div>
+    </div>
+
+    <!-- ================= ABOUT SECTION ================= -->
+    <section class="sec" aria-labelledby="about-h">
+      <div class="about-grid">
+        <h2 class="h2" id="about-h">More than a haircut</h2>
+        <div class="about-side">
+          <div class="polebig" aria-hidden="true"></div>
+          <p id="aboutDesc">Culture Olmaliqdagi zamonaviy va hashamatli barbershop. Barber darajasini o‘zingiz tanlaysiz: PRO, TOP yoki VIP. Xizmatlarni belgilab, qulay vaqtga yoziling va navbatda turmang.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 3D STRAIGHT RAZOR SECTION ================= -->
+    <section class="sec" aria-labelledby="razor-h">
+      <div class="razor">
+        <div>
+          <h2 class="h2" id="razor-h">Ustara, aniq chiziq</h2>
+          <p class="lede" id="razorDesc">Soqol chizig‘i ustara bilan shunday tozalanadi. Ustarani sudrab aylantiring, bosib oching yoki yoping.</p>
+          <button class="btn quiet" id="razorToggle" type="button">Ustarani yopish</button>
+        </div>
+        <div class="razor-stage" id="razorStage" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- ================= PRICE TABLE (18 SERVICES) ================= -->
+    <section class="sec" id="narxlar" aria-labelledby="menu-h">
+      <h2 class="h2" id="menu-h">Narxlar</h2>
+      <p class="tier-note" id="tierNote"></p>
+      <div class="ptable" id="ptable" data-tier="1">
+        <div class="phead">
+          <span id="pricesHeaderService">Xizmat</span>
+          <button class="tier" type="button" data-i="0" aria-pressed="false">PRO</button>
+          <button class="tier" type="button" data-i="1" aria-pressed="true">TOP</button>
+          <button class="tier" type="button" data-i="2" aria-pressed="false">VIP</button>
+        </div>
+        <div id="pbody"></div>
+      </div>
+      <p class="note" id="pricesFootnote">Narxlar so‘mda. Daraja nomini bossangiz, ustun ajralib turadi.</p>
+    </section>
+
+    <!-- ================= BOOKING SECTION ================= -->
+    <section class="sec" id="yozilish" aria-labelledby="book-h">
+      <div class="book">
+        <div>
+          <h2 class="h2" id="book-h">Onlayn yozilish</h2>
+          <p class="lede" id="bookDesc">Yozilish alohida ilovada ochiladi. Barbershopning bron tizimi barcha bo‘sh vaqtlarni real vaqt rejimida ko‘rsatadi.</p>
+          <div class="book-act">
+            <a class="btn gold" id="bookActBtn" href="https://culture-barbershop.onrender.com/" target="_blank" rel="noopener">Yozilish</a>
+            <a class="btn quiet" id="bookBotBtn" href="https://t.me/culturebarbersbot" target="_blank" rel="noopener">Telegram bot</a>
+          </div>
+          <p class="book-url">culture-barbershop.onrender.com</p>
+        </div>
+        <ol class="steps">
+          <li id="step1">Barber darajasini tanlang: PRO, TOP yoki VIP.</li>
+          <li id="step2">Shu darajadagi professional ustalardan birini tanlang.</li>
+          <li id="step3">Kerakli xizmatlarni belgilang, jami narx avtomatik hisoblanadi.</li>
+          <li id="step4">Sana va qulay vaqtni tanlab, ismingiz va raqamingizni yozing. Usta tasdiqlashi bilan botdan xabar olasiz.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= LOCATION & CONTACTS ================= -->
+    <section class="sec" id="manzil" aria-labelledby="visit-h">
+      <h2 class="h2" id="visit-h">Qayerda va qachon</h2>
+      <div class="visit-grid">
+        <div>
+          <h3 id="locCityTitle">Shahar</h3>
+          <p id="locCityDesc">Olmaliq shahri. Aniq manzil va xarita Instagram sahifamizda.</p>
+        </div>
+        <div>
+          <h3 id="locHoursTitle">Ish vaqti</h3>
+          <p id="locHoursDesc">Har kuni 10:00 dan 22:00 gacha dam olish kunlarisiz.</p>
+        </div>
+        <div>
+          <h3 id="locContactTitle">Bog‘lanish</h3>
+          <p><a href="https://www.instagram.com/culture.olmaliq" target="_blank" rel="noopener">@culture.olmaliq</a> yoki <a href="https://t.me/culturebarbersbot" target="_blank" rel="noopener">@culturebarbersbot</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="foot">
+    <span id="footerBrand">Culture barbershop, Olmaliq</span>
+    <a href="https://www.instagram.com/culture.olmaliq" target="_blank" rel="noopener">@culture.olmaliq</a>
+  </footer>
+</div>
+
+<!-- ================= SCRIPTS & ANIMATION ENGINES ================= -->
+<!-- GSAP & Lenis CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<!-- Three.js CDN for 3D Straight Razor -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+(function () {
+  const WEBAPP_URL = "https://culture-barbershop.onrender.com";
+
+  /* ---------- BILINGUAL DICTIONARY ---------- */
+  const DICT = {
+    uz: {
+      preloader_tagline: "PREMIAL BARBERSHOP • OLMALIQ",
+      preloader_loading: "Tayyorlanmoqda...",
+      preloader_ready: "Xush kelibsiz",
+      preloader_skip: "O‘tkazib yuborish ›",
+      nav_prices: "Narxlar",
+      nav_booking: "Yozilish",
+      nav_location: "Manzil",
+      nav_cta: "Onlayn yozilish",
+      hero_line: "Professional parvarish. Sizning uslubingiz.",
+      hero_book_btn: "Onlayn yozilish",
+      hero_clear_btn: "Hammasini tozalash",
+      hero_hint: "Yozuv soqol bilan qoplangan. Chapga va o‘ngga suring.",
+      hero_hint_progress: "Davom eting, qolganini o‘zingiz tozalang.",
+      hero_hint_done: "Tayyor. Endi stulga o‘ting.",
+      hero_pct: "Tozalandi: {n}%",
+      about_title: "More than a haircut",
+      about_desc: "Culture Olmaliqdagi zamonaviy va hashamatli barbershop. Barber darajasini o‘zingiz tanlaysiz: PRO, TOP yoki VIP. Xizmatlarni belgilab, qulay vaqtga yoziling va navbatda turmang.",
+      razor_title: "Ustara, aniq chiziq",
+      razor_desc: "Soqol chizig‘i ustara bilan shunday tozalanadi. Ustarani sudrab aylantiring, bosib oching yoki yoping.",
+      razor_toggle_close: "Ustarani yopish",
+      razor_toggle_open: "Ustarani ochish",
+      prices_title: "Narxlar",
+      prices_service: "Xizmat",
+      prices_footnote: "Narxlar so‘mda. Daraja nomini bossangiz, ustun ajralib turadi.",
+      prices_note_pro: "PRO: kundalik uslublar va klassik soch olish.",
+      prices_note_top: "TOP: tajribali barber, aniq ish va shaxsiy uslub. Eng ko‘p tanlanadigan daraja.",
+      prices_note_vip: "VIP: eksklyuziv parvarish. Imzoli soch olish, soqol parvarishi va SPA.",
+      book_title: "Onlayn yozilish",
+      book_desc: "Yozilish alohida ilovada ochiladi. Barbershopning bron tizimi barcha bo‘sh vaqtlarni real vaqt rejimida ko‘rsatadi.",
+      book_btn: "Yozilish",
+      bot_btn: "Telegram bot",
+      step_1: "Barber darajasini tanlang: PRO, TOP yoki VIP.",
+      step_2: "Shu darajadagi professional ustalardan birini tanlang.",
+      step_3: "Kerakli xizmatlarni belgilang, jami narx avtomatik hisoblanadi.",
+      step_4: "Sana va qulay vaqtni tanlab, ismingiz va raqamingizni yozing. Usta tasdiqlashi bilan botdan xabar olasiz.",
+      loc_title: "Qayerda va qachon",
+      loc_city: "Shahar",
+      loc_city_desc: "Olmaliq shahri. Aniq manzil va xarita Instagram sahifamizda.",
+      loc_hours: "Ish vaqti",
+      loc_hours_desc: "Har kuni 10:00 dan 22:00 gacha dam olish kunlarisiz.",
+      loc_contact: "Bog‘lanish",
+      footer_text: "Culture barbershop, Olmaliq"
+    },
+    ru: {
+      preloader_tagline: "ПРЕМИАЛЬНЫЙ БАРБЕРШОП • АЛМАЛЫК",
+      preloader_loading: "Подготовка...",
+      preloader_ready: "Добро пожаловать",
+      preloader_skip: "Пропустить ›",
+      nav_prices: "Цены",
+      nav_booking: "Запись",
+      nav_location: "Адрес",
+      nav_cta: "Онлайн запись",
+      hero_line: "Профессиональный уход. Ваш безупречный стиль.",
+      hero_book_btn: "Онлайн запись",
+      hero_clear_btn: "Очистить всё",
+      hero_hint: "Логотип покрыт щетиной. Проведите пальцем или курсором.",
+      hero_hint_progress: "Отлично, продолжайте сбривать щетину.",
+      hero_hint_done: "Готово! Теперь добро пожаловать в кресло мастера.",
+      hero_pct: "Сбрито: {n}%",
+      about_title: "More than a haircut",
+      about_desc: "Culture — премиальный барбершоп в Алмалыке. Вы сами выбираете категорию барбера: PRO, TOP или VIP. Бронируйте удобное время онлайн без ожидания в очереди.",
+      razor_title: "Опасная бритва, чистые линии",
+      razor_desc: "Идеальные контуры бороды создаются опасной бритвой. Поворачивайте клинок курсором или откройте/закройте кликом.",
+      razor_toggle_close: "Закрыть бритву",
+      razor_toggle_open: "Открыть бритву",
+      prices_title: "Прайс-лист",
+      prices_service: "Услуга",
+      prices_footnote: "Цены указаны в сумах. Нажмите на категорию, чтобы выделить колонку.",
+      prices_note_pro: "PRO: повседневный стиль и классические стрижки.",
+      prices_note_top: "TOP: опытный мастер, высокая точность и индивидуальный стиль. Самый популярный выбор.",
+      prices_note_vip: "VIP: премиальный уход. Авторская стрижка, моделирование бороды и SPA.",
+      book_title: "Онлайн запись",
+      book_desc: "Запись открывается в интерактивном приложении. Доступны все свободные слоты в реальном времени.",
+      book_btn: "Записаться",
+      bot_btn: "Telegram бот",
+      step_1: "Выберите категорию мастера: PRO, TOP или VIP.",
+      step_2: "Выберите одного из наших профессиональных барберов.",
+      step_3: "Отметьте нужные услуги — сумма рассчитается автоматически.",
+      step_4: "Выберите дату и время, укажите телефон. После подтверждения мастером вам придёт уведомление.",
+      loc_title: "Где и когда",
+      loc_city: "Город",
+      loc_city_desc: "г. Алмалык. Точный адрес и геолокация в нашем Instagram.",
+      loc_hours: "Время работы",
+      loc_hours_desc: "Ежедневно с 10:00 до 22:00 без выходных.",
+      loc_contact: "Контакты",
+      footer_text: "Culture barbershop, Алмалык"
+    }
+  };
+
+  let curLang = localStorage.getItem("culture_lang") || "uz";
+  function t(k, p = {}) {
+    const d = DICT[curLang] || DICT.uz;
+    let v = d[k] || DICT.uz[k] || k;
+    for (const [key, val] of Object.entries(p)) v = v.replace(`{${key}}`, val);
+    return v;
+  }
+
+  function applyTranslations() {
+    document.getElementById("preloaderTagline").textContent = t("preloader_tagline");
+    document.getElementById("preloaderStatus").textContent = t("preloader_loading");
+    document.getElementById("preloaderSkip").textContent = t("preloader_skip");
+    document.getElementById("navPrices").textContent = t("nav_prices");
+    document.getElementById("navBooking").textContent = t("nav_booking");
+    document.getElementById("navLocation").textContent = t("nav_location");
+    document.getElementById("navCtaBtn").textContent = t("nav_cta");
+    document.getElementById("heroLine").textContent = t("hero_line");
+    document.getElementById("heroBookBtn").textContent = t("hero_book_btn");
+    document.getElementById("clearAll").textContent = t("hero_clear_btn");
+    document.getElementById("hint").textContent = t("hero_hint");
+    document.getElementById("aboutDesc").textContent = t("about_desc");
+    document.getElementById("razor-h").textContent = t("razor_title");
+    document.getElementById("razorDesc").textContent = t("razor_desc");
+    document.getElementById("pricesHeaderService").textContent = t("prices_service");
+    document.getElementById("pricesFootnote").textContent = t("prices_footnote");
+    document.getElementById("book-h").textContent = t("book_title");
+    document.getElementById("bookDesc").textContent = t("book_desc");
+    document.getElementById("bookActBtn").textContent = t("book_btn");
+    document.getElementById("bookBotBtn").textContent = t("bot_btn");
+    document.getElementById("step1").textContent = t("step_1");
+    document.getElementById("step2").textContent = t("step_2");
+    document.getElementById("step3").textContent = t("step_3");
+    document.getElementById("step4").textContent = t("step_4");
+    document.getElementById("locCityTitle").textContent = t("loc_city");
+    document.getElementById("locCityDesc").textContent = t("loc_city_desc");
+    document.getElementById("locHoursTitle").textContent = t("loc_hours");
+    document.getElementById("locHoursDesc").textContent = t("loc_hours_desc");
+    document.getElementById("locContactTitle").textContent = t("loc_contact");
+    document.getElementById("footerBrand").textContent = t("footer_text");
+    setTier(currentTier);
+  }
+
+  function setLanguage(l) {
+    curLang = l;
+    localStorage.setItem("culture_lang", l);
+    document.getElementById("langUzBtn").classList.toggle("active", l === "uz");
+    document.getElementById("langRuBtn").classList.toggle("active", l === "ru");
+    applyTranslations();
+  }
+
+  document.getElementById("langUzBtn").addEventListener("click", () => setLanguage("uz"));
+  document.getElementById("langRuBtn").addEventListener("click", () => setLanguage("ru"));
+
+  /* ---------- 18 SERVICES PRICE TABLE (PRO, TOP, VIP) ---------- */
+  const GROUPS = [
+    { t: "Asosiy xizmatlar", ru_t: "Основные услуги", items: [
+      ["Erkaklar soch olishi", "Мужская стрижка", 75, 95, 125],
+      ["Bolalar soch olishi", "Детская стрижка (до 10 лет)", 45, 60, 75],
+      ["Soqol va britva modellash", "Моделирование бороды бритвой", 55, 75, 105],
+      ["Okantovka", "Окантовка", 30, 50, 70],
+      ["Mashinkada soch olish", "Стрижка под машинку", 40, 60, 90],
+      ["Ukladka", "Укладка волос", 30, 40, 50]
+    ]},
+    { t: "Qo‘shimcha xizmatlar", ru_t: "Дополнительные услуги", items: [
+      ["Oq sochni kamuflyaj qilish", "Камуфляж седины", 40, 60, 80],
+      ["Mum bilan korreksiya", "Коррекция воском", 20, 30, 40],
+      ["Premium soqol modellash", "Премиум моделирование бороды", 85, 105, 135],
+      ["Premium soch olish", "Премиум стрижка волос", 95, 125, 155],
+      ["Premium bosh terisi parvarishi", "Премиум уход за кожей головы", 35, 45, 55],
+      ["Premium yuz parvarishi", "Премиум уход за лицом", 40, 50, 60],
+      ["SPA bosh terisi parvarishi", "SPA уход за кожей головы", 25, 35, 45],
+      ["Qora niqob", "Черная маска (Black mask)", 30, 40, 50]
+    ]},
+    { t: "Kompleks xizmatlar", ru_t: "Комплексные услуги", items: [
+      ["Soch olish + soqol va britva modellash", "Стрижка + Моделирование бороды", 110, 140, 190],
+      ["Soch olish + SPA bosh terisi parvarishi", "Стрижка + SPA уход за кожей головы", 85, 115, 145],
+      ["Soch olish + qora niqob", "Стрижка + Черная маска", 90, 120, 150],
+      ["Ota + o‘g‘il (10 yoshgacha)", "Отец + Сын (до 10 лет)", 115, 145, 185]
+    ]}
+  ];
+
+  function fmt(n) { return (n * 1000).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "); }
+
+  const pbody = document.getElementById("pbody");
+  function renderPriceTable() {
+    pbody.innerHTML = "";
+    GROUPS.forEach(g => {
+      const h = document.createElement("h3");
+      h.className = "pgroup";
+      h.textContent = curLang === "ru" ? g.ru_t : g.t;
+      pbody.appendChild(h);
+
+      g.items.forEach(it => {
+        const r = document.createElement("div");
+        r.className = "prow";
+        const name = curLang === "ru" ? it[1] : it[0];
+        r.innerHTML = `<span class="pn">${name}</span>
+          <span class="pv c0">${fmt(it[2])}</span>
+          <span class="pv c1">${fmt(it[3])}</span>
+          <span class="pv c2">${fmt(it[4])}</span>`;
+        pbody.appendChild(r);
+      });
+    });
+  }
+
+  const ptable = document.getElementById("ptable");
+  const tierNote = document.getElementById("tierNote");
+  const tierBtns = Array.from(document.querySelectorAll(".tier"));
+  const TIERS = ["PRO", "TOP", "VIP"];
+  let currentTier = 1; // TOP by default
+
+  function setTier(i) {
+    currentTier = i;
+    ptable.setAttribute("data-tier", String(i));
+    tierBtns.forEach((b, k) => b.setAttribute("aria-pressed", String(k === i)));
+    tierNote.textContent = t(`prices_note_${TIERS[i].toLowerCase()}`);
+
+    // Update CTA links to pass category parameter
+    const tierName = TIERS[i];
+    document.getElementById("heroBookBtn").href = `${WEBAPP_URL}?category=${tierName}`;
+    document.getElementById("bookActBtn").href = `${WEBAPP_URL}?category=${tierName}`;
+    document.getElementById("navCtaBtn").href = `${WEBAPP_URL}?category=${tierName}`;
+  }
+
+  tierBtns.forEach(b => {
+    b.addEventListener("click", () => {
+      const idx = Number(b.getAttribute("data-i"));
+      setTier(idx);
+    });
+  });
+
+  renderPriceTable();
+  setTier(1);
+
+  /* ---------- SHAVE-THE-WORDMARK HERO CANVAS ---------- */
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const root = document.documentElement;
+  const stage = document.getElementById("stage");
+  const cBase = document.getElementById("cBase");
+  const cTop = document.getElementById("cTop");
+  const clipper = document.getElementById("clipper");
+  const hint = document.getElementById("hint");
+  const pctEl = document.getElementById("pct");
+  const WORD = "CULTURE";
+  const FONT_FAMILY = '"Cinzel", "Trajan Pro", "Times New Roman", serif';
+  let W = 0, H = 0, dpr = 1, fs = 0, brush = 40, baseCount = 1, done = false, sweeping = false, timer = null;
+  const probe = document.createElement("canvas");
+
+  function tok(n) { return getComputedStyle(root).getPropertyValue(n).trim(); }
+
+  function buildCanvas() {
+    done = false;
+    stage.classList.remove("is-done");
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = stage.clientWidth;
+    const bctx = cBase.getContext("2d");
+    bctx.font = "700 200px " + FONT_FAMILY;
+    const m = bctx.measureText(WORD);
+    const k0 = (W * 0.96) / m.width;
+    fs = Math.min(200 * k0, 420);
+    const k = fs / 200;
+    const textW = m.width * k, asc = m.actualBoundingBoxAscent * k;
+    const pad = fs * 0.08;
+    H = Math.ceil(asc + pad * 2);
+    const x = (W - textW) / 2, y = pad + asc;
+    stage.style.height = H + "px";
+    brush = Math.max(30, H * 0.3);
+    clipper.style.height = brush + "px";
+
+    [cBase, cTop].forEach(c => {
+      c.width = Math.round(W * dpr);
+      c.height = Math.round(H * dpr);
+    });
+
+    const b = cBase.getContext("2d");
+    b.setTransform(dpr, 0, 0, dpr, 0, 0);
+    b.clearRect(0, 0, W, H);
+    b.font = `700 ${fs}px ${FONT_FAMILY}`;
+    b.fillStyle = tok("--letter");
+    b.fillText(WORD, x, y);
+
+    const tCtx = cTop.getContext("2d");
+    tCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    tCtx.clearRect(0, 0, W, H);
+    tCtx.font = `700 ${fs}px ${FONT_FAMILY}`;
+    tCtx.fillStyle = tok("--stub-base");
+    tCtx.fillText(WORD, x, y);
+    tCtx.globalCompositeOperation = "source-atop";
+
+    const n = Math.floor((W * H) / 7);
+    [tok("--stub-a"), tok("--stub-b")].forEach(col => {
+      tCtx.strokeStyle = col;
+      tCtx.lineWidth = 1.1;
+      tCtx.beginPath();
+      for (let i = 0; i < n; i++) {
+        const px = Math.random() * W, py = Math.random() * H;
+        const a = -Math.PI / 2 + (Math.random() - 0.5) * 1.3, len = 3 + Math.random() * 6;
+        tCtx.moveTo(px, py);
+        tCtx.lineTo(px + Math.cos(a) * len, py + Math.sin(a) * len);
+      }
+      tCtx.stroke();
+    });
+    tCtx.globalCompositeOperation = "source-over";
+    baseCount = Math.max(1, sample());
+    pctEl.textContent = t("hero_pct", { n: 0 });
+  }
+
+  function sample() {
+    const w = 220, h = Math.max(1, Math.round((w * H) / W));
+    probe.width = w;
+    probe.height = h;
+    const p = probe.getContext("2d", { willReadFrequently: true });
+    p.clearRect(0, 0, w, h);
+    p.drawImage(cTop, 0, 0, w, h);
+    const data = p.getImageData(0, 0, w, h).data;
+    let c = 0;
+    for (let i = 3; i < data.length; i += 4) {
+      if (data[i] > 60) c++;
+    }
+    return c;
+  }
+
+  function check() {
+    timer = null;
+    const v = Math.min(1, Math.max(0, 1 - sample() / baseCount));
+    const p = Math.round(v * 100);
+    pctEl.textContent = t("hero_pct", { n: p });
+    if (v >= 0.86) finish();
+  }
+
+  function schedule() {
+    if (!timer && !done) timer = setTimeout(check, 220);
+  }
+
+  function finish() {
+    if (done) return;
+    done = true;
+    stage.classList.add("is-done");
+    pctEl.textContent = t("hero_pct", { n: 100 });
+    hint.textContent = t("hero_hint_done");
+    clipper.classList.remove("on");
+  }
+
+  function erase(x0, y0, x1, y1) {
+    const tCtx = cTop.getContext("2d");
+    tCtx.save();
+    tCtx.globalCompositeOperation = "destination-out";
+    tCtx.lineWidth = brush;
+    tCtx.lineCap = "round";
+    tCtx.lineJoin = "round";
+    tCtx.beginPath();
+    tCtx.moveTo(x0, y0);
+    tCtx.lineTo(x1, y1);
+    tCtx.stroke();
+    tCtx.restore();
+  }
+
+  function placeClipper(x, y) {
+    clipper.style.transform = `translate3d(${x - 13}px, ${y - brush / 2}px, 0)`;
+  }
+
+  let last = null;
+  stage.addEventListener("pointermove", function (e) {
+    if (done || sweeping) return;
+    const r = cTop.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    clipper.classList.add("on");
+    placeClipper(x, y);
+    if (last) erase(last.x, last.y, x, y); else erase(x, y, x, y);
+    last = { x, y };
+    if (hint.dataset.t !== "1") {
+      hint.dataset.t = "1";
+      hint.textContent = t("hero_hint_progress");
+    }
+    schedule();
+  });
+
+  function leave() {
+    last = null;
+    clipper.classList.remove("on");
+    schedule();
+  }
+  stage.addEventListener("pointerleave", leave);
+  stage.addEventListener("pointerup", leave);
+  stage.addEventListener("pointercancel", leave);
+  document.getElementById("clearAll").addEventListener("click", finish);
+
+  function sweep() {
+    if (reduce) {
+      erase(-10, H / 2, W + 10, H / 2);
+      schedule();
+      hint.textContent = t("hero_hint_progress");
+      return;
+    }
+    sweeping = true;
+    const dur = 2200;
+    let t0 = null, px = -20;
+    clipper.classList.add("on");
+
+    function ease(tVal) {
+      return tVal < 0.5 ? 2 * tVal * tVal : 1 - Math.pow(-2 * tVal + 2, 2) / 2;
+    }
+
+    function step(ts) {
+      if (t0 === null) t0 = ts;
+      const p = Math.min(1, (ts - t0) / dur);
+      const x = -20 + (W + 40) * ease(p);
+      erase(px, H / 2, x, H / 2);
+      placeClipper(x, H / 2);
+      px = x;
+
+      if (p < 1) {
+        requestAnimationFrame(step);
+      } else {
+        sweeping = false;
+        clipper.classList.remove("on");
+        hint.textContent = t("hero_hint_progress");
+        schedule();
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  let lastW = 0, rt = null;
+  window.addEventListener("resize", function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () {
+      if (stage.clientWidth !== lastW) {
+        lastW = stage.clientWidth;
+        buildCanvas();
+      }
+    }, 200);
+  });
+
+  const fontsReady = (document.fonts && document.fonts.load)
+    ? document.fonts.load("700 200px " + FONT_FAMILY, WORD).catch(function () {})
+    : Promise.resolve();
+
+  fontsReady.then(function () {
+    buildCanvas();
+    lastW = stage.clientWidth;
+  });
+
+  /* ---------- ENTRANCE PRELOADER LOGIC ---------- */
+  let preloaderDismissed = false;
+  function initPreloader(onComplete) {
+    const preloader = document.getElementById("preloader");
+    if (!preloader) {
+      if (onComplete) onComplete();
+      return;
+    }
+    const bar = document.getElementById("preloaderBar");
+    const pct = document.getElementById("preloaderPct");
+    const status = document.getElementById("preloaderStatus");
+    const skipBtn = document.getElementById("preloaderSkip");
+
+    let animFrame = null;
+    const dur = 1200;
+    const start = performance.now();
+
+    function dismiss() {
+      if (preloaderDismissed) return;
+      preloaderDismissed = true;
+      if (animFrame) cancelAnimationFrame(animFrame);
+
+      if (bar) bar.style.width = "100%";
+      if (pct) pct.textContent = "100%";
+      if (status) status.textContent = t("preloader_ready");
+
+      preloader.classList.add("preloader-dismiss");
+
+      setTimeout(() => {
+        if (onComplete) onComplete();
+      }, 350);
+
+      setTimeout(() => {
+        preloader.classList.add("preloader-finished");
+      }, 900);
+    }
+
+    function loop(now) {
+      if (preloaderDismissed) return;
+      const el = now - start;
+      const p = Math.min(1, el / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const val = Math.min(100, Math.round(eased * 100));
+
+      if (bar) bar.style.width = val + "%";
+      if (pct) pct.textContent = val + "%";
+
+      if (p < 1) animFrame = requestAnimationFrame(loop);
+      else dismiss();
+    }
+    animFrame = requestAnimationFrame(loop);
+
+    skipBtn?.addEventListener("click", (e) => { e.stopPropagation(); dismiss(); });
+    preloader.addEventListener("click", (e) => { if (e.target.id !== "preloaderSkip") dismiss(); });
+  }
+
+  /* ---------- GSAP & LENIS SMOOTH SCROLL ---------- */
+  let introSeq = null;
+  function initGSAP() {
+    if (!window.gsap || !window.ScrollTrigger) return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const mm = gsap.matchMedia();
+    mm.add("(prefers-reduced-motion: no-preference)", function () {
+      let lenis = null;
+      function tick(t) { if (lenis) lenis.raf(t * 1000); }
+
+      if (window.Lenis) {
+        lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+        lenis.on("scroll", ScrollTrigger.update);
+        gsap.ticker.add(tick);
+        gsap.ticker.lagSmoothing(0);
+
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+          a.addEventListener("click", function (e) {
+            const id = a.getAttribute("href").slice(1);
+            const target = id === "top" ? 0 : document.getElementById(id);
+            if (target !== null && target !== undefined) {
+              e.preventDefault();
+              lenis.scrollTo(target, { offset: -8 });
+            }
+          });
+        });
+      }
+
+      /* Intro sequence paused until preloader opens */
+      introSeq = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+      introSeq
+        .from(".bar-name, .bar-logo-img", { y: -14, opacity: 0, duration: 0.6 })
+        .from(".bar-links a, .lang-toggle-wrap, .nav-cta-btn", { y: -14, opacity: 0, stagger: 0.05, duration: 0.5 }, "<0.1")
+        .from(".lockup", { letterSpacing: "1.3em", opacity: 0, duration: 1.2 }, 0.2)
+        .from(".hero-line", { y: 24, opacity: 0, duration: 0.8 }, 0.6)
+        .from(".hero-act > *", { y: 18, opacity: 0, stagger: 0.08, duration: 0.6 }, 0.8)
+        .from(".hero-meta", { opacity: 0, duration: 0.6 }, 1.0);
+
+      /* Scroll progress line */
+      gsap.to("#prog", { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: 0.2 } });
+
+      /* Hero stage parallax drift */
+      const heroSec = document.querySelector("#top section");
+      gsap.to(".stage", { y: 70, ease: "none", scrollTrigger: { trigger: heroSec, start: "top top", end: "bottom top", scrub: true } });
+
+      /* Heading letters mask rise */
+      document.querySelectorAll(".h2").forEach(h => {
+        const text = h.textContent;
+        h.setAttribute("aria-label", text);
+        h.textContent = "";
+        text.split(" ").forEach((w, i, arr) => {
+          const sw = document.createElement("span");
+          sw.className = "sw";
+          sw.setAttribute("aria-hidden", "true");
+          Array.from(w).forEach(ch => {
+            const c = document.createElement("span");
+            c.className = "sc";
+            c.textContent = ch;
+            sw.appendChild(c);
+          });
+          h.appendChild(sw);
+          if (i < arr.length - 1) h.appendChild(document.createTextNode(" "));
+        });
+        gsap.from(h.querySelectorAll(".sc"), {
+          yPercent: 110, duration: 0.9, ease: "power4.out", stagger: 0.025,
+          scrollTrigger: { trigger: h, start: "top 88%", once: true }
+        });
+      });
+
+      /* Marquee track scrub */
+      gsap.fromTo("#marqTrack", { xPercent: 0 }, {
+        xPercent: -35, ease: "none",
+        scrollTrigger: { trigger: ".marq", start: "top bottom", end: "bottom top", scrub: true }
+      });
+
+      /* Big barber pole stripe scrub */
+      gsap.to(".polebig", {
+        "--off": 160, ease: "none",
+        scrollTrigger: { trigger: ".about-grid", start: "top bottom", end: "bottom top", scrub: true }
+      });
+
+      /* Rows, steps, and blocks batch reveal */
+      const reveal = ".prow, .pgroup, .steps li, .visit-grid > div, .about-side, .lede";
+      gsap.set(reveal, { opacity: 0, y: 22 });
+      ScrollTrigger.batch(reveal, {
+        start: "top 92%", once: true,
+        onEnter: function (els) {
+          gsap.to(els, { y: 0, opacity: 1, duration: 0.7, ease: "power3.out", stagger: 0.06, overwrite: true });
+        }
+      });
+
+      /* Price column pulse on tier change */
+      document.querySelectorAll(".tier").forEach(btn => {
+        btn.addEventListener("click", function () {
+          const i = btn.getAttribute("data-i");
+          gsap.fromTo(".pv.c" + i, { y: 8, opacity: 0.2 }, { y: 0, opacity: 1, duration: 0.45, stagger: 0.025, ease: "power2.out", overwrite: true });
+        });
+      });
+
+      /* Magnetic buttons & cursor ring */
+      if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+        document.querySelectorAll(".btn, .nav-cta-btn").forEach(b => {
+          const xt = gsap.quickTo(b, "x", { duration: 0.4, ease: "power3" });
+          const yt = gsap.quickTo(b, "y", { duration: 0.4, ease: "power3" });
+          b.addEventListener("pointermove", function (e) {
+            const r = b.getBoundingClientRect();
+            xt((e.clientX - r.left - r.width / 2) * 0.25);
+            yt((e.clientY - r.top - r.height / 2) * 0.35);
+          });
+          b.addEventListener("pointerleave", function () { xt(0); yt(0); });
+        });
+
+        const ring = document.getElementById("ring");
+        const rx = gsap.quickTo(ring, "x", { duration: 0.35, ease: "power3" });
+        const ry = gsap.quickTo(ring, "y", { duration: 0.35, ease: "power3" });
+        let mode = "";
+
+        document.addEventListener("pointermove", function (e) {
+          rx(e.clientX - 17);
+          ry(e.clientY - 17);
+          const m = e.target.closest && e.target.closest(".stage") ? "hide" : (e.target.closest && e.target.closest("a, button, .razor-stage") ? "big" : "idle");
+          if (m !== mode) {
+            mode = m;
+            gsap.to(ring, { opacity: m === "hide" ? 0 : 1, scale: m === "big" ? 1.8 : 1, duration: 0.25, overwrite: "auto" });
+          }
+        });
+        document.addEventListener("pointerleave", function () {
+          mode = "";
+          gsap.to(ring, { opacity: 0, duration: 0.2 });
+        });
+      }
+
+      window.addEventListener("load", function () { ScrollTrigger.refresh(); });
+    });
+  }
+
+  /* ---------- THREE.JS 3D STRAIGHT RAZOR (USTARA) ---------- */
+  function init3DRazor() {
+    const wrap = document.getElementById("razorStage");
+    const toggle = document.getElementById("razorToggle");
+    if (!wrap) return;
+
+    function fail() {
+      const s = wrap.closest(".razor");
+      if (s) s.style.display = "none";
+    }
+
+    if (!window.THREE) { fail(); return; }
+
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    } catch (e) { fail(); return; }
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    wrap.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(32, 1.5, 0.1, 60);
+
+    /* Studio environment map for realistic steel reflection */
+    function face(top, bottom, strips) {
+      const c = document.createElement("canvas");
+      c.width = c.height = 128;
+      const g = c.getContext("2d"), grd = g.createLinearGradient(0, 0, 0, 128);
+      grd.addColorStop(0, top);
+      grd.addColorStop(1, bottom);
+      g.fillStyle = grd;
+      g.fillRect(0, 0, 128, 128);
+      g.fillStyle = "#ffffff";
+      strips.forEach(s => g.fillRect(s[0], s[1], s[2], s[3]));
+      return c;
+    }
+
+    const env = new THREE.CubeTexture([
+      face("#3a3f46", "#0d0e10", [[20, 10, 26, 108]]),
+      face("#3a3f46", "#0d0e10", [[84, 10, 20, 108]]),
+      face("#ffffff", "#b9bdc4", []),
+      face("#08090a", "#08090a", []),
+      face("#454b53", "#0d0e10", [[40, 16, 48, 40]]),
+      face("#2b2f35", "#0b0c0d", [[10, 20, 14, 90], [104, 20, 14, 90]])
+    ]);
+    env.needsUpdate = true;
+
+    const steel = new THREE.MeshStandardMaterial({
+      color: 0xdfe3e8,
+      metalness: 1,
+      roughness: 0.2,
+      envMap: env,
+      envMapIntensity: 1.3
+    });
+
+    const handleMat = new THREE.MeshStandardMaterial({
+      color: 0x18181b,
+      metalness: 0.55,
+      roughness: 0.34,
+      envMap: env,
+      envMapIntensity: 0.9
+    });
+
+    /* Razor Blade: spine on top, edge below, rounded toe */
+    const bs = new THREE.Shape();
+    bs.moveTo(0, 0.26);
+    bs.lineTo(3.0, 0.26);
+    bs.bezierCurveTo(3.28, 0.26, 3.42, 0.1, 3.36, -0.08);
+    bs.lineTo(3.24, -0.28);
+    bs.lineTo(0.4, -0.28);
+    bs.lineTo(0, -0.18);
+    bs.closePath();
+
+    const bg = new THREE.ExtrudeGeometry(bs, { depth: 0.04, bevelEnabled: false });
+    bg.translate(0, 0, -0.02);
+    const blade = new THREE.Mesh(bg, steel);
+
+    /* Handle scales along +x from the pivot */
+    const hs = new THREE.Shape();
+    hs.moveTo(-0.2, 0.24);
+    hs.lineTo(3.3, 0.2);
+    hs.quadraticCurveTo(3.6, 0.2, 3.6, 0);
+    hs.quadraticCurveTo(3.6, -0.2, 3.3, -0.2);
+    hs.lineTo(-0.2, -0.24);
+    hs.quadraticCurveTo(-0.38, -0.24, -0.38, 0);
+    hs.quadraticCurveTo(-0.38, 0.24, -0.2, 0.24);
+
+    const hg = new THREE.ExtrudeGeometry(hs, {
+      depth: 0.06,
+      bevelEnabled: true,
+      bevelThickness: 0.012,
+      bevelSize: 0.012,
+      bevelSegments: 2
+    });
+    hg.translate(0, 0, -0.03);
+
+    const handle = new THREE.Group();
+    [-0.075, 0.075].forEach(z => {
+      const m = new THREE.Mesh(hg, handleMat);
+      m.position.z = z;
+      handle.add(m);
+    });
+
+    const spacer = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.17, 20), steel);
+    spacer.rotation.x = Math.PI / 2;
+    spacer.position.set(3.25, 0, 0);
+    handle.add(spacer);
+
+    const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.27, 28), steel);
+    pin.rotation.x = Math.PI / 2;
+
+    const razor = new THREE.Group();
+    razor.add(blade, handle, pin);
+
+    const holder = new THREE.Group();
+    holder.add(razor);
+    scene.add(holder);
+
+    const key = new THREE.DirectionalLight(0xffffff, 1.1);
+    key.position.set(3, 4, 6);
+    scene.add(key);
+
+    const rim = new THREE.DirectionalLight(0xcfd8ff, 0.5);
+    rim.position.set(-4, -2, 3);
+    scene.add(rim);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+
+    const state = { open: reduce ? 1 : 0, scrollY: 0, dragY: 0, dragX: 0 };
+    let target = 1;
+
+    function size() {
+      const w = wrap.clientWidth, h = wrap.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.position.set(0, 0, 10.6 * Math.max(1, 1.45 / camera.aspect));
+      camera.updateProjectionMatrix();
+    }
+    size();
+    window.addEventListener("resize", size);
+
+    function draw(tVal) {
+      const sway = reduce ? 0 : Math.sin(tVal / 1400);
+      holder.rotation.y = -0.45 + state.scrollY + state.dragY;
+      holder.rotation.x = -0.28 + state.dragX;
+      holder.rotation.z = -0.22 + sway * 0.03;
+      holder.position.x = -1.6 * (1 - state.open);
+      handle.rotation.z = Math.PI * 0.97 * state.open;
+      renderer.render(scene, camera);
+    }
+
+    let visible = true, raf = 0;
+    function loop(tVal) {
+      raf = 0;
+      if (!visible) return;
+      draw(tVal);
+      raf = requestAnimationFrame(loop);
+    }
+    function kick() {
+      if (!raf && visible) raf = requestAnimationFrame(loop);
+    }
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(es => {
+        visible = es[0].isIntersecting;
+        kick();
+      }).observe(wrap);
+    }
+    kick();
+
+    function setLabel() {
+      if (toggle) {
+        toggle.textContent = target > 0.5 ? t("razor_toggle_close") : t("razor_toggle_open");
+      }
+    }
+
+    function flip() {
+      target = target > 0.5 ? 0 : 1;
+      setLabel();
+      if (window.gsap && !reduce) {
+        gsap.to(state, { open: target, duration: 1.1, ease: "power3.inOut", overwrite: true });
+      } else {
+        state.open = target;
+      }
+    }
+
+    if (toggle) toggle.addEventListener("click", flip);
+
+    /* Drag to rotate in 3D space, tap to open / close */
+    let down = null;
+    wrap.addEventListener("pointerdown", function (e) {
+      down = { x: e.clientX, y: e.clientY, moved: 0 };
+      try { wrap.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+
+    wrap.addEventListener("pointermove", function (e) {
+      if (!down) return;
+      const dx = e.clientX - down.x, dy = e.clientY - down.y;
+      down.x = e.clientX;
+      down.y = e.clientY;
+      down.moved += Math.abs(dx) + Math.abs(dy);
+      state.dragY += dx * 0.012;
+      state.dragX = Math.max(-0.6, Math.min(0.6, state.dragX + dy * 0.006));
+      if (reduce) draw(0);
+    });
+
+    function up() {
+      if (down && down.moved < 6) flip();
+      down = null;
+    }
+    wrap.addEventListener("pointerup", up);
+    wrap.addEventListener("pointercancel", function () { down = null; });
+
+    /* Auto-opens on scroll and turns with page */
+    if (!reduce && window.gsap) {
+      gsap.to(state, {
+        open: 1, duration: 1.6, ease: "power3.out",
+        scrollTrigger: window.ScrollTrigger ? { trigger: wrap, start: "top 75%", once: true } : undefined
+      });
+      if (window.ScrollTrigger) {
+        gsap.fromTo(state, { scrollY: -0.7 }, {
+          scrollY: 0.7, ease: "none",
+          scrollTrigger: { trigger: wrap, start: "top bottom", end: "bottom top", scrub: true }
+        });
+      }
+    } else {
+      state.open = 1;
+      draw(0);
+    }
+  }
+
+  /* ---------- INITIALIZATION COORDINATOR ---------- */
+  document.addEventListener("DOMContentLoaded", function () {
+    initGSAP();
+    init3DRazor();
+
+    initPreloader(() => {
+      // Preloader curtains opened:
+      if (introSeq) introSeq.play();
+      setTimeout(sweep, 450);
+      if (window.ScrollTrigger) ScrollTrigger.refresh();
+    });
+  });
+})();
+</script>
+
 </body>
 </html>
