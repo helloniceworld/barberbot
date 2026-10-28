@@ -129,7 +129,6 @@ async def book_appointment(data: BookingRequest):
 
     # 5. Mijozni ro'yxatga olish / yangilash
     client_id = None
-    client_loyalty_points = 0
     if data.telegram_id:
         client = await database.get_or_create_client(
             telegram_id=data.telegram_id,
@@ -138,17 +137,6 @@ async def book_appointment(data: BookingRequest):
             phone_number=data.client_phone
         )
         client_id = client['id']
-        client_loyalty_points = client.get('loyalty_points', 0) or 0
-
-    # 5.1 Ballar hisobidan chegirma hisoblash
-    points_to_use = 0
-    discount_amount = 0
-    if data.points_used > 0 and client_id:
-        # Mijozda bor balldan va jami to'lovdan ko'p bo'lmagan qismini ishlatish
-        points_to_use = min(data.points_used, client_loyalty_points, total_price)
-        discount_amount = points_to_use
-
-    payable_price = total_price - discount_amount
 
     # 6. Appointments jadvaliga yozish
     appointment = await database.create_appointment(
@@ -157,17 +145,17 @@ async def book_appointment(data: BookingRequest):
         service_id=data.service_ids[0] if data.service_ids else None,
         appointment_date=app_date,
         appointment_time=app_time,
-        total_price=payable_price,
+        total_price=total_price,
         client_name=data.client_name,
         client_phone=data.client_phone,
         client_username=data.client_username,
         service_ids=data.service_ids,
-        points_used=points_to_use,
-        discount_amount=discount_amount
+        points_used=0,
+        discount_amount=0
     )
 
     app_id = appointment['id']
-    logger.info(f"Yangi bron yaratildi: #{app_id} | Usta: {barber['name']} | Mijoz: {data.client_name} | Chegirma: {discount_amount} | To'lov: {payable_price}")
+    logger.info(f"Yangi bron yaratildi: #{app_id} | Usta: {barber['name']} | Mijoz: {data.client_name} | To'lov: {total_price}")
 
     # 7. Ustaga @culturestaffbot orqali xabar yuborish
     try:
@@ -189,10 +177,7 @@ async def book_appointment(data: BookingRequest):
         "category": barber['category'],
         "date": data.appointment_date,
         "time": data.appointment_time,
-        "total_price": payable_price,
-        "original_price": total_price,
-        "discount_amount": discount_amount,
-        "points_used": points_to_use
+        "total_price": total_price
     }
 
 

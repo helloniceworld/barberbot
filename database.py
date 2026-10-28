@@ -82,6 +82,8 @@ async def init_db(dsn: str):
         """)
         await conn.execute("ALTER TABLE services ADD COLUMN IF NOT EXISTS duration_min INT DEFAULT 45;")
         await conn.execute("ALTER TABLE services ADD COLUMN IF NOT EXISTS price_brand INT NOT NULL DEFAULT 250000;")
+        await conn.execute("ALTER TABLE services ADD COLUMN IF NOT EXISTS name_uz VARCHAR(255);")
+        await conn.execute("ALTER TABLE services ADD COLUMN IF NOT EXISTS name_ru VARCHAR(255);")
         await conn.execute("ALTER TABLE services ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;")
 
         # 4. appointments jadvali
@@ -160,17 +162,20 @@ async def init_db(dsn: str):
             WHERE status != 'cancelled';
         """)
 
-        # Boshlang'ich ustalar
+        # BRAND toifasini olib tashlash va VIP ga o'tkazish
+        await conn.execute("UPDATE barbers SET category = 'VIP' WHERE category = 'BRAND';")
+        await conn.execute("DELETE FROM barbers WHERE name LIKE '%Brand Master%';")
+
+        # Boshlang'ich ustalar (Faqat PRO, TOP, VIP)
         default_barbers = [
             ("Jasur", "PRO", 3, 4.8),
             ("Sardor", "PRO", 4, 4.9),
             ("Abduvali", "TOP", 5, 5.0),
             ("Aziz", "TOP", 6, 4.9),
             ("Niyozali", "VIP", 8, 5.0),
-            ("Bekzod", "VIP", 10, 4.9),
-            ("Jamshid (Brand Master)", "BRAND", 12, 5.0)
+            ("Bekzod", "VIP", 10, 4.9)
         ]
-        b_count = await conn.fetchval("SELECT COUNT(*) FROM barbers;")
+        b_count = await conn.fetchval("SELECT COUNT(*) FROM barbers WHERE is_active = TRUE;")
         if b_count == 0:
             for b_name, b_cat, b_exp, b_rat in default_barbers:
                 await conn.execute("""
@@ -178,38 +183,53 @@ async def init_db(dsn: str):
                     VALUES ($1, $2, $3, $4, TRUE);
                 """, b_name, b_cat, b_exp, b_rat)
 
-        # Boshlang'ich xizmatlar
-        default_services = [
-            ("Soch kesish (Classic Haircut)", "main", 45, 80000, 120000, 180000, 250000),
-            ("Soqol tekislash va shakl berish (Beard Trim)", "beard", 30, 50000, 75000, 110000, 150000),
-            ("Soch va Soqol kompleksi (Combo)", "complex", 60, 120000, 180000, 250000, 350000),
-            ("VIP Spa muolajasi va parvarish", "spa", 40, 70000, 100000, 150000, 200000),
-            ("Bolalar sochini kesish (Kids)", "kids", 35, 50000, 70000, 100000, 140000),
-            ("Soch yuvish va styling", "styling", 25, 40000, 60000, 80000, 120000)
-        ]
-        s_count = await conn.fetchval("SELECT COUNT(*) FROM services;")
-        if s_count == 0:
-            for s_name, s_type, s_dur, p_pro, p_top, p_vip, p_brand in default_services:
-                await conn.execute("""
-                    INSERT INTO services (name, type, duration_min, price_pro, price_top, price_vip, price_brand, is_active)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7, TRUE);
-                """, s_name, s_type, s_dur, p_pro, p_top, p_vip, p_brand)
+        # Rasmiy narxlar ro'yxati (Figma / Prays bo'yicha 18 ta xizmat)
+        official_services = [
+            # 1. Основные услуги (main)
+            (1, "Мужская стрижка", "Мужская стрижка", "Erkaklar sochini kesish", "main", 45, 75000, 95000, 125000),
+            (2, "Детская стрижка", "Детская стрижка", "Bolalar sochini kesish", "main", 35, 45000, 60000, 75000),
+            (3, "Моделирование бороды/бритьё", "Моделирование бороды/бритьё", "Soqol shakllantirish / tarash", "main", 30, 55000, 75000, 105000),
+            (4, "Окантовка", "Окантовка", "Okantovka (kontur tekislash)", "main", 20, 30000, 50000, 70000),
+            (5, "Стрижка машинкой", "Стрижка машинкой", "Mashinkada soch olish", "main", 25, 40000, 60000, 90000),
+            (6, "Укладка", "Укладка", "Soch turmaklash (Ukladka)", "main", 20, 30000, 40000, 50000),
 
-        # Boshlang'ich sovg'alar (Vosk, moy, bepul xizmatlar)
-        r_count = await conn.fetchval("SELECT COUNT(*) FROM loyalty_rewards;")
-        if r_count == 0:
-            default_rewards = [
-                ("Premium Soch Voski (Hairstyle Matte Wax)", "Kuchli fiksatsiya va tabiiy mat effekt beruvchi original vosk", 25000, "product", "💈"),
-                ("Hashamatli Soqol Moyi (Luxury Beard Oil)", "Soqolni yumshatuvchi va o'stiruvchi vitaminli tabiiy moy", 20000, "product", "🧴"),
-                ("VIP Yuz Spa & Qora Maska muolajasi", "Yuz terisini chuqur tozalovchi qora maska va yuz massaji", 18000, "service", "🧖‍♂️"),
-                ("Qosh va Quloq detallash (Waxing)", "Issiq mum bilan ortiqcha tuklarni tozalash va qosh shakllantirish", 12000, "service", "✂️"),
-                ("Culture Brand Metall Taroq", "Maxsus g'ilofli, zanglamas po'latdan Culture VIP brend taroq", 10000, "accessory", "👑")
-            ]
-            for r_name, r_desc, r_cost, r_cat, r_icon in default_rewards:
-                await conn.execute("""
-                    INSERT INTO loyalty_rewards (name, description, points_cost, category, icon, is_active)
-                    VALUES ($1, $2, $3, $4, $5, TRUE);
-                """, r_name, r_desc, r_cost, r_cat, r_icon)
+            # 2. Дополнительные услуги (extra)
+            (7, "Камуфляж седины", "Камуфляж седины", "Oq sochlarni kamuflyaj qilish", "extra", 25, 40000, 60000, 80000),
+            (8, "Коррекция воском", "Коррекция воском", "Vosk bilan tozalash (korreksiya)", "extra", 15, 20000, 30000, 40000),
+            (9, "Премиум моделирование бороды", "Премиум моделирование бороды", "Premium soqol shakllantirish", "extra", 40, 85000, 105000, 135000),
+            (10, "Премиум стрижка", "Премиум стрижка", "Premium soch kesish", "extra", 50, 95000, 125000, 155000),
+            (11, "Премиум уход за кожей головы", "Премиум уход за кожей головы", "Bosh terisi uchun premium parvarish", "extra", 25, 35000, 45000, 55000),
+            (12, "Премиум уход за лицом", "Премиум уход за лицом", "Yuz uchun premium parvarish", "extra", 30, 40000, 50000, 60000),
+            (13, "SPA уход за кожей головы", "SPA уход за кожей головы", "Bosh terisi SPA parvarishi", "extra", 20, 25000, 35000, 45000),
+            (14, "Чёрная маска", "Чёрная маска", "Qora niqob (Black mask)", "extra", 20, 30000, 40000, 50000),
+
+            # 3. Комплексные услуги (complex)
+            (15, "Мужская стрижка + моделирование бороды/бритьё", "Мужская стрижка + моделирование бороды/бритьё", "Erkaklar sochi + soqol shakllantirish", "complex", 65, 110000, 140000, 190000),
+            (16, "Мужская стрижка + SPA уход за кожей головы", "Мужская стрижка + SPA уход за кожей головы", "Erkaklar sochi + Bosh terisi SPA", "complex", 55, 85000, 115000, 145000),
+            (17, "Мужская стрижка + чёрная маска", "Мужская стрижка + чёрная маска", "Erkaklar sochi + Qora niqob", "complex", 55, 90000, 120000, 150000),
+            (18, "Папа + сын (до 10 лет)", "Папа + сын (до 10 лет)", "Ota + o'g'il (10 yoshgacha)", "complex", 75, 115000, 145000, 185000)
+        ]
+
+        # Barcha 18 ta rasmiy xizmatni bazada sinxronizatsiya qilish (Upsert)
+        for s_id, s_name, s_ru, s_uz, s_type, s_dur, p_pro, p_top, p_vip in official_services:
+            await conn.execute("""
+                INSERT INTO services (id, name, name_ru, name_uz, type, duration_min, price_pro, price_top, price_vip, is_active)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, TRUE)
+                ON CONFLICT (id) DO UPDATE SET
+                    name = EXCLUDED.name,
+                    name_ru = EXCLUDED.name_ru,
+                    name_uz = EXCLUDED.name_uz,
+                    type = EXCLUDED.type,
+                    duration_min = EXCLUDED.duration_min,
+                    price_pro = EXCLUDED.price_pro,
+                    price_top = EXCLUDED.price_top,
+                    price_vip = EXCLUDED.price_vip,
+                    is_active = TRUE;
+            """, s_id, s_name, s_ru, s_uz, s_type, s_dur, p_pro, p_top, p_vip)
+
+        # 18 tadan ortiq eski xizmatlar bo'lsa, ularni nofaol qilish
+        await conn.execute("UPDATE services SET is_active = FALSE WHERE id > 18;")
+        await conn.execute("SELECT setval(pg_get_serial_sequence('services', 'id'), COALESCE((SELECT MAX(id) FROM services), 1));")
 
     logger.info("Ma'lumotlar bazasi jadvallari va Sodiqlik dasturi tayyor.")
 
@@ -589,15 +609,6 @@ async def create_appointment(
         """, client_id, barber_id, service_id, service_ids, total_price,
            appointment_date, appointment_time, client_name, client_phone, client_username,
            points_used, discount_amount)
-        
-        # Agar ball ishlatilgan bo'lsa, mijozdan ayirish
-        if points_used > 0 and client_id:
-            await deduct_loyalty_points(
-                client_id=client_id,
-                points=points_used,
-                tx_type="discount_used",
-                description=f"#{row['id']} bron uchun {points_used:,} ball chegirmaga ishlatildi"
-            )
 
         return dict(row)
 
@@ -670,24 +681,6 @@ async def update_appointment_status(appointment_id: int, new_status: str, reason
             SET status = $1, cancellation_reason = COALESCE($2, cancellation_reason)
             WHERE id = $3;
         """, new_status, reason, appointment_id)
-
-        # Xizmat ko'rsatib tugatilganda (completed) mijozga keshbek berish
-        if new_status == 'completed' and old_app['status'] != 'completed' and old_app['client_id']:
-            total = old_app['total_price'] or 0
-            if total > 0:
-                # 5% keshbek
-                cashback = int(total * 0.05)
-                if cashback > 0:
-                    await add_loyalty_points(
-                        client_id=old_app['client_id'],
-                        points=cashback,
-                        tx_type="cashback",
-                        description=f"#{appointment_id} tashrif uchun 5% keshbek"
-                    )
-                    # total_spent yangilash
-                    await conn.execute("""
-                        UPDATE clients SET total_spent = COALESCE(total_spent, 0) + $1 WHERE id = $2;
-                    """, total, old_app['client_id'])
 
         return "UPDATE 1" in res
 

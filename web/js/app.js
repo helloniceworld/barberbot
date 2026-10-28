@@ -1,25 +1,194 @@
 /**
  * Culture Barbershop - Telegram Web App Interactive Booking Logic
+ * Multilingual (UZ / RU), Dynamic 18 Services, 3 Tiers (PRO, TOP, VIP)
  */
 
 const tg = window.Telegram?.WebApp;
 
+const I18N = {
+  uz: {
+    step1_eyebrow: "1-BOSQICH (4 TADAN)",
+    step1_title: "Sartarosh toifasini tanlang",
+    step1_desc: "O'zingizga mos bo'lgan mahorat darajasini tanlang",
+    tier_pro_sub: "Standart sifat",
+    tier_pro_desc: "Kundalik uslub va klassik soch turmaklari",
+    tier_pro_price: "75 000 UZS dan",
+    badge_popular: "OMMABOP",
+    tier_top_sub: "Tajribali usta",
+    tier_top_desc: "Yuqori aniqlik va individual uslub",
+    tier_top_price: "95 000 UZS dan",
+    badge_signature: "PREMIUM",
+    tier_vip_sub: "Eksklyuziv parvarish",
+    tier_vip_desc: "Mualliflik soch kesimi, soqol parvarishi va spa",
+    tier_vip_price: "125 000 UZS dan",
+    step2_eyebrow: "2-BOSQICH (4 TADAN)",
+    step2_title: "Sartaroshni tanlang",
+    step2_desc: "O'z mahoratiga ega ustalardan birini tanlang",
+    btn_back: "Orqaga",
+    step3_eyebrow: "3-BOSQICH (4 TADAN)",
+    step3_title: "Xizmatlarni tanlang",
+    step3_desc: "Bir yoki bir nechta xizmat turini tanlang",
+    filter_all: "Barchasi",
+    filter_main: "Asosiy",
+    filter_extra: "Qo'shimcha",
+    filter_complex: "Kompleks",
+    group_main: "Asosiy xizmatlar",
+    group_extra: "Qo'shimcha xizmatlar",
+    group_complex: "Kompleks xizmatlar",
+    mins: "daqiqa",
+    btn_continue: "Davom etish",
+    step4_eyebrow: "4-BOSQICH (4 TADAN)",
+    step4_title: "Sana va Vaqtni tanlang",
+    step4_desc: "O'zingizga qulay bo'sh vaqt oralig'ini tanlang",
+    pill_datetime: "Sana va Vaqt",
+    available_slots: "Mavjud vaqtlar",
+    time_not_selected: "Vaqt tanlanmagan",
+    btn_to_confirm: "Tasdiqlashga o'tish",
+    pill_review: "Ko'rib chiqish",
+    step5_title: "Buyurtma ma'lumotlari",
+    step5_desc: "Buyurtma ma'lumotlarini tekshiring va tasdiqlang",
+    label_barber: "Sartarosh:",
+    label_category: "Toifasi:",
+    label_datetime: "Sana va Vaqt:",
+    label_services: "Tanlangan xizmatlar:",
+    label_total: "Jami to'lov:",
+    contact_info_title: "Bog'lanish ma'lumotlari",
+    input_name_label: "Ism va Familiya",
+    input_name_placeholder: "Masalan: Alisher Karimov",
+    input_phone_label: "Telefon raqam",
+    input_phone_placeholder: "+998 90 123 45 67",
+    btn_submit_booking: "TASDIQLASH VA BRON QILISH",
+    submitting: "Saqlanmoqda...",
+    success_title: "Muvaffaqiyatli bron qilindi!",
+    success_desc: "Sizning buyurtmangiz qabul qilindi. Sartarosh so'rovni qabul qilishi bilanoq <b>@culturebarbersbot</b> orqali xabarnoma olasiz.",
+    receipt_id: "Buyurtma ID:",
+    receipt_barber: "Sartarosh:",
+    receipt_datetime: "Sana va Vaqt:",
+    receipt_total: "Jami to'lov:",
+    btn_my_bookings: "Mening bronlarim",
+    btn_close: "Yopish",
+    my_bookings_title: "Mening bronlarim",
+    no_bookings: "Sizda hali hech qanday bron mavjud emas.",
+    status_pending: "Kutilmoqda ⏳",
+    status_confirmed: "Tasdiqlangan ✅",
+    status_completed: "Bajarilgan 💈",
+    status_cancelled: "Bekor qilingan ❌",
+    cancel_btn: "Bekor qilish",
+    cancel_confirm: "buyurtmasini bekor qilishni tasdiqlaysizmi?",
+    booking_cancelled: "Bron bekor qilindi",
+    err_select_service: "Kamida bitta xizmatni tanlang",
+    err_name_req: "Iltimos, ismingizni kiriting",
+    err_phone_req: "Iltimos, to'g'ri telefon raqam kiriting",
+    loading: "Yuklanmoqda...",
+    slots_loading: "Vaqtlar yuklanmoqda...",
+    select_btn: "Tanlash",
+    selected_btn: "Tanlandi",
+    years_exp: "yil tajriba",
+    services_selected: "{n} xizmat tanlandi",
+    today: "Bugun",
+    tomorrow: "Erta",
+    days_short: ['Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan'],
+    months_short: ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyun', 'Iyul', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek']
+  },
+  ru: {
+    step1_eyebrow: "ШАГ 1 ИЗ 4",
+    step1_title: "Выберите категорию мастера",
+    step1_desc: "Выберите подходящий для вас уровень мастерства",
+    tier_pro_sub: "Стандартное качество",
+    tier_pro_desc: "Повседневный стиль и классические стрижки",
+    tier_pro_price: "от 75 000 сум",
+    badge_popular: "ХИТ",
+    tier_top_sub: "Мастерский опыт",
+    tier_top_desc: "Высокая точность и индивидуальный стиль",
+    tier_top_price: "от 95 000 сум",
+    badge_signature: "ПРЕМИУМ",
+    tier_vip_sub: "Премиум уход",
+    tier_vip_desc: "Авторская стрижка, премиум борода и спа",
+    tier_vip_price: "от 125 000 сум",
+    step2_eyebrow: "ШАГ 2 ИЗ 4",
+    step2_title: "Выберите мастера",
+    step2_desc: "Выберите одного из наших профессиональных барберов",
+    btn_back: "Назад",
+    step3_eyebrow: "ШАГ 3 ИЗ 4",
+    step3_title: "Выберите услуги",
+    step3_desc: "Выберите одну или несколько необходимых услуг",
+    filter_all: "Все услуги",
+    filter_main: "Основные",
+    filter_extra: "Дополнительные",
+    filter_complex: "Комплексы",
+    group_main: "Основные услуги",
+    group_extra: "Дополнительные услуги",
+    group_complex: "Комплексные услуги",
+    mins: "мин",
+    btn_continue: "Продолжить",
+    step4_eyebrow: "ШАГ 4 ИЗ 4",
+    step4_title: "Выберите дату и время",
+    step4_desc: "Выберите удобный для вас свободный интервал времени",
+    pill_datetime: "Дата и время",
+    available_slots: "Доступное время",
+    time_not_selected: "Время не выбрано",
+    btn_to_confirm: "Перейти к подтверждению",
+    pill_review: "Проверка",
+    step5_title: "Детали записи",
+    step5_desc: "Проверьте данные бронирования и подтвердите запись",
+    label_barber: "Барбер:",
+    label_category: "Категория:",
+    label_datetime: "Дата и время:",
+    label_services: "Выбранные услуги:",
+    label_total: "Итого к оплате:",
+    contact_info_title: "Контактная информация",
+    input_name_label: "Имя и Фамилия",
+    input_name_placeholder: "Например: Алишер Каримов",
+    input_phone_label: "Номер телефона",
+    input_phone_placeholder: "+998 90 123 45 67",
+    btn_submit_booking: "ПОДТВЕРДИТЬ И ЗАБРОНИРОВАТЬ",
+    submitting: "Бронирование...",
+    success_title: "Запись успешно оформлена!",
+    success_desc: "Ваша заявка принята. Как только мастер подтвердит бронь, вы получите уведомление в боте <b>@culturebarbersbot</b>.",
+    receipt_id: "ID брони:",
+    receipt_barber: "Барбер:",
+    receipt_datetime: "Дата и время:",
+    receipt_total: "Итого к оплате:",
+    btn_my_bookings: "Мои записи",
+    btn_close: "Закрыть",
+    my_bookings_title: "Мои записи",
+    no_bookings: "У вас пока нет активных записей.",
+    status_pending: "В ожидании ⏳",
+    status_confirmed: "Подтверждено ✅",
+    status_completed: "Выполнено 💈",
+    status_cancelled: "Отменено ❌",
+    cancel_btn: "Отменить",
+    cancel_confirm: "Вы действительно хотите отменить запись?",
+    booking_cancelled: "Запись успешно отменена",
+    err_select_service: "Выберите хотя бы одну услугу",
+    err_name_req: "Пожалуйста, введите ваше имя",
+    err_phone_req: "Пожалуйста, введите корректный номер телефона",
+    loading: "Загрузка...",
+    slots_loading: "Загрузка времени...",
+    select_btn: "Выбрать",
+    selected_btn: "Выбрано",
+    years_exp: "г. опыта",
+    services_selected: "Выбрано услуг: {n}",
+    today: "Сегодня",
+    tomorrow: "Завтра",
+    days_short: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+    months_short: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
+  }
+};
+
 const app = {
   // State
   state: {
+    lang: localStorage.getItem('culture_lang') || 'uz',
     selectedCategory: 'TOP',
     selectedBarber: null,
     selectedServices: [],
     selectedDate: null,
     selectedTime: null,
+    selectedServiceFilter: 'all',
     allBarbers: [],
     allServices: [],
-    myBookings: [],
-    loyaltyProfile: null,
-    loyaltyRewards: [],
-    usePointsDiscount: false,
-    discountAmount: 0,
-    pointsUsed: 0
+    myBookings: []
   },
 
   // Telegram User Data
@@ -27,6 +196,17 @@ const app = {
     id: null,
     name: '',
     username: ''
+  },
+
+  t(key, params = {}) {
+    const dict = I18N[this.state.lang] || I18N.uz;
+    let val = dict[key] || I18N.uz[key] || key;
+    if (typeof val === 'string') {
+      for (const [k, v] of Object.entries(params)) {
+        val = val.replace(`{${k}}`, v);
+      }
+    }
+    return val;
   },
 
   init() {
@@ -39,12 +219,16 @@ const app = {
           tg.enableClosingConfirmation();
         }
 
-        // Get user from Telegram
         const tgUser = tg.initDataUnsafe?.user;
         if (tgUser) {
           this.user.id = tgUser.id;
           this.user.name = [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ');
           this.user.username = tgUser.username || '';
+
+          // If user's Telegram language code is Russian and no saved preference, default to RU
+          if (!localStorage.getItem('culture_lang') && tgUser.language_code?.startsWith('ru')) {
+            this.state.lang = 'ru';
+          }
         }
       } catch (e) {
         console.warn('Telegram WebApp SDK init warning:', e);
@@ -57,21 +241,25 @@ const app = {
       nameInput.value = this.user.name;
     }
 
-    // 2. Setup event listeners
+    // 2. Setup language buttons
+    this.setupLanguageSwitcher();
+
+    // 3. Setup event listeners
     this.setupEventListeners();
 
-    // 3. Setup dates in carousel
+    // 4. Setup dates in carousel
     this.initDateCarousel();
 
-    // 4. Fetch initial data from server
+    // 5. Fetch initial data from server
     this.fetchData();
 
-    // 5. Fetch Loyalty & Bookings
-    this.fetchLoyaltyRewards();
+    // 6. Check user bookings
     if (this.user.id) {
-      this.fetchLoyaltyProfile();
       this.fetchMyBookings();
     }
+
+    // Apply translations
+    this.applyTranslations();
   },
 
   // Haptic Feedback Helper
@@ -84,6 +272,62 @@ const app = {
         else if (type === 'error') tg.HapticFeedback.notificationOccurred('error');
       } catch (e) {}
     }
+  },
+
+  setupLanguageSwitcher() {
+    const uzBtn = document.getElementById('langBtnUz');
+    const ruBtn = document.getElementById('langBtnRu');
+
+    uzBtn?.addEventListener('click', () => this.setLanguage('uz'));
+    ruBtn?.addEventListener('click', () => this.setLanguage('ru'));
+
+    this.updateLanguageButtons();
+  },
+
+  setLanguage(lang) {
+    if (this.state.lang === lang) return;
+    this.haptic('light');
+    this.state.lang = lang;
+    localStorage.setItem('culture_lang', lang);
+    this.updateLanguageButtons();
+    this.applyTranslations();
+    this.initDateCarousel();
+
+    // Re-render current step if needed
+    if (this.state.selectedBarber) {
+      this.renderServices(this.state.selectedBarber.category);
+    }
+    if (this.state.selectedCategory) {
+      this.renderBarbers(this.state.selectedCategory);
+    }
+    this.renderSummary();
+  },
+
+  updateLanguageButtons() {
+    const uzBtn = document.getElementById('langBtnUz');
+    const ruBtn = document.getElementById('langBtnRu');
+    if (uzBtn && ruBtn) {
+      uzBtn.classList.toggle('active', this.state.lang === 'uz');
+      ruBtn.classList.toggle('active', this.state.lang === 'ru');
+    }
+  },
+
+  applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (key) {
+        el.innerHTML = this.t(key);
+      }
+    });
+
+    // Update input placeholders
+    const nameInput = document.getElementById('clientNameInput');
+    const phoneInput = document.getElementById('clientPhoneInput');
+    if (nameInput) nameInput.placeholder = this.t('input_name_placeholder');
+    if (phoneInput) phoneInput.placeholder = this.t('input_phone_placeholder');
+
+    this.updateServicesSummary();
+    this.updateDateTimeSummary();
   },
 
   setupEventListeners() {
@@ -115,6 +359,19 @@ const app = {
       this.submitBooking();
     });
 
+    // Service category filter tabs
+    document.querySelectorAll('.filter-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.haptic('light');
+        document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.state.selectedServiceFilter = btn.getAttribute('data-filter') || 'all';
+        if (this.state.selectedBarber) {
+          this.renderServices(this.state.selectedBarber.category);
+        }
+      });
+    });
+
     // Header Profile button -> Bookings Drawer
     document.getElementById('openBookingsBtn')?.addEventListener('click', () => {
       this.haptic('light');
@@ -129,37 +386,6 @@ const app = {
       if (e.target.id === 'bookingsDrawer') {
         this.closeBookingsDrawer();
       }
-    });
-
-    // Header Loyalty button -> Loyalty Drawer
-    document.getElementById('openLoyaltyBtn')?.addEventListener('click', () => {
-      this.haptic('light');
-      this.openLoyaltyDrawer();
-    });
-
-    document.getElementById('closeLoyaltyBtn')?.addEventListener('click', () => {
-      this.closeLoyaltyDrawer();
-    });
-
-    document.getElementById('loyaltyDrawer')?.addEventListener('click', (e) => {
-      if (e.target.id === 'loyaltyDrawer') {
-        this.closeLoyaltyDrawer();
-      }
-    });
-
-    // Loyalty Tabs switching
-    const loyaltyTabs = document.querySelectorAll('.loyalty-tab');
-    loyaltyTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const tabKey = tab.getAttribute('data-tab');
-        this.switchLoyaltyTab(tabKey);
-      });
-    });
-
-    // Points discount toggle on Step 5
-    const pointsToggle = document.getElementById('usePointsToggle');
-    pointsToggle?.addEventListener('change', (e) => {
-      this.onTogglePointsDiscount(e.target.checked);
     });
 
     // Success Screen buttons
@@ -204,18 +430,13 @@ const app = {
   },
 
   goToStep(stepId) {
-    this.haptic('light');
-    document.querySelectorAll('.view-step').forEach(step => {
-      step.classList.remove('active');
-    });
-
+    document.querySelectorAll('.view-step').forEach(el => el.classList.remove('active'));
     const target = document.getElementById(stepId);
     if (target) {
       target.classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Manage Telegram BackButton visibility
     if (tg?.BackButton) {
       if (stepId === 'stepCategories') {
         tg.BackButton.hide();
@@ -223,16 +444,6 @@ const app = {
         tg.BackButton.show();
       }
     }
-  },
-
-  showToast(msg) {
-    const toast = document.getElementById('toastMessage');
-    if (!toast) return;
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => {
-      toast.classList.remove('show');
-    }, 2800);
   },
 
   // ================= DATA FETCHING =================
@@ -246,11 +457,13 @@ const app = {
       if (barbersRes.ok) {
         this.state.allBarbers = await barbersRes.json();
       }
+
       if (servicesRes.ok) {
         this.state.allServices = await servicesRes.json();
       }
     } catch (e) {
       console.error('Data fetch error:', e);
+      this.showToast(this.t('loading'));
     }
   },
 
@@ -258,44 +471,42 @@ const app = {
   selectCategory(category) {
     this.haptic('medium');
     this.state.selectedCategory = category;
-    
-    // Update step 2 pill text
+
     const pill = document.getElementById('selectedTierPill');
     if (pill) {
       pill.textContent = `${category} BARBER`;
     }
 
-    // Filter and render barbers in step 2
     this.renderBarbers(category);
     this.goToStep('stepBarbers');
   },
 
-  // ================= STEP 2: BARBERS =================
+  // ================= STEP 2: BARBERS LIST =================
   renderBarbers(category) {
     const container = document.getElementById('barbersListContainer');
     if (!container) return;
 
+    container.innerHTML = '';
     const filtered = this.state.allBarbers.filter(b => b.category === category);
+
     if (filtered.length === 0) {
       container.innerHTML = `
-        <div class="drawer-empty">
-          Ushbu toifada hozircha ustalar mavjud emas.<br>
-          Iltimos, boshqa toifani tanlang.
+        <div style="grid-column: span 2; text-align: center; color: var(--text-muted); padding: 40px 10px;">
+          ${this.state.lang === 'ru' ? 'В данной категории мастеров пока нет.' : 'Ushbu toifada hozircha ustalar mavjud emas.'}
         </div>
       `;
       return;
     }
 
-    container.innerHTML = '';
     filtered.forEach(barber => {
       const isSelected = this.state.selectedBarber?.id === barber.id;
-      const initial = barber.name.charAt(0).toUpperCase();
-
       const card = document.createElement('div');
       card.className = `barber-card ${isSelected ? 'selected' : ''}`;
       card.innerHTML = `
         <div class="barber-avatar-wrap">
-          <span>${initial}</span>
+          <div class="barber-avatar-placeholder">
+            <span>${barber.name.charAt(0)}</span>
+          </div>
         </div>
         <div class="barber-details">
           <div class="barber-name-row">
@@ -305,10 +516,10 @@ const app = {
           <div class="barber-meta">
             <span class="barber-rating">⭐ ${barber.rating || '5.0'}</span>
             <span>•</span>
-            <span>${barber.experience_years || 3} yil tajriba</span>
+            <span>${barber.experience_years || 3} ${this.t('years_exp')}</span>
           </div>
         </div>
-        <button class="barber-select-btn">${isSelected ? 'Tanlandi' : 'Tanlash'}</button>
+        <button class="barber-select-btn">${isSelected ? this.t('selected_btn') : this.t('select_btn')}</button>
       `;
 
       card.addEventListener('click', () => {
@@ -323,13 +534,11 @@ const app = {
     this.haptic('medium');
     this.state.selectedBarber = barber;
 
-    // Update pill in step 3
     const pill = document.getElementById('selectedBarberPill');
     if (pill) {
       pill.textContent = barber.name;
     }
 
-    // Render services with this barber's tier pricing
     this.renderServices(barber.category);
     this.goToStep('stepServices');
   },
@@ -341,11 +550,42 @@ const app = {
 
     container.innerHTML = '';
     const catCol = `price_${category.toLowerCase()}`;
+    const filter = this.state.selectedServiceFilter;
 
-    this.state.allServices.forEach(srv => {
-      const price = srv[catCol] || srv.price_pro || 80000;
+    // Filter services
+    let services = this.state.allServices;
+    if (filter !== 'all') {
+      services = services.filter(s => s.type === filter);
+    }
+
+    if (services.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; color: var(--text-muted); padding: 40px 10px;">
+          ${this.state.lang === 'ru' ? 'Услуги не найдены' : 'Xizmatlar topilmadi'}
+        </div>
+      `;
+      return;
+    }
+
+    // Grouping headers if 'all' filter is active
+    let currentGroup = null;
+
+    services.forEach(srv => {
+      if (filter === 'all' && srv.type !== currentGroup) {
+        currentGroup = srv.type;
+        const groupTitle = document.createElement('div');
+        groupTitle.className = 'services-group-title';
+        const groupKey = `group_${currentGroup}`;
+        groupTitle.textContent = this.t(groupKey);
+        container.appendChild(groupTitle);
+      }
+
+      const price = srv[catCol] || srv.price_pro || 75000;
       const isChecked = this.state.selectedServices.some(s => s.id === srv.id);
       const priceFormatted = `${price.toLocaleString('ru-RU')} UZS`;
+
+      // Localized service name
+      const serviceName = (this.state.lang === 'ru' ? (srv.name_ru || srv.name) : (srv.name_uz || srv.name)) || srv.name;
 
       const card = document.createElement('div');
       card.className = `service-card ${isChecked ? 'selected' : ''}`;
@@ -357,8 +597,8 @@ const app = {
             </svg>
           </div>
           <div class="service-info">
-            <span class="service-name">${srv.name}</span>
-            <span class="service-duration">⏱ ${srv.duration_min || 45} daqiqa</span>
+            <span class="service-name">${serviceName}</span>
+            <span class="service-duration">⏱ ${srv.duration_min || 45} ${this.t('mins')}</span>
           </div>
         </div>
         <div class="service-price">${priceFormatted}</div>
@@ -397,7 +637,7 @@ const app = {
     const totalEl = document.getElementById('servicesSelectedTotal');
     const btn = document.getElementById('toDateTimeBtn');
 
-    if (countEl) countEl.textContent = `${count} xizmat tanlandi`;
+    if (countEl) countEl.textContent = this.t('services_selected', { n: count });
     if (totalEl) totalEl.textContent = `${total.toLocaleString('ru-RU')} UZS`;
 
     if (btn) {
@@ -411,8 +651,9 @@ const app = {
     if (!carousel) return;
 
     carousel.innerHTML = '';
-    const daysUz = ['Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan'];
-    const monthsUz = ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyun', 'Iyul', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek'];
+    const dict = I18N[this.state.lang] || I18N.uz;
+    const daysArr = dict.days_short;
+    const monthsArr = dict.months_short;
 
     const today = new Date();
 
@@ -425,17 +666,19 @@ const app = {
       const dd = String(d.getDate()).padStart(2, '0');
       const dateString = `${yyyy}-${mm}-${dd}`;
 
-      let dayLabel = daysUz[d.getDay()];
-      if (i === 0) dayLabel = 'Bugun';
-      else if (i === 1) dayLabel = 'Erta';
+      let dayLabel = daysArr[d.getDay()];
+      if (i === 0) dayLabel = dict.today;
+      else if (i === 1) dayLabel = dict.tomorrow;
+
+      const isCurrentActive = this.state.selectedDate === dateString || (!this.state.selectedDate && i === 0);
 
       const pill = document.createElement('div');
-      pill.className = `date-pill ${i === 0 ? 'active' : ''}`;
+      pill.className = `date-pill ${isCurrentActive ? 'active' : ''}`;
       pill.setAttribute('data-date', dateString);
       pill.innerHTML = `
         <span class="date-day-name">${dayLabel}</span>
         <span class="date-number">${d.getDate()}</span>
-        <span class="date-month-name">${monthsUz[d.getMonth()]}</span>
+        <span class="date-month-name">${monthsArr[d.getMonth()]}</span>
       `;
 
       pill.addEventListener('click', () => {
@@ -448,7 +691,7 @@ const app = {
       });
 
       carousel.appendChild(pill);
-      if (i === 0) {
+      if (i === 0 && !this.state.selectedDate) {
         this.state.selectedDate = dateString;
       }
     }
@@ -458,11 +701,11 @@ const app = {
     const grid = document.getElementById('slotsGrid');
     if (!grid || !this.state.selectedBarber || !this.state.selectedDate) return;
 
-    grid.innerHTML = '<div style="grid-column: span 3; text-align: center; color: #888;">Vaqtlar yuklanmoqda...</div>';
+    grid.innerHTML = `<div style="grid-column: span 3; text-align: center; color: var(--text-muted);">${this.t('slots_loading')}</div>`;
 
     try {
       const res = await fetch(`/api/slots?barber_id=${this.state.selectedBarber.id}&date=${this.state.selectedDate}`);
-      if (!res.ok) throw new Error('Slotlarni yuklashda xatolik');
+      if (!res.ok) throw new Error('Slot error');
       const data = await res.json();
 
       grid.innerHTML = '';
@@ -493,7 +736,7 @@ const app = {
       this.updateDateTimeSummary();
     } catch (e) {
       console.error(e);
-      grid.innerHTML = '<div style="grid-column: span 3; color: red;">Xatolik yuz berdi.</div>';
+      grid.innerHTML = `<div style="grid-column: span 3; color: red;">${this.t('loading')}</div>`;
     }
   },
 
@@ -509,56 +752,34 @@ const app = {
       if (infoEl) infoEl.textContent = `${this.state.selectedDate} • ${this.state.selectedTime}`;
       if (btn) btn.disabled = false;
     } else {
-      if (infoEl) infoEl.textContent = 'Vaqt tanlanmagan';
+      if (infoEl) infoEl.textContent = this.t('time_not_selected');
       if (btn) btn.disabled = true;
     }
   },
 
   // ================= STEP 5: SUMMARY & SUBMISSION =================
-  onTogglePointsDiscount(isChecked) {
-    this.haptic('light');
-    this.state.usePointsDiscount = isChecked;
-    this.renderSummary();
-  },
-
   renderSummary() {
     const barber = this.state.selectedBarber;
-    const totalServicesPrice = this.state.selectedServices.reduce((sum, s) => sum + s.currentPrice, 0);
+    const total = this.state.selectedServices.reduce((sum, s) => sum + s.currentPrice, 0);
 
-    let finalPrice = totalServicesPrice;
-    let discount = 0;
+    const nameEl = document.getElementById('sumBarberName');
+    const catEl = document.getElementById('sumBarberCategory');
+    const dtEl = document.getElementById('sumDateTime');
+    const priceEl = document.getElementById('sumTotalPrice');
 
-    const availablePoints = this.state.loyaltyProfile?.points || 0;
-
-    if (this.state.usePointsDiscount && availablePoints > 0) {
-      discount = Math.min(availablePoints, totalServicesPrice);
-      finalPrice = totalServicesPrice - discount;
-      this.state.pointsUsed = discount;
-      this.state.discountAmount = discount;
-
-      const discountRow = document.getElementById('sumDiscountRow');
-      const discountVal = document.getElementById('sumDiscountVal');
-      if (discountRow) discountRow.style.display = 'flex';
-      if (discountVal) discountVal.textContent = `-${discount.toLocaleString('ru-RU')} UZS`;
-    } else {
-      this.state.pointsUsed = 0;
-      this.state.discountAmount = 0;
-      const discountRow = document.getElementById('sumDiscountRow');
-      if (discountRow) discountRow.style.display = 'none';
-    }
-
-    document.getElementById('sumBarberName').textContent = barber?.name || '—';
-    document.getElementById('sumBarberCategory').textContent = barber ? `${barber.category} Barber` : '—';
-    document.getElementById('sumDateTime').textContent = `${this.state.selectedDate} | ${this.state.selectedTime}`;
-    document.getElementById('sumTotalPrice').textContent = `${finalPrice.toLocaleString('ru-RU')} UZS`;
+    if (nameEl) nameEl.textContent = barber?.name || '—';
+    if (catEl) catEl.textContent = barber ? `${barber.category} Barber` : '—';
+    if (dtEl) dtEl.textContent = `${this.state.selectedDate} | ${this.state.selectedTime}`;
+    if (priceEl) priceEl.textContent = `${total.toLocaleString('ru-RU')} UZS`;
 
     const servicesContainer = document.getElementById('sumServicesList');
     if (servicesContainer) {
       servicesContainer.innerHTML = '';
       this.state.selectedServices.forEach(s => {
+        const serviceName = (this.state.lang === 'ru' ? (s.name_ru || s.name) : (s.name_uz || s.name)) || s.name;
         const item = document.createElement('span');
         item.className = 'summary-service-tag';
-        item.textContent = `• ${s.name} (${s.currentPrice.toLocaleString('ru-RU')} UZS)`;
+        item.textContent = `• ${serviceName} (${s.currentPrice.toLocaleString('ru-RU')} UZS)`;
         servicesContainer.appendChild(item);
       });
     }
@@ -572,14 +793,19 @@ const app = {
     const clientPhone = phoneInput?.value.trim();
 
     if (!clientName) {
-      this.showToast('Iltimos, ismingizni kiriting');
+      this.showToast(this.t('err_name_req'));
       nameInput?.focus();
       return;
     }
 
     if (!clientPhone || clientPhone.length < 7) {
-      this.showToast('Iltimos, to\'g\'ri telefon raqam kiriting');
+      this.showToast(this.t('err_phone_req'));
       phoneInput?.focus();
+      return;
+    }
+
+    if (this.state.selectedServices.length === 0) {
+      this.showToast(this.t('err_select_service'));
       return;
     }
 
@@ -591,14 +817,13 @@ const app = {
       barber_id: this.state.selectedBarber.id,
       service_ids: this.state.selectedServices.map(s => s.id),
       appointment_date: this.state.selectedDate,
-      appointment_time: this.state.selectedTime,
-      points_used: this.state.usePointsDiscount ? this.state.pointsUsed : 0
+      appointment_time: this.state.selectedTime
     };
 
     const confirmBtn = document.getElementById('confirmBookingBtn');
     if (confirmBtn) {
       confirmBtn.disabled = true;
-      confirmBtn.innerHTML = '<span>Saqlanmoqda...</span>';
+      confirmBtn.innerHTML = `<span>${this.t('submitting')}</span>`;
     }
 
     try {
@@ -610,7 +835,7 @@ const app = {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.detail || 'Bron qilishda xatolik');
+        throw new Error(data.detail || 'Booking error');
       }
 
       this.haptic('success');
@@ -620,24 +845,19 @@ const app = {
       if (receipt) {
         receipt.innerHTML = `
           <div class="receipt-row">
-            <span class="receipt-label">Buyurtma ID:</span>
+            <span class="receipt-label">${this.t('receipt_id')}</span>
             <span class="receipt-val">#BRON-${data.appointment_id}</span>
           </div>
           <div class="receipt-row">
-            <span class="receipt-label">Sartarosh:</span>
+            <span class="receipt-label">${this.t('receipt_barber')}</span>
             <span class="receipt-val">${data.barber} (${data.category})</span>
           </div>
           <div class="receipt-row">
-            <span class="receipt-label">Sana va Vaqt:</span>
+            <span class="receipt-label">${this.t('receipt_datetime')}</span>
             <span class="receipt-val">${data.date} • ${data.time}</span>
           </div>
-          ${data.discount_amount > 0 ? `
           <div class="receipt-row">
-            <span class="receipt-label">⭐ Ballar chegirmasi:</span>
-            <span class="receipt-val" style="color: #4CAF50;">-${data.discount_amount.toLocaleString('ru-RU')} UZS</span>
-          </div>` : ''}
-          <div class="receipt-row">
-            <span class="receipt-label">Jami to'lov:</span>
+            <span class="receipt-label">${this.t('receipt_total')}</span>
             <span class="receipt-val" style="color: var(--gold-primary); font-weight: 800;">${data.total_price.toLocaleString('ru-RU')} UZS</span>
           </div>
         `;
@@ -645,16 +865,15 @@ const app = {
 
       this.goToStep('stepSuccess');
       if (this.user.id) {
-        this.fetchLoyaltyProfile();
         this.fetchMyBookings();
       }
     } catch (e) {
       this.haptic('error');
-      this.showToast(e.message || 'Xatolik yuz berdi');
+      this.showToast(e.message || 'Error');
     } finally {
       if (confirmBtn) {
         confirmBtn.disabled = false;
-        confirmBtn.innerHTML = '<span>TASDIQLASH VA BRON QILISH</span>';
+        confirmBtn.innerHTML = `<span>${this.t('btn_submit_booking')}</span>`;
       }
     }
   },
@@ -697,7 +916,7 @@ const app = {
     if (!this.state.myBookings || this.state.myBookings.length === 0) {
       list.innerHTML = `
         <div class="drawer-empty">
-          Sizda hali hech qanday bron mavjud emas.
+          ${this.t('no_bookings')}
         </div>
       `;
       return;
@@ -706,10 +925,10 @@ const app = {
     list.innerHTML = '';
     this.state.myBookings.forEach(b => {
       const statusLabels = {
-        pending: 'Kutilmoqda ⏳',
-        confirmed: 'Tasdiqlangan ✅',
-        completed: 'Bajarilgan 💈',
-        cancelled: 'Bekor qilingan ❌'
+        pending: this.t('status_pending'),
+        confirmed: this.t('status_confirmed'),
+        completed: this.t('status_completed'),
+        cancelled: this.t('status_cancelled')
       };
 
       const canCancel = (b.status === 'pending' || b.status === 'confirmed');
@@ -721,11 +940,11 @@ const app = {
           <span class="item-status ${b.status}">${statusLabels[b.status] || b.status}</span>
         </div>
         <div class="item-details">
-          <div><b>Usta:</b> ${b.barber_name} (${b.barber_category})</div>
-          <div><b>Vaqt:</b> ${b.appointment_date} • ${b.appointment_time}</div>
-          <div><b>Summa:</b> ${b.total_price.toLocaleString('ru-RU')} UZS</div>
+          <div><b>${this.t('label_barber')}</b> ${b.barber_name} (${b.barber_category})</div>
+          <div><b>${this.t('label_datetime')}</b> ${b.appointment_date} • ${b.appointment_time}</div>
+          <div><b>${this.t('receipt_total')}</b> ${b.total_price.toLocaleString('ru-RU')} UZS</div>
         </div>
-        ${canCancel ? `<button class="item-cancel-btn" data-id="${b.id}">Bekor qilish</button>` : ''}
+        ${canCancel ? `<button class="item-cancel-btn" data-id="${b.id}">${this.t('cancel_btn')}</button>` : ''}
       `;
 
       if (canCancel) {
@@ -740,7 +959,8 @@ const app = {
   },
 
   async cancelBooking(appointmentId) {
-    if (!confirm(`#BRON-${appointmentId} buyurtmasini bekor qilishni tasdiqlaysizmi?`)) {
+    const confirmText = `${this.t('cancel_confirm', { id: appointmentId })}`;
+    if (!confirm(confirmText)) {
       return;
     }
 
@@ -755,251 +975,28 @@ const app = {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.detail || 'Bekor qilishda xatolik');
+      if (!res.ok) throw new Error(data.detail || 'Cancel error');
 
-      this.showToast('Bron bekor qilindi');
+      this.showToast(this.t('booking_cancelled'));
       await this.fetchMyBookings();
       this.renderMyBookingsList();
     } catch (e) {
-      this.showToast(e.message || 'Xatolik');
+      this.showToast(e.message || 'Error');
     }
   },
 
-  // ================= LOYALTY CLUB & REWARDS =================
-  openLoyaltyDrawer() {
-    const drawer = document.getElementById('loyaltyDrawer');
-    if (!drawer) return;
-    drawer.classList.add('active');
-    if (this.user.id) {
-      this.fetchLoyaltyProfile();
-    }
-  },
+  // ================= TOAST NOTIFICATION =================
+  showToast(message) {
+    const toast = document.getElementById('toastMessage');
+    if (!toast) return;
 
-  closeLoyaltyDrawer() {
-    const drawer = document.getElementById('loyaltyDrawer');
-    if (drawer) drawer.classList.remove('active');
-  },
+    toast.textContent = message;
+    toast.classList.add('show');
 
-  switchLoyaltyTab(tabKey) {
-    this.haptic('light');
-    document.querySelectorAll('.loyalty-tab').forEach(t => {
-      t.classList.toggle('active', t.getAttribute('data-tab') === tabKey);
-    });
-    document.querySelectorAll('.loyalty-tab-content').forEach(c => {
-      c.classList.remove('active');
-    });
-    if (tabKey === 'shop') document.getElementById('tabContentShop')?.classList.add('active');
-    else if (tabKey === 'my-gifts') document.getElementById('tabContentMyGifts')?.classList.add('active');
-    else if (tabKey === 'history') document.getElementById('tabContentHistory')?.classList.add('active');
-  },
-
-  async fetchLoyaltyProfile() {
-    if (!this.user.id) return;
-    try {
-      const res = await fetch(`/api/loyalty/profile?telegram_id=${this.user.id}`);
-      if (res.ok) {
-        const profile = await res.json();
-        this.state.loyaltyProfile = profile;
-        this.renderLoyaltyProfile();
-      }
-    } catch (e) {
-      console.warn('Loyalty profile fetch error:', e);
-    }
-  },
-
-  renderLoyaltyProfile() {
-    const p = this.state.loyaltyProfile;
-    if (!p) return;
-
-    const points = p.points || 0;
-    const pointsStr = points.toLocaleString('ru-RU');
-
-    // Header badge
-    const headerPts = document.getElementById('headerPointsVal');
-    if (headerPts) headerPts.textContent = pointsStr;
-
-    // VIP Metal Card
-    const vipBalNum = document.getElementById('vipBalanceNum');
-    if (vipBalNum) vipBalNum.textContent = pointsStr;
-
-    const vipBalEq = document.getElementById('vipBalanceEq');
-    if (vipBalEq) vipBalEq.textContent = `= ${pointsStr} UZS chegirma`;
-
-    const vipHolder = document.getElementById('vipHolderName');
-    if (vipHolder) vipHolder.textContent = p.full_name || this.user.name || 'Culture VIP';
-
-    const vipTier = document.getElementById('vipTierBadge');
-    if (vipTier) vipTier.textContent = `${p.tier} VIP`;
-
-    const vipCashback = document.getElementById('vipCashbackRate');
-    if (vipCashback) vipCashback.textContent = `${p.cashback_rate}% har tashrifdan`;
-
-    // Step 5 Points toggle info
-    const discountDesc = document.getElementById('pointsDiscountDesc');
-    if (discountDesc) {
-      discountDesc.textContent = `Mavjud: ${pointsStr} ball (1 ball = 1 UZS chegirma)`;
-    }
-
-    // My gifts count
-    const activeGifts = p.active_redemptions || [];
-    const countEl = document.getElementById('myGiftsCount');
-    if (countEl) countEl.textContent = activeGifts.length;
-
-    // Render lists
-    this.renderLoyaltyShop();
-    this.renderMyGifts(activeGifts);
-    this.renderLoyaltyHistory(p.transactions || []);
-  },
-
-  async fetchLoyaltyRewards() {
-    try {
-      const res = await fetch('/api/loyalty/rewards');
-      if (res.ok) {
-        this.state.loyaltyRewards = await res.json();
-        this.renderLoyaltyShop();
-      }
-    } catch (e) {
-      console.warn('Loyalty rewards fetch error:', e);
-    }
-  },
-
-  renderLoyaltyShop() {
-    const container = document.getElementById('loyaltyRewardsList');
-    if (!container) return;
-
-    if (!this.state.loyaltyRewards || this.state.loyaltyRewards.length === 0) {
-      container.innerHTML = '<div class="drawer-empty">Hozircha sovg\'alar mavjud emas.</div>';
-      return;
-    }
-
-    const userPoints = this.state.loyaltyProfile?.points || 0;
-
-    container.innerHTML = '';
-    this.state.loyaltyRewards.forEach(r => {
-      const canAfford = userPoints >= r.points_cost;
-      const card = document.createElement('div');
-      card.className = 'reward-card';
-      card.innerHTML = `
-        <div class="reward-left">
-          <div class="reward-icon-box">${r.icon || '🎁'}</div>
-          <div class="reward-details">
-            <span class="reward-name">${r.name}</span>
-            <span class="reward-desc">${r.description || ''}</span>
-            <span class="reward-cost-tag">⭐ ${r.points_cost.toLocaleString('ru-RU')} ball</span>
-          </div>
-        </div>
-        <div class="reward-action-box">
-          <button class="reward-btn" data-id="${r.id}" ${canAfford ? '' : 'disabled'}>
-            ${canAfford ? 'Almashtirish' : 'Yetarli emas'}
-          </button>
-        </div>
-      `;
-
-      if (canAfford) {
-        card.querySelector('.reward-btn')?.addEventListener('click', () => {
-          this.redeemReward(r.id, r.name, r.points_cost);
-        });
-      }
-
-      container.appendChild(card);
-    });
-  },
-
-  async redeemReward(rewardId, rewardName, cost) {
-    if (!this.user.id) {
-      this.showToast('Telegram orqali kirilmagan');
-      return;
-    }
-
-    const confirmMsg = `"${rewardName}" sovg'asini ${cost.toLocaleString('ru-RU')} ballga almashtirishni tasdiqlaysizmi?`;
-    if (!confirm(confirmMsg)) return;
-
-    try {
-      const res = await fetch('/api/loyalty/redeem', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          telegram_id: this.user.id,
-          reward_id: rewardId
-        })
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.detail || 'Almashtirishda xatolik');
-
-      this.haptic('success');
-      this.showToast(`🎉 Tabriklaymiz! Kod: #${data.code}`);
-      await this.fetchLoyaltyProfile();
-      this.switchLoyaltyTab('my-gifts');
-    } catch (e) {
-      this.haptic('error');
-      this.showToast(e.message || 'Xatolik yuz berdi');
-    }
-  },
-
-  renderMyGifts(gifts) {
-    const container = document.getElementById('loyaltyMyGiftsList');
-    if (!container) return;
-
-    if (!gifts || gifts.length === 0) {
-      container.innerHTML = '<div class="drawer-empty">Sizda hali olingan sovg\'alar mavjud emas.</div>';
-      return;
-    }
-
-    container.innerHTML = '';
-    gifts.forEach(g => {
-      const item = document.createElement('div');
-      item.className = 'voucher-card';
-      item.innerHTML = `
-        <div class="voucher-top">
-          <span class="voucher-name">${g.reward_name}</span>
-          <span class="voucher-status-badge">Faol</span>
-        </div>
-        <div class="voucher-code-row">
-          <span class="voucher-code">#${g.code}</span>
-          <button class="voucher-copy-btn" data-code="${g.code}">Nusxa olish</button>
-        </div>
-        <div style="font-size: 11px; color: var(--text-muted);">
-          Sana: ${g.created_at} • Sartaroshxonada ko'rsating
-        </div>
-      `;
-
-      item.querySelector('.voucher-copy-btn')?.addEventListener('click', () => {
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(g.code);
-        }
-        this.showToast(`Kod nusxalandi: #${g.code}`);
-      });
-
-      container.appendChild(item);
-    });
-  },
-
-  renderLoyaltyHistory(history) {
-    const container = document.getElementById('loyaltyHistoryList');
-    if (!container) return;
-
-    if (!history || history.length === 0) {
-      container.innerHTML = '<div class="drawer-empty">Tarix mavjud emas.</div>';
-      return;
-    }
-
-    container.innerHTML = '';
-    history.forEach(tx => {
-      const isPos = tx.points > 0;
-      const ptsFormatted = (isPos ? '+' : '') + tx.points.toLocaleString('ru-RU') + ' ball';
-
-      const item = document.createElement('div');
-      item.className = 'history-item';
-      item.innerHTML = `
-        <div class="history-item-left">
-          <span class="history-desc">${tx.description || tx.type}</span>
-          <span class="history-date">${tx.created_at}</span>
-        </div>
-        <span class="history-pts ${isPos ? 'positive' : 'negative'}">${ptsFormatted}</span>
-      `;
-      container.appendChild(item);
-    });
+    if (this._toastTimer) clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2500);
   }
 };
 

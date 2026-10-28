@@ -50,42 +50,49 @@ WORK_HOURS = [
     "21:00"
 ]
 
-# Master toifalari (Figma dizayni bo'yicha)
+# Master toifalari (3 ta toifa: PRO, TOP, VIP)
 CATEGORIES = {
     "PRO": {
         "id": "PRO",
         "name": "PRO Barber",
         "badge": None,
         "subtitle": "Standard Excellence",
+        "subtitle_uz": "Standart sifat",
+        "subtitle_ru": "Стандартное качество",
         "description": "Everyday style & classic cuts",
-        "base_price": 80000,
+        "description_uz": "Kundalik uslub va klassik soch turmaklari",
+        "description_ru": "Повседневный стиль и классические стрижки",
+        "base_price": 75000,
         "icon": "✦"
     },
     "TOP": {
         "id": "TOP",
         "name": "TOP Barber",
         "badge": "POPULAR",
+        "badge_uz": "OMMABOP",
+        "badge_ru": "ХИТ",
         "subtitle": "Master Experience",
+        "subtitle_uz": "Tajribali usta",
+        "subtitle_ru": "Мастерский опыт",
         "description": "Advanced precision & custom styling",
-        "base_price": 120000,
+        "description_uz": "Yuqori aniqlik va individual uslub",
+        "description_ru": "Высокая точность и индивидуальный стиль",
+        "base_price": 95000,
         "icon": "★"
     },
     "VIP": {
         "id": "VIP",
         "name": "VIP Barber",
         "badge": "SIGNATURE",
+        "badge_uz": "PREMIUM",
+        "badge_ru": "ПРЕМИУМ",
         "subtitle": "Signature Luxury",
+        "subtitle_uz": "Eksklyuziv parvarish",
+        "subtitle_ru": "Премиум уход",
         "description": "Master cut, premium beard care & spa",
-        "base_price": 180000,
+        "description_uz": "Mualliflik soch kesimi, soqol parvarishi va spa",
+        "description_ru": "Авторская стрижка, премиум борода и спа",
+        "base_price": 125000,
         "icon": "👑"
-    },
-    "BRAND": {
-        "id": "BRAND",
-        "name": "BRAND Barber",
-        "badge": "EXCLUSIVE",
-        "subtitle": "Artistic Director",
-        "description": "Exclusive full package & VIP lounge",
-        "base_price": 250000,
-        "icon": "💎"
     }
 }
