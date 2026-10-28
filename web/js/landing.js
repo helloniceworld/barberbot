@@ -40,7 +40,11 @@
       loc_hours_title: "Ish vaqti",
       loc_hours_desc: "Har kuni 10:00 dan 22:00 gacha dam olish kunlarisiz.",
       loc_contact_title: "Bog‘lanish",
-      footer_text: "Culture barbershop, Olmaliq"
+      footer_text: "Culture barbershop, Olmaliq",
+      preloader_tagline: "PREMIAL BARBERSHOP • OLMALIQ",
+      preloader_loading: "Tayyorlanmoqda...",
+      preloader_ready: "Xush kelibsiz",
+      preloader_skip: "O‘tkazib yuborish ›"
     },
     ru: {
       nav_prices: "Цены",
@@ -76,7 +80,11 @@
       loc_hours_title: "Время работы",
       loc_hours_desc: "Ежедневно с 10:00 до 22:00 без выходных.",
       loc_contact_title: "Контакты",
-      footer_text: "Culture barbershop, Алмалык"
+      footer_text: "Culture barbershop, Алмалык",
+      preloader_tagline: "ПРЕМИАЛЬНЫЙ БАРБЕРШОП • АЛМАЛЫК",
+      preloader_loading: "Подготовка...",
+      preloader_ready: "Добро пожаловать",
+      preloader_skip: "Пропустить ›"
     }
   };
 
@@ -505,11 +513,99 @@
     }
   }
 
+  // ================= CINEMATIC ENTRANCE PRELOADER =================
+  let preloaderDismissed = false;
+  let preloaderOnComplete = null;
+
+  function initPreloader(onComplete) {
+    preloaderOnComplete = onComplete;
+    const preloader = document.getElementById("preloader");
+    if (!preloader) {
+      document.body.classList.add("entrance-ready");
+      if (onComplete) onComplete();
+      return;
+    }
+
+    const bar = document.getElementById("preloaderBar");
+    const pct = document.getElementById("preloaderPct");
+    const status = document.getElementById("preloaderStatus");
+    const skipBtn = document.getElementById("preloaderSkip");
+
+    let animFrame = null;
+
+    // Check if directly opening booking (?book=1 or Telegram Mini App)
+    const urlParams = new URLSearchParams(window.location.search);
+    const isDirectBooking = urlParams.get("book") === "1" || !!window.Telegram?.WebApp?.initData;
+    const totalDuration = isDirectBooking ? 350 : 1250; // swift for booking, cinematic for regular visit
+
+    const startTime = performance.now();
+
+    function dismissPreloader() {
+      if (preloaderDismissed) return;
+      preloaderDismissed = true;
+      if (animFrame) cancelAnimationFrame(animFrame);
+
+      if (bar) bar.style.width = "100%";
+      if (pct) pct.textContent = "100%";
+      if (status) status.textContent = tLanding("preloader_ready");
+
+      preloader.classList.add("preloader-dismiss");
+      document.body.classList.add("entrance-ready");
+
+      // Trigger callback (sweep intro on canvas) shortly after curtains part
+      setTimeout(() => {
+        if (preloaderOnComplete) preloaderOnComplete();
+      }, 350);
+
+      // Clean up preloader from DOM after transition finishes
+      setTimeout(() => {
+        preloader.classList.add("preloader-finished");
+        preloader.setAttribute("aria-hidden", "true");
+      }, 900);
+    }
+
+    function updateProgress(now) {
+      if (preloaderDismissed) return;
+      const elapsed = now - startTime;
+      const t = Math.min(1, elapsed / totalDuration);
+
+      // Smooth cubic ease out
+      const eased = 1 - Math.pow(1 - t, 3);
+      const progress = Math.min(100, Math.round(eased * 100));
+
+      if (bar) bar.style.width = progress + "%";
+      if (pct) pct.textContent = progress + "%";
+
+      if (t < 1) {
+        animFrame = requestAnimationFrame(updateProgress);
+      } else {
+        dismissPreloader();
+      }
+    }
+
+    animFrame = requestAnimationFrame(updateProgress);
+
+    // Skip on button click
+    skipBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dismissPreloader();
+    });
+
+    // Skip on tapping preloader backdrop
+    preloader.addEventListener("click", (e) => {
+      if (e.target && e.target.id === "preloaderSkip") return;
+      dismissPreloader();
+    });
+  }
+
   // ================= DOM READY INIT =================
   document.addEventListener("DOMContentLoaded", () => {
     // 1. Language switcher buttons on landing page
     document.getElementById("landingLangUz")?.addEventListener("click", () => setLandingLanguage("uz"));
     document.getElementById("landingLangRu")?.addEventListener("click", () => setLandingLanguage("ru"));
+
+    // Apply translations immediately so preloader displays user language
+    applyLandingTranslations();
 
     // 2. Initialize Price table
     initPriceTable();
@@ -518,6 +614,7 @@
     initBookingModal();
 
     // 4. Initialize Shave-the-Wordmark Canvas
+    let canvasReady = false;
     const fontsReady = (document.fonts && document.fonts.load)
       ? document.fonts.load("700 200px " + FONT_FAMILY, WORD).catch(() => {})
       : Promise.resolve();
@@ -525,7 +622,16 @@
     fontsReady.then(() => {
       buildCanvas();
       initShaveEvents();
-      setTimeout(sweepIntro, 500);
+      canvasReady = true;
+    });
+
+    // 5. Initialize Entrance Preloader
+    initPreloader(() => {
+      if (canvasReady) {
+        sweepIntro();
+      } else {
+        fontsReady.then(() => setTimeout(sweepIntro, 100));
+      }
     });
 
     let lastW = 0, rt = null;
@@ -539,8 +645,5 @@
         }
       }, 200);
     });
-
-    // Apply translations
-    applyLandingTranslations();
   });
 })();

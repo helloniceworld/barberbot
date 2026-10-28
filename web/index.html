@@ -14,10 +14,50 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Onest:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="/static/css/landing.css?v=2.4">
-  <link rel="stylesheet" href="/static/css/style.css?v=2.4">
+  <link rel="stylesheet" href="/static/css/landing.css?v=2.5">
+  <link rel="stylesheet" href="/static/css/style.css?v=2.5">
 </head>
 <body>
+
+  <!-- ================= LUXURY ENTRANCE PRELOADER ================= -->
+  <div id="preloader" class="preloader" role="dialog" aria-modal="true" aria-label="Culture Barbershop Intro">
+    <div class="preloader-curtain preloader-curtain-top" aria-hidden="true"></div>
+    <div class="preloader-curtain preloader-curtain-bottom" aria-hidden="true"></div>
+    <div class="preloader-glow-ambient" aria-hidden="true"></div>
+    
+    <div class="preloader-content">
+      <div class="preloader-emblem">
+        <div class="preloader-ring-outer" aria-hidden="true"></div>
+        <div class="preloader-ring-inner" aria-hidden="true"></div>
+        <div class="preloader-logo-frame">
+          <img src="/static/images/logo.jpg" alt="Culture Barbershop" class="preloader-logo">
+          <div class="preloader-sheen" aria-hidden="true"></div>
+        </div>
+      </div>
+      
+      <div class="preloader-text-group">
+        <h1 class="preloader-brand">CULTURE</h1>
+        <div class="preloader-divider" aria-hidden="true">
+          <span class="p-line"></span>
+          <span class="p-star">✦</span>
+          <span class="p-line"></span>
+        </div>
+        <p class="preloader-tagline" data-landing-i18n="preloader_tagline">PREMIAL BARBERSHOP &bull; OLMALIQ</p>
+      </div>
+
+      <div class="preloader-track-wrap">
+        <div class="preloader-track" aria-hidden="true">
+          <div class="preloader-bar" id="preloaderBar"></div>
+        </div>
+        <div class="preloader-meta">
+          <span class="preloader-status" id="preloaderStatus" data-landing-i18n="preloader_loading">Tayyorlanmoqda...</span>
+          <span class="preloader-counter" id="preloaderPct">0%</span>
+        </div>
+      </div>
+
+      <button class="preloader-skip" id="preloaderSkip" type="button" data-landing-i18n="preloader_skip">O‘tkazib yuborish &rsaquo;</button>
+    </div>
+  </div>
 
   <!-- BARBER POLE TOP STRIPE -->
   <div class="pole" aria-hidden="true"></div>
@@ -468,7 +508,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="/static/js/app.js?v=2.4"></script>
-  <script src="/static/js/landing.js?v=2.4"></script>
+  <script src="/static/js/app.js?v=2.5"></script>
+  <script src="/static/js/landing.js?v=2.5"></script>
 </body>
 </html>
