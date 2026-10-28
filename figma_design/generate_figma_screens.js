@@ -1,0 +1,1100 @@
+const fs = require('fs');
+const path = require('path');
+
+// Common SVG Gradients and Styles
+const defs = `
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0E0E12" />
+      <stop offset="100%" stop-color="#070709" />
+    </linearGradient>
+
+    <!-- Card Background Gradient -->
+    <linearGradient id="cardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#18181F" />
+      <stop offset="100%" stop-color="#121216" />
+    </linearGradient>
+
+    <!-- Popular Card Gradient -->
+    <linearGradient id="popularCardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#221C14" />
+      <stop offset="100%" stop-color="#15120F" />
+    </linearGradient>
+
+    <!-- Gold Gradient Primary -->
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F2D379" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#9C7A1D" />
+    </linearGradient>
+
+    <!-- Gold Accent Subtle -->
+    <linearGradient id="goldSubtle" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="rgba(212, 175, 55, 0.4)" />
+      <stop offset="100%" stop-color="rgba(212, 175, 55, 0.08)" />
+    </linearGradient>
+
+    <!-- Shimmer Stroke -->
+    <linearGradient id="goldBorder" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ECC86A" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#6B510B" />
+    </linearGradient>
+
+    <!-- Soft Drop Shadow -->
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+
+    <!-- Clip Paths -->
+    <clipPath id="screenClip">
+      <rect width="390" height="844" rx="44" />
+    </clipPath>
+  </defs>
+`;
+
+function renderStatusBar() {
+  return `
+    <!-- iOS Status Bar -->
+    <g id="StatusBar" opacity="0.9">
+      <text x="36" y="34" font-family="'Plus Jakarta Sans', -apple-system, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">9:41</text>
+      <!-- Signal, Wifi, Battery -->
+      <g transform="translate(315, 22)" fill="#FFFFFF">
+        <rect x="0" y="8" width="3" height="4" rx="1"/>
+        <rect x="5" y="6" width="3" height="6" rx="1"/>
+        <rect x="10" y="3" width="3" height="9" rx="1"/>
+        <rect x="15" y="0" width="3" height="12" rx="1"/>
+        <path d="M26 2 C28.5 0.5 32.5 0.5 35 2 M27.5 5 C29.2 3.8 31.8 3.8 33.5 5 M29.5 8 C30.2 7.4 30.8 7.4 31.5 8" stroke="#FFFFFF" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <rect x="42" y="1" width="22" height="11" rx="3.5" fill="none" stroke="#FFFFFF" stroke-width="1.4"/>
+        <rect x="44" y="3" width="14" height="7" rx="2" fill="#FFFFFF"/>
+        <rect x="65" y="4.5" width="1.5" height="4" rx="0.75" fill="#FFFFFF"/>
+      </g>
+    </g>
+  `;
+}
+
+function renderHeader(activeLang = 'uz') {
+  return `
+    <!-- App Header -->
+    <g id="Header" transform="translate(0, 52)">
+      <!-- Brand Logo & Name -->
+      <g id="Brand" transform="translate(20, 0)">
+        <circle cx="20" cy="20" r="19" fill="#000000" stroke="url(#goldBorder)" stroke-width="1.5"/>
+        <text x="20" y="24" font-family="'Playfair Display', Georgia, serif" font-size="14" font-weight="700" fill="url(#goldGrad)" text-anchor="middle">CB</text>
+        <text x="48" y="17" font-family="'Playfair Display', Georgia, serif" font-size="18" font-weight="700" fill="#FFFFFF" letter-spacing="0.5">Culture</text>
+        <text x="49" y="29" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="700" fill="#D4AF37" letter-spacing="2.4">BARBERSHOP</text>
+      </g>
+
+      <!-- Language Switcher Pill -->
+      <g id="LangSwitcher" transform="translate(262, 7)">
+        <rect width="66" height="26" rx="13" fill="#141418" stroke="rgba(212, 175, 55, 0.4)" stroke-width="1"/>
+        ${activeLang === 'uz' ? `
+          <rect x="2" y="2" width="30" height="22" rx="11" fill="url(#goldGrad)"/>
+          <text x="17" y="17" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="800" fill="#0A0A0C" text-anchor="middle">UZ</text>
+          <text x="49" y="17" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#8E8E93" text-anchor="middle">RU</text>
+        ` : `
+          <rect x="34" y="2" width="30" height="22" rx="11" fill="url(#goldGrad)"/>
+          <text x="17" y="17" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#8E8E93" text-anchor="middle">UZ</text>
+          <text x="49" y="17" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="800" fill="#0A0A0C" text-anchor="middle">RU</text>
+        `}
+      </g>
+
+      <!-- Profile Button -->
+      <g id="ProfileBtn" transform="translate(336, 4)">
+        <circle cx="16" cy="16" r="16" fill="#141418" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1"/>
+        <path d="M16 14 C18.2 14 20 12.2 20 10 C20 7.8 18.2 6 16 6 C13.8 6 12 7.8 12 10 C12 12.2 13.8 14 16 14 Z M10 22 C10 18.7 12.7 16 16 16 C19.3 16 22 18.7 22 22" fill="none" stroke="#D4AF37" stroke-width="1.4" stroke-linecap="round"/>
+        <circle cx="26" cy="6" r="3.5" fill="#D4AF37" stroke="#0E0E12" stroke-width="1.5"/>
+      </g>
+    </g>
+  `;
+}
+
+// ================= SCREEN 1: CATEGORY SELECTION =================
+function generateScreen1() {
+  return `
+<svg width="390" height="844" viewBox="0 0 390 844" fill="none" xmlns="http://www.w3.org/2000/svg">
+  ${defs}
+  <g clip-path="url(#screenClip)">
+    <!-- Base Background -->
+    <rect width="390" height="844" fill="url(#bgGrad)"/>
+    <circle cx="20" cy="180" r="160" fill="url(#goldGrad)" opacity="0.04" filter="url(#goldGlow)"/>
+
+    ${renderStatusBar()}
+    ${renderHeader('uz')}
+
+    <!-- Step Title -->
+    <g transform="translate(20, 114)">
+      <rect width="92" height="20" rx="10" fill="rgba(212, 175, 55, 0.12)" stroke="rgba(212, 175, 55, 0.3)" stroke-width="0.8"/>
+      <text x="46" y="14" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="700" fill="#D4AF37" text-anchor="middle" letter-spacing="1">1-BOSQICH (4 TADAN)</text>
+      
+      <text x="0" y="48" font-family="'Playfair Display', Georgia, serif" font-size="24" font-weight="700" fill="#FFFFFF">Sartarosh toifasini tanlang</text>
+      <text x="0" y="70" font-family="'Plus Jakarta Sans', sans-serif" font-size="12.5" font-weight="400" fill="#8E8E93">O'zingizga mos bo'lgan mahorat darajasini tanlang</text>
+    </g>
+
+    <!-- TIER 1: PRO Barber -->
+    <g id="CardPRO" transform="translate(20, 210)" filter="url(#cardShadow)">
+      <rect width="350" height="114" rx="18" fill="url(#cardGrad)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+      <!-- Icon -->
+      <circle cx="36" cy="42" r="20" fill="rgba(255, 255, 255, 0.04)" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+      <text x="36" y="47" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" fill="#D4AF37" text-anchor="middle">✦</text>
+      
+      <text x="68" y="38" font-family="'Playfair Display', Georgia, serif" font-size="18" font-weight="700" fill="#FFFFFF">PRO Barber</text>
+      <text x="178" y="37" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#8E8E93">• Standart sifat</text>
+      <text x="68" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="400" fill="#AEAEB2">Kundalik uslub va klassik soch turmaklari</text>
+      
+      <text x="68" y="92" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="700" fill="#D4AF37">75 000 UZS dan</text>
+      <path d="M324 57 L330 57 M327 52 L332 57 L327 62" stroke="#8E8E93" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <!-- TIER 2: TOP Barber (Popular Card) -->
+    <g id="CardTOP" transform="translate(20, 340)" filter="url(#cardShadow)">
+      <rect width="350" height="122" rx="18" fill="url(#popularCardGrad)" stroke="url(#goldBorder)" stroke-width="1.5"/>
+      <!-- Badge -->
+      <rect x="238" y="-1" width="94" height="22" rx="11" fill="url(#goldGrad)"/>
+      <text x="285" y="14" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="800" fill="#0A0A0C" text-anchor="middle" letter-spacing="1">★ OMMABOP</text>
+
+      <!-- Icon -->
+      <circle cx="36" cy="46" r="20" fill="rgba(212, 175, 55, 0.15)" stroke="rgba(212, 175, 55, 0.4)" stroke-width="1"/>
+      <text x="36" y="51" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" fill="#F2D379" text-anchor="middle">★</text>
+      
+      <text x="68" y="42" font-family="'Playfair Display', Georgia, serif" font-size="19" font-weight="700" fill="#FFFFFF">TOP Barber</text>
+      <text x="180" y="41" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#ECC86A">• Tajribali usta</text>
+      <text x="68" y="64" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="400" fill="#C7C7CC">Yuqori aniqlik, individual uslub va soqol dizayni</text>
+      
+      <text x="68" y="98" font-family="'Plus Jakarta Sans', sans-serif" font-size="15" font-weight="800" fill="#F2D379">95 000 UZS dan</text>
+      <path d="M324 61 L330 61 M327 56 L332 61 L327 66" stroke="#F2D379" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <!-- TIER 3: VIP Barber (Signature Card) -->
+    <g id="CardVIP" transform="translate(20, 480)" filter="url(#cardShadow)">
+      <rect width="350" height="122" rx="18" fill="url(#cardGrad)" stroke="rgba(212, 175, 55, 0.5)" stroke-width="1.2"/>
+      <!-- Badge -->
+      <rect x="238" y="-1" width="94" height="22" rx="11" fill="#1F1A12" stroke="rgba(212, 175, 55, 0.6)" stroke-width="1"/>
+      <text x="285" y="14" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="700" fill="#D4AF37" text-anchor="middle" letter-spacing="1">👑 PREMIUM</text>
+
+      <!-- Icon -->
+      <circle cx="36" cy="46" r="20" fill="rgba(212, 175, 55, 0.12)" stroke="rgba(212, 175, 55, 0.35)" stroke-width="1"/>
+      <text x="36" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" fill="#D4AF37" text-anchor="middle">👑</text>
+      
+      <text x="68" y="42" font-family="'Playfair Display', Georgia, serif" font-size="19" font-weight="700" fill="#FFFFFF">VIP Barber</text>
+      <text x="176" y="41" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#D4AF37">• Eksklyuziv</text>
+      <text x="68" y="64" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="400" fill="#AEAEB2">Mualliflik stili, to'liq soqol spa va maxsus parvarish</text>
+      
+      <text x="68" y="98" font-family="'Plus Jakarta Sans', sans-serif" font-size="15" font-weight="800" fill="#D4AF37">125 000 UZS dan</text>
+      <path d="M324 61 L330 61 M327 56 L332 61 L327 66" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <!-- Atelier Guarantee Badge -->
+    <g transform="translate(20, 624)">
+      <rect width="350" height="52" rx="14" fill="rgba(255, 255, 255, 0.03)" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1"/>
+      <circle cx="32" cy="26" r="12" fill="rgba(212, 175, 55, 0.1)"/>
+      <text x="32" y="30" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" fill="#D4AF37" text-anchor="middle">✓</text>
+      <text x="56" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="600" fill="#FFFFFF">100% Sifat kafolati &amp; Qulay bron</text>
+      <text x="56" y="38" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="400" fill="#8E8E93">Hech qanday navbatsiz, aniq belgilangan vaqtda</text>
+    </g>
+
+    <!-- Home Indicator -->
+    <rect x="127" y="828" width="136" height="5" rx="2.5" fill="#FFFFFF" opacity="0.3"/>
+  </g>
+</svg>
+`;
+}
+
+// ================= SCREEN 2: BARBER SELECTION =================
+function generateScreen2() {
+  return `
+<svg width="390" height="844" viewBox="0 0 390 844" fill="none" xmlns="http://www.w3.org/2000/svg">
+  ${defs}
+  <g clip-path="url(#screenClip)">
+    <rect width="390" height="844" fill="url(#bgGrad)"/>
+    ${renderStatusBar()}
+    ${renderHeader('uz')}
+
+    <!-- Step Navigation & Pill -->
+    <g transform="translate(20, 114)">
+      <g>
+        <path d="M6 14 L0 8 L6 2" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="14" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="600" fill="#D4AF37">Orqaga</text>
+      </g>
+      <rect x="250" y="-3" width="100" height="22" rx="11" fill="rgba(212, 175, 55, 0.15)" stroke="rgba(212, 175, 55, 0.4)" stroke-width="1"/>
+      <text x="300" y="12" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="800" fill="#D4AF37" text-anchor="middle">TOP BARBER</text>
+      
+      <text x="0" y="46" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="700" fill="#D4AF37" letter-spacing="1">2-BOSQICH (4 TADAN)</text>
+      <text x="0" y="74" font-family="'Playfair Display', Georgia, serif" font-size="24" font-weight="700" fill="#FFFFFF">Sartaroshni tanlang</text>
+      <text x="0" y="94" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="400" fill="#8E8E93">TOP toifasidagi mohir ustalardan birini tanlang</text>
+    </g>
+
+    <!-- Barber Card 1: Bobur Karimov (SELECTED) -->
+    <g transform="translate(20, 230)" filter="url(#cardShadow)">
+      <rect width="350" height="96" rx="16" fill="url(#popularCardGrad)" stroke="url(#goldBorder)" stroke-width="1.5"/>
+      <!-- Avatar -->
+      <circle cx="48" cy="48" r="28" fill="#1C1814" stroke="#D4AF37" stroke-width="2"/>
+      <text x="48" y="54" font-family="'Playfair Display', serif" font-size="18" font-weight="700" fill="#D4AF37" text-anchor="middle">B</text>
+      <circle cx="68" cy="68" r="8" fill="#34C759" stroke="#121216" stroke-width="2"/>
+
+      <text x="88" y="38" font-family="'Playfair Display', serif" font-size="17" font-weight="700" fill="#FFFFFF">Bobur Karimov</text>
+      <rect x="210" y="24" width="48" height="18" rx="9" fill="rgba(212, 175, 55, 0.2)"/>
+      <text x="234" y="36" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="800" fill="#F2D379" text-anchor="middle">TOP</text>
+
+      <text x="88" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="600" fill="#FFC107">⭐ 5.0 <tspan fill="#8E8E93">• 8 yil tajriba • 215 ta sharh</tspan></text>
+      <text x="88" y="76" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="400" fill="#AEAEB2">Klassik va zamonaviy fade ustasi</text>
+
+      <!-- Selected Button -->
+      <rect x="264" y="34" width="72" height="28" rx="14" fill="url(#goldGrad)"/>
+      <text x="300" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="800" fill="#0A0A0C" text-anchor="middle">Tanlandi ✓</text>
+    </g>
+
+    <!-- Barber Card 2: Jasur Aliyev -->
+    <g transform="translate(20, 338)" filter="url(#cardShadow)">
+      <rect width="350" height="96" rx="16" fill="url(#cardGrad)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+      <circle cx="48" cy="48" r="28" fill="#18181E" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1.5"/>
+      <text x="48" y="54" font-family="'Playfair Display', serif" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="middle">J</text>
+      <circle cx="68" cy="68" r="8" fill="#34C759" stroke="#121216" stroke-width="2"/>
+
+      <text x="88" y="38" font-family="'Playfair Display', serif" font-size="17" font-weight="700" fill="#FFFFFF">Jasur Aliyev</text>
+      <rect x="194" y="24" width="48" height="18" rx="9" fill="rgba(255, 255, 255, 0.08)"/>
+      <text x="218" y="36" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="800" fill="#AEAEB2" text-anchor="middle">TOP</text>
+
+      <text x="88" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="600" fill="#FFC107">⭐ 4.9 <tspan fill="#8E8E93">• 6 yil tajriba • 142 ta sharh</tspan></text>
+      <text x="88" y="76" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="400" fill="#8E8E93">Soqol konturlash va geometriya</text>
+
+      <!-- Select Button -->
+      <rect x="264" y="34" width="72" height="28" rx="14" fill="rgba(255, 255, 255, 0.06)" stroke="rgba(255, 255, 255, 0.18)" stroke-width="1"/>
+      <text x="300" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">Tanlash</text>
+    </g>
+
+    <!-- Barber Card 3: Farrux Mirzayev -->
+    <g transform="translate(20, 446)" filter="url(#cardShadow)">
+      <rect width="350" height="96" rx="16" fill="url(#cardGrad)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+      <circle cx="48" cy="48" r="28" fill="#18181E" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1.5"/>
+      <text x="48" y="54" font-family="'Playfair Display', serif" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="middle">F</text>
+      <circle cx="68" cy="68" r="8" fill="#34C759" stroke="#121216" stroke-width="2"/>
+
+      <text x="88" y="38" font-family="'Playfair Display', serif" font-size="17" font-weight="700" fill="#FFFFFF">Farrux Mirzayev</text>
+      <rect x="220" y="24" width="48" height="18" rx="9" fill="rgba(255, 255, 255, 0.08)"/>
+      <text x="244" y="36" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="800" fill="#AEAEB2" text-anchor="middle">TOP</text>
+
+      <text x="88" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="600" fill="#FFC107">⭐ 4.9 <tspan fill="#8E8E93">• 5 yil tajriba • 98 ta sharh</tspan></text>
+      <text x="88" y="76" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="400" fill="#8E8E93">Soch turmaklash va kamuflyaj</text>
+
+      <rect x="264" y="34" width="72" height="28" rx="14" fill="rgba(255, 255, 255, 0.06)" stroke="rgba(255, 255, 255, 0.18)" stroke-width="1"/>
+      <text x="300" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">Tanlash</text>
+    </g>
+
+    <!-- Barber Card 4: Alisher Rustamov -->
+    <g transform="translate(20, 554)" filter="url(#cardShadow)">
+      <rect width="350" height="96" rx="16" fill="url(#cardGrad)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+      <circle cx="48" cy="48" r="28" fill="#18181E" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1.5"/>
+      <text x="48" y="54" font-family="'Playfair Display', serif" font-size="18" font-weight="700" fill="#FFFFFF" text-anchor="middle">A</text>
+      <circle cx="68" cy="68" r="8" fill="#34C759" stroke="#121216" stroke-width="2"/>
+
+      <text x="88" y="38" font-family="'Playfair Display', serif" font-size="17" font-weight="700" fill="#FFFFFF">Alisher Rustamov</text>
+      <rect x="238" y="24" width="48" height="18" rx="9" fill="rgba(255, 255, 255, 0.08)"/>
+      <text x="262" y="36" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="800" fill="#AEAEB2" text-anchor="middle">TOP</text>
+
+      <text x="88" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="600" fill="#FFC107">⭐ 4.8 <tspan fill="#8E8E93">• 4 yil tajriba • 76 ta sharh</tspan></text>
+      <text x="88" y="76" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="400" fill="#8E8E93">Kreativ uslublar va spalar</text>
+
+      <rect x="264" y="34" width="72" height="28" rx="14" fill="rgba(255, 255, 255, 0.06)" stroke="rgba(255, 255, 255, 0.18)" stroke-width="1"/>
+      <text x="300" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF" text-anchor="middle">Tanlash</text>
+    </g>
+
+    <!-- Sticky Next Bar -->
+    <g transform="translate(0, 740)">
+      <rect width="390" height="104" fill="#0A0A0C" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+      <g transform="translate(20, 16)">
+        <rect width="350" height="50" rx="25" fill="url(#goldGrad)"/>
+        <text x="175" y="31" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="800" fill="#0A0A0C" text-anchor="middle" letter-spacing="0.5">DAVOM ETISH (XIZMATLARGA) ›</text>
+      </g>
+    </g>
+
+    <rect x="127" y="828" width="136" height="5" rx="2.5" fill="#FFFFFF" opacity="0.3"/>
+  </g>
+</svg>
+`;
+}
+
+// ================= SCREEN 3: SERVICES SELECTION (18 SERVICES) =================
+function generateScreen3() {
+  return `
+<svg width="390" height="844" viewBox="0 0 390 844" fill="none" xmlns="http://www.w3.org/2000/svg">
+  ${defs}
+  <g clip-path="url(#screenClip)">
+    <rect width="390" height="844" fill="url(#bgGrad)"/>
+    ${renderStatusBar()}
+    ${renderHeader('uz')}
+
+    <!-- Step Navigation & Pill -->
+    <g transform="translate(20, 114)">
+      <g>
+        <path d="M6 14 L0 8 L6 2" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="14" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="600" fill="#D4AF37">Orqaga</text>
+      </g>
+      <rect x="220" y="-3" width="130" height="22" rx="11" fill="rgba(212, 175, 55, 0.15)" stroke="rgba(212, 175, 55, 0.4)" stroke-width="1"/>
+      <text x="285" y="12" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="800" fill="#D4AF37" text-anchor="middle">Bobur Karimov (TOP)</text>
+      
+      <text x="0" y="46" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="700" fill="#D4AF37" letter-spacing="1">3-BOSQICH (4 TADAN)</text>
+      <text x="0" y="74" font-family="'Playfair Display', Georgia, serif" font-size="24" font-weight="700" fill="#FFFFFF">Xizmatlarni tanlang</text>
+    </g>
+
+    <!-- Filter Pills Bar -->
+    <g transform="translate(20, 206)">
+      <!-- All (Active) -->
+      <rect width="82" height="32" rx="16" fill="rgba(212, 175, 55, 0.18)" stroke="#D4AF37" stroke-width="1"/>
+      <text x="41" y="20" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="700" fill="#F2D379" text-anchor="middle">Barchasi</text>
+
+      <!-- Asosiy -->
+      <rect x="90" width="76" height="32" rx="16" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+      <text x="128" y="20" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="600" fill="#AEAEB2" text-anchor="middle">Asosiy</text>
+
+      <!-- Qo'shimcha -->
+      <rect x="174" width="94" height="32" rx="16" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+      <text x="221" y="20" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="600" fill="#AEAEB2" text-anchor="middle">Qo'shimcha</text>
+
+      <!-- Kompleks -->
+      <rect x="276" width="74" height="32" rx="16" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+      <text x="313" y="20" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="600" fill="#AEAEB2" text-anchor="middle">Kompleks</text>
+    </g>
+
+    <!-- Service Group 1: ASOSIY XIZMATLAR -->
+    <g transform="translate(20, 256)">
+      <text x="0" y="14" font-family="'Playfair Display', serif" font-size="14" font-weight="700" fill="#D4AF37" letter-spacing="0.5">✦ ASOSIY XIZMATLAR</text>
+      <line x1="160" y1="10" x2="350" y2="10" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+
+      <!-- Item 1: Erkaklar soch kesimi (SELECTED) -->
+      <g transform="translate(0, 26)" filter="url(#cardShadow)">
+        <rect width="350" height="66" rx="14" fill="url(#popularCardGrad)" stroke="url(#goldBorder)" stroke-width="1.2"/>
+        <rect x="16" y="21" width="24" height="24" rx="12" fill="url(#goldGrad)"/>
+        <path d="M24 33 L27 36 L32 29" stroke="#0A0A0C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="50" y="36" font-family="'Plus Jakarta Sans', sans-serif" font-size="14.5" font-weight="700" fill="#FFFFFF">Erkaklar soch kesimi</text>
+        <text x="50" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="500" fill="#8E8E93">⏱ 45 daqiqa • Shaxsiy maslahat</text>
+        <text x="334" y="41" font-family="'Plus Jakarta Sans', sans-serif" font-size="15" font-weight="800" fill="#F2D379" text-anchor="end">95 000 UZS</text>
+      </g>
+
+      <!-- Item 2: Soqol tekislash va dizayn (SELECTED) -->
+      <g transform="translate(0, 100)" filter="url(#cardShadow)">
+        <rect width="350" height="66" rx="14" fill="url(#popularCardGrad)" stroke="url(#goldBorder)" stroke-width="1.2"/>
+        <rect x="16" y="21" width="24" height="24" rx="12" fill="url(#goldGrad)"/>
+        <path d="M24 33 L27 36 L32 29" stroke="#0A0A0C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="50" y="36" font-family="'Plus Jakarta Sans', sans-serif" font-size="14.5" font-weight="700" fill="#FFFFFF">Soqol tekislash va shakl berish</text>
+        <text x="50" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="500" fill="#8E8E93">⏱ 30 daqiqa • Issiq sochiq &amp; moy</text>
+        <text x="334" y="41" font-family="'Plus Jakarta Sans', sans-serif" font-size="15" font-weight="800" fill="#F2D379" text-anchor="end">55 000 UZS</text>
+      </g>
+
+      <!-- Item 3: Bolalar sochi -->
+      <g transform="translate(0, 174)" filter="url(#cardShadow)">
+        <rect width="350" height="66" rx="14" fill="url(#cardGrad)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+        <rect x="16" y="21" width="24" height="24" rx="12" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.5"/>
+        <text x="50" y="36" font-family="'Plus Jakarta Sans', sans-serif" font-size="14.5" font-weight="600" fill="#E5E5EA">Bolalar soch kesimi (12 yoshgacha)</text>
+        <text x="50" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="400" fill="#8E8E93">⏱ 35 daqiqa • Klassik &amp; zamonaviy</text>
+        <text x="334" y="41" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="700" fill="#D4AF37" text-anchor="end">70 000 UZS</text>
+      </g>
+    </g>
+
+    <!-- Service Group 2: QO'SHIMCHA XIZMATLAR -->
+    <g transform="translate(20, 520)">
+      <text x="0" y="14" font-family="'Playfair Display', serif" font-size="14" font-weight="700" fill="#D4AF37" letter-spacing="0.5">✦ QO'SHIMCHA XIZMATLAR</text>
+      <line x1="190" y1="10" x2="350" y2="10" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+
+      <!-- Item 4: Vosk -->
+      <g transform="translate(0, 26)" filter="url(#cardShadow)">
+        <rect width="350" height="66" rx="14" fill="url(#cardGrad)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+        <rect x="16" y="21" width="24" height="24" rx="12" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.5"/>
+        <text x="50" y="36" font-family="'Plus Jakarta Sans', sans-serif" font-size="14.5" font-weight="600" fill="#E5E5EA">Vosk (quloq, burun, yuz)</text>
+        <text x="50" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="400" fill="#8E8E93">⏱ 15 daqiqa • Nozik tozalash</text>
+        <text x="334" y="41" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="700" fill="#D4AF37" text-anchor="end">25 000 UZS</text>
+      </g>
+
+      <!-- Item 5: Qora Niqob -->
+      <g transform="translate(0, 100)" filter="url(#cardShadow)">
+        <rect width="350" height="66" rx="14" fill="url(#cardGrad)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+        <rect x="16" y="21" width="24" height="24" rx="12" fill="none" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.5"/>
+        <text x="50" y="36" font-family="'Plus Jakarta Sans', sans-serif" font-size="14.5" font-weight="600" fill="#E5E5EA">Qora niqob (Black Mask)</text>
+        <text x="50" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="400" fill="#8E8E93">⏱ 20 daqiqa • Yuz terisini tozalash</text>
+        <text x="334" y="41" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="700" fill="#D4AF37" text-anchor="end">35 000 UZS</text>
+      </g>
+    </g>
+
+    <!-- Sticky Bottom Bar (Summary & Next) -->
+    <g transform="translate(0, 720)">
+      <rect width="390" height="124" fill="#0C0C0E" stroke="rgba(212, 175, 55, 0.25)" stroke-width="1"/>
+      <g transform="translate(20, 14)">
+        <text x="0" y="16" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Tanlangan xizmatlar (2 ta):</text>
+        <text x="0" y="38" font-family="'Plus Jakarta Sans', sans-serif" font-size="20" font-weight="800" fill="#FFFFFF">150 000 <tspan font-size="14" font-weight="600" fill="#D4AF37">UZS</tspan></text>
+        
+        <!-- Continue CTA -->
+        <g transform="translate(180, 2)">
+          <rect width="170" height="46" rx="23" fill="url(#goldGrad)"/>
+          <text x="85" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="800" fill="#0A0A0C" text-anchor="middle" letter-spacing="0.5">DAVOM ETISH ›</text>
+        </g>
+      </g>
+    </g>
+
+    <rect x="127" y="828" width="136" height="5" rx="2.5" fill="#FFFFFF" opacity="0.3"/>
+  </g>
+</svg>
+`;
+}
+
+// ================= SCREEN 4: DATE & TIME PICKER =================
+function generateScreen4() {
+  return `
+<svg width="390" height="844" viewBox="0 0 390 844" fill="none" xmlns="http://www.w3.org/2000/svg">
+  ${defs}
+  <g clip-path="url(#screenClip)">
+    <rect width="390" height="844" fill="url(#bgGrad)"/>
+    ${renderStatusBar()}
+    ${renderHeader('uz')}
+
+    <!-- Step Navigation & Pill -->
+    <g transform="translate(20, 114)">
+      <g>
+        <path d="M6 14 L0 8 L6 2" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="14" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="600" fill="#D4AF37">Orqaga</text>
+      </g>
+      <rect x="236" y="-3" width="114" height="22" rx="11" fill="rgba(212, 175, 55, 0.15)" stroke="rgba(212, 175, 55, 0.4)" stroke-width="1"/>
+      <text x="293" y="12" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="800" fill="#D4AF37" text-anchor="middle">Sana va Vaqt</text>
+      
+      <text x="0" y="46" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="700" fill="#D4AF37" letter-spacing="1">4-BOSQICH (4 TADAN)</text>
+      <text x="0" y="74" font-family="'Playfair Display', Georgia, serif" font-size="24" font-weight="700" fill="#FFFFFF">Sana va Vaqtni tanlang</text>
+      <text x="0" y="94" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="400" fill="#8E8E93">O'zingizga qulay bo'sh vaqt oralig'ini tanlang</text>
+    </g>
+
+    <!-- Date Carousel -->
+    <g transform="translate(20, 226)">
+      <!-- Pill 1: Bugun (Active) -->
+      <g filter="url(#goldGlow)">
+        <rect width="64" height="84" rx="16" fill="url(#goldGrad)"/>
+        <text x="32" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="800" fill="#0A0A0C" text-anchor="middle">Bugun</text>
+        <text x="32" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="24" font-weight="800" fill="#0A0A0C" text-anchor="middle">28</text>
+        <text x="32" y="72" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" fill="#0A0A0C" text-anchor="middle">Okt</text>
+      </g>
+
+      <!-- Pill 2: Erta -->
+      <g transform="translate(72, 0)">
+        <rect width="64" height="84" rx="16" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+        <text x="32" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#8E8E93" text-anchor="middle">Erta</text>
+        <text x="32" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="700" fill="#FFFFFF" text-anchor="middle">29</text>
+        <text x="32" y="72" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#8E8E93" text-anchor="middle">Okt</text>
+      </g>
+
+      <!-- Pill 3: Pay -->
+      <g transform="translate(144, 0)">
+        <rect width="64" height="84" rx="16" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+        <text x="32" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#8E8E93" text-anchor="middle">Pay</text>
+        <text x="32" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="700" fill="#FFFFFF" text-anchor="middle">30</text>
+        <text x="32" y="72" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#8E8E93" text-anchor="middle">Okt</text>
+      </g>
+
+      <!-- Pill 4: Jum -->
+      <g transform="translate(216, 0)">
+        <rect width="64" height="84" rx="16" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+        <text x="32" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#8E8E93" text-anchor="middle">Jum</text>
+        <text x="32" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="700" fill="#FFFFFF" text-anchor="middle">31</text>
+        <text x="32" y="72" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#8E8E93" text-anchor="middle">Okt</text>
+      </g>
+
+      <!-- Pill 5: Shan -->
+      <g transform="translate(288, 0)">
+        <rect width="64" height="84" rx="16" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+        <text x="32" y="24" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#8E8E93" text-anchor="middle">Shan</text>
+        <text x="32" y="52" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="700" fill="#FFFFFF" text-anchor="middle">01</text>
+        <text x="32" y="72" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#8E8E93" text-anchor="middle">Noy</text>
+      </g>
+    </g>
+
+    <!-- Available Slots Grid (4 Columns - Clean & Fits perfectly) -->
+    <g transform="translate(20, 334)">
+      <text x="0" y="16" font-family="'Playfair Display', serif" font-size="16" font-weight="700" fill="#FFFFFF">Mavjud vaqtlar (28-Oktabr)</text>
+      <text x="350" y="16" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="600" fill="#34C759" text-anchor="end">● Bo'sh vaqtlar bor</text>
+
+      <!-- Slots Grid 4 columns x 3 rows -->
+      <!-- Row 1 -->
+      <g transform="translate(0, 32)">
+        <rect width="80" height="40" rx="10" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+        <text x="40" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-size="13.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">10:00</text>
+
+        <rect x="90" width="80" height="40" rx="10" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+        <text x="130" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-size="13.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">11:00</text>
+
+        <rect x="180" width="80" height="40" rx="10" fill="#101014" opacity="0.35"/>
+        <text x="220" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-size="13.5" font-weight="500" fill="#8E8E93" text-anchor="middle">12:00</text>
+
+        <rect x="270" width="80" height="40" rx="10" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+        <text x="310" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-size="13.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">13:00</text>
+      </g>
+
+      <!-- Row 2 -->
+      <g transform="translate(0, 80)">
+        <!-- 14:00 (SELECTED ACTIVE) -->
+        <rect width="80" height="40" rx="10" fill="url(#goldGrad)"/>
+        <text x="40" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-size="13.5" font-weight="800" fill="#0A0A0C" text-anchor="middle">14:00 ✓</text>
+
+        <rect x="90" width="80" height="40" rx="10" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+        <text x="130" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-size="13.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">15:00</text>
+
+        <rect x="180" width="80" height="40" rx="10" fill="#101014" opacity="0.35"/>
+        <text x="220" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-size="13.5" font-weight="500" fill="#8E8E93" text-anchor="middle">16:00</text>
+
+        <rect x="270" width="80" height="40" rx="10" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+        <text x="310" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-size="13.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">17:00</text>
+      </g>
+
+      <!-- Row 3 -->
+      <g transform="translate(0, 128)">
+        <rect width="80" height="40" rx="10" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+        <text x="40" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-size="13.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">18:00</text>
+
+        <rect x="90" width="80" height="40" rx="10" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+        <text x="130" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-size="13.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">19:00</text>
+
+        <rect x="180" width="80" height="40" rx="10" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+        <text x="220" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-size="13.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">20:00</text>
+
+        <rect x="270" width="80" height="40" rx="10" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+        <text x="310" y="25" font-family="'Plus Jakarta Sans', sans-serif" font-size="13.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">21:00</text>
+      </g>
+    </g>
+
+    <!-- Sticky Bottom Bar -->
+    <g transform="translate(0, 720)">
+      <rect width="390" height="124" fill="#0C0C0E" stroke="rgba(212, 175, 55, 0.25)" stroke-width="1"/>
+      <g transform="translate(20, 14)">
+        <text x="0" y="16" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Tanlangan vaqt:</text>
+        <text x="0" y="38" font-family="'Plus Jakarta Sans', sans-serif" font-size="18" font-weight="800" fill="#FFFFFF">Bugun, 28-Okt • 14:00</text>
+        
+        <g transform="translate(180, 2)">
+          <rect width="170" height="46" rx="23" fill="url(#goldGrad)"/>
+          <text x="85" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="12.5" font-weight="800" fill="#0A0A0C" text-anchor="middle" letter-spacing="0.5">TASDIQLASHGA O'TISH ›</text>
+        </g>
+      </g>
+    </g>
+
+    <rect x="127" y="828" width="136" height="5" rx="2.5" fill="#FFFFFF" opacity="0.3"/>
+  </g>
+</svg>
+`;
+}
+
+// ================= SCREEN 5: CONFIRMATION & CONTACTS =================
+function generateScreen5() {
+  return `
+<svg width="390" height="844" viewBox="0 0 390 844" fill="none" xmlns="http://www.w3.org/2000/svg">
+  ${defs}
+  <g clip-path="url(#screenClip)">
+    <rect width="390" height="844" fill="url(#bgGrad)"/>
+    ${renderStatusBar()}
+    ${renderHeader('uz')}
+
+    <!-- Step Navigation & Pill -->
+    <g transform="translate(20, 114)">
+      <g>
+        <path d="M6 14 L0 8 L6 2" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="14" y="11" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="600" fill="#D4AF37">Orqaga</text>
+      </g>
+      <rect x="240" y="-3" width="110" height="22" rx="11" fill="rgba(212, 175, 55, 0.15)" stroke="rgba(212, 175, 55, 0.4)" stroke-width="1"/>
+      <text x="295" y="12" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="800" fill="#D4AF37" text-anchor="middle">Ko'rib chiqish</text>
+      
+      <text x="0" y="46" font-family="'Playfair Display', Georgia, serif" font-size="24" font-weight="700" fill="#FFFFFF">Buyurtma ma'lumotlari</text>
+      <text x="0" y="68" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="400" fill="#8E8E93">Ma'lumotlarni tekshiring va tasdiqlang</text>
+    </g>
+
+    <!-- Atelier Summary Card -->
+    <g transform="translate(20, 206)" filter="url(#cardShadow)">
+      <rect width="350" height="236" rx="18" fill="url(#popularCardGrad)" stroke="url(#goldBorder)" stroke-width="1.2"/>
+      
+      <!-- Barber -->
+      <text x="20" y="32" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Sartarosh:</text>
+      <text x="330" y="32" font-family="'Playfair Display', serif" font-size="16" font-weight="700" fill="#F2D379" text-anchor="end">Bobur Karimov</text>
+
+      <text x="20" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Toifasi:</text>
+      <text x="330" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="end">TOP Barber</text>
+
+      <text x="20" y="84" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Sana va Vaqt:</text>
+      <text x="330" y="84" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="end">28-Oktabr, 2026 • 14:00</text>
+
+      <!-- Perforated separator -->
+      <line x1="20" y1="104" x2="330" y2="104" stroke="rgba(212, 175, 55, 0.3)" stroke-width="1" stroke-dasharray="4 4"/>
+
+      <!-- Services -->
+      <text x="20" y="126" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="600" fill="#8E8E93">Tanlangan xizmatlar:</text>
+      
+      <rect x="20" y="136" width="310" height="26" rx="8" fill="rgba(255, 255, 255, 0.04)"/>
+      <text x="30" y="153" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="600" fill="#FFFFFF">• Erkaklar soch kesimi</text>
+      <text x="320" y="153" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="700" fill="#D4AF37" text-anchor="end">95 000 UZS</text>
+
+      <rect x="20" y="166" width="310" height="26" rx="8" fill="rgba(255, 255, 255, 0.04)"/>
+      <text x="30" y="183" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="600" fill="#FFFFFF">• Soqol tekislash va dizayn</text>
+      <text x="320" y="183" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="700" fill="#D4AF37" text-anchor="end">55 000 UZS</text>
+
+      <!-- Total Row -->
+      <line x1="20" y1="200" x2="330" y2="200" stroke="rgba(212, 175, 55, 0.3)" stroke-width="1"/>
+      <text x="20" y="222" font-family="'Playfair Display', serif" font-size="15" font-weight="700" fill="#FFFFFF">Jami to'lov:</text>
+      <text x="330" y="224" font-family="'Plus Jakarta Sans', sans-serif" font-size="20" font-weight="800" fill="#F2D379" text-anchor="end">150 000 UZS</text>
+    </g>
+
+    <!-- Client Contact Inputs -->
+    <g transform="translate(20, 460)">
+      <text x="0" y="16" font-family="'Playfair Display', serif" font-size="16" font-weight="700" fill="#FFFFFF">Bog'lanish ma'lumotlari</text>
+
+      <!-- Name Field -->
+      <g transform="translate(0, 30)">
+        <text x="0" y="10" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="600" fill="#8E8E93">Ism va Familiya</text>
+        <rect y="18" width="350" height="48" rx="14" fill="#141418" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1"/>
+        <text x="16" y="48" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="500" fill="#FFFFFF">Alisher Karimov</text>
+        <path d="M326 42 C326 39.8 327.8 38 330 38 C332.2 38 334 39.8 334 42 M326 48 C326 45 328 43 330 43 C332 43 334 45 334 48" stroke="#8E8E93" stroke-width="1.4" fill="none"/>
+      </g>
+
+      <!-- Phone Field -->
+      <g transform="translate(0, 110)">
+        <text x="0" y="10" font-family="'Plus Jakarta Sans', sans-serif" font-size="11.5" font-weight="600" fill="#8E8E93">Telefon raqam</text>
+        <rect y="18" width="350" height="48" rx="14" fill="#141418" stroke="#D4AF37" stroke-width="1.2"/>
+        <text x="16" y="48" font-family="'Plus Jakarta Sans', sans-serif" font-size="14.5" font-weight="600" fill="#FFFFFF">+998 90 123 45 67</text>
+        <text x="330" y="48" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="700" fill="#34C759" text-anchor="end">✓</text>
+      </g>
+    </g>
+
+    <!-- Large Gold CTA Submit Button -->
+    <g transform="translate(20, 680)" filter="url(#goldGlow)">
+      <rect width="350" height="54" rx="27" fill="url(#goldGrad)"/>
+      <text x="175" y="33" font-family="'Plus Jakarta Sans', sans-serif" font-size="13.5" font-weight="800" fill="#0A0A0C" text-anchor="middle" letter-spacing="1">TASDIQLASH VA BRON QILISH</text>
+    </g>
+
+    <text x="195" y="756" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="400" fill="#8E8E93" text-anchor="middle">Bron qilgach, @culturestaffbot orqali tasdiqlash yuboriladi</text>
+
+    <rect x="127" y="828" width="136" height="5" rx="2.5" fill="#FFFFFF" opacity="0.3"/>
+  </g>
+</svg>
+`;
+}
+
+// ================= SCREEN 6: SUCCESS BOARDING PASS / RECEIPT =================
+function generateScreen6() {
+  return `
+<svg width="390" height="844" viewBox="0 0 390 844" fill="none" xmlns="http://www.w3.org/2000/svg">
+  ${defs}
+  <g clip-path="url(#screenClip)">
+    <rect width="390" height="844" fill="url(#bgGrad)"/>
+    ${renderStatusBar()}
+
+    <!-- Success Checkmark Badge -->
+    <g transform="translate(195, 110)" filter="url(#goldGlow)">
+      <circle cx="0" cy="0" r="38" fill="rgba(212, 175, 55, 0.12)" stroke="url(#goldBorder)" stroke-width="2"/>
+      <circle cx="0" cy="0" r="28" fill="url(#goldGrad)"/>
+      <path d="M-9 0 L-2 7 L9 -5" stroke="#0A0A0C" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <text x="195" y="180" font-family="'Playfair Display', Georgia, serif" font-size="22" font-weight="700" fill="#FFFFFF" text-anchor="middle">Muvaffaqiyatli bron qilindi!</text>
+    <text x="195" y="202" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="400" fill="#AEAEB2" text-anchor="middle">Sartarosh tez orada so'rovni qabul qiladi</text>
+
+    <!-- Digital Boarding Pass Ticket -->
+    <g transform="translate(25, 230)" filter="url(#cardShadow)">
+      <!-- Main Ticket Body -->
+      <rect width="340" height="420" rx="20" fill="url(#popularCardGrad)" stroke="url(#goldBorder)" stroke-width="1.4"/>
+      
+      <!-- Brand Crest on Ticket -->
+      <g transform="translate(20, 20)">
+        <circle cx="16" cy="16" r="16" fill="#000000" stroke="url(#goldBorder)" stroke-width="1"/>
+        <text x="16" y="20" font-family="'Playfair Display', serif" font-size="11" font-weight="700" fill="#F2D379" text-anchor="middle">CB</text>
+        <text x="42" y="15" font-family="'Playfair Display', serif" font-size="15" font-weight="700" fill="#FFFFFF">Culture Barbershop</text>
+        <text x="42" y="27" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" font-weight="700" fill="#D4AF37" letter-spacing="1.5">OFFICIAL APPOINTMENT PASS</text>
+      </g>
+
+      <!-- Booking ID Chip -->
+      <rect x="238" y="22" width="82" height="24" rx="12" fill="rgba(212, 175, 55, 0.15)"/>
+      <text x="279" y="38" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="800" fill="#F2D379" text-anchor="middle">#BRON-1082</text>
+
+      <line x1="20" y1="64" x2="320" y2="64" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+
+      <!-- Ticket Grid Details -->
+      <g transform="translate(24, 84)">
+        <text x="0" y="0" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="600" fill="#8E8E93" letter-spacing="0.5">SARTAROSH / MASTER</text>
+        <text x="0" y="20" font-family="'Playfair Display', serif" font-size="17" font-weight="700" fill="#FFFFFF">Bobur Karimov</text>
+        <text x="0" y="34" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="600" fill="#D4AF37">TOP BARBER</text>
+
+        <text x="170" y="0" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="600" fill="#8E8E93" letter-spacing="0.5">SANA VA VAQT / TIME</text>
+        <text x="170" y="20" font-family="'Playfair Display', serif" font-size="17" font-weight="700" fill="#FFFFFF">28 Okt, 14:00</text>
+        <text x="170" y="34" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="600" fill="#34C759">● Kutilmoqda</text>
+      </g>
+
+      <g transform="translate(24, 150)">
+        <text x="0" y="0" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="600" fill="#8E8E93" letter-spacing="0.5">MIJOZ / GUEST</text>
+        <text x="0" y="18" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">Alisher Karimov</text>
+
+        <text x="170" y="0" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="600" fill="#8E8E93" letter-spacing="0.5">JAMI TO'LOV / TOTAL</text>
+        <text x="170" y="18" font-family="'Plus Jakarta Sans', sans-serif" font-size="17" font-weight="800" fill="#F2D379">150 000 UZS</text>
+      </g>
+
+      <!-- Perforated Cutout Line -->
+      <line x1="20" y1="230" x2="320" y2="230" stroke="rgba(212, 175, 55, 0.4)" stroke-width="1.2" stroke-dasharray="6 6"/>
+      <circle cx="0" cy="230" r="12" fill="#0E0E12" stroke="url(#goldBorder)" stroke-width="1"/>
+      <circle cx="340" cy="230" r="12" fill="#0E0E12" stroke="url(#goldBorder)" stroke-width="1"/>
+
+      <!-- Barcode / Digital Code Section -->
+      <g transform="translate(20, 260)">
+        <text x="150" y="14" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="700" fill="#8E8E93" text-anchor="middle" letter-spacing="3">AUTHENTIC DIGITAL PASS</text>
+        
+        <!-- Stylized Barcode Bars -->
+        <g transform="translate(40, 28)" fill="#D4AF37">
+          <rect x="0" width="3" height="52"/>
+          <rect x="5" width="1.5" height="52"/>
+          <rect x="9" width="4.5" height="52"/>
+          <rect x="17" width="2" height="52"/>
+          <rect x="22" width="1" height="52"/>
+          <rect x="26" width="4" height="52"/>
+          <rect x="33" width="2.5" height="52"/>
+          <rect x="38" width="5" height="52"/>
+          <rect x="46" width="1" height="52"/>
+          <rect x="50" width="3" height="52"/>
+          <rect x="56" width="2" height="52"/>
+          <rect x="61" width="4" height="52"/>
+          <rect x="68" width="1.5" height="52"/>
+          <rect x="72" width="3" height="52"/>
+          <rect x="78" width="5" height="52"/>
+          <rect x="86" width="2" height="52"/>
+          <rect x="91" width="3.5" height="52"/>
+          <rect x="97" width="1.5" height="52"/>
+          <rect x="101" width="4" height="52"/>
+          <rect x="108" width="2" height="52"/>
+          <rect x="113" width="3" height="52"/>
+          <rect x="118" width="5" height="52"/>
+          <rect x="126" width="1.5" height="52"/>
+          <rect x="130" width="4" height="52"/>
+          <rect x="137" width="2.5" height="52"/>
+          <rect x="143" width="3" height="52"/>
+          <rect x="149" width="1" height="52"/>
+          <rect x="153" width="4.5" height="52"/>
+          <rect x="160" width="2" height="52"/>
+          <rect x="165" width="3" height="52"/>
+          <rect x="171" width="1.5" height="52"/>
+          <rect x="175" width="4" height="52"/>
+          <rect x="182" width="2.5" height="52"/>
+          <rect x="187" width="5" height="52"/>
+          <rect x="195" width="2" height="52"/>
+          <rect x="200" width="3" height="52"/>
+          <rect x="206" width="1.5" height="52"/>
+          <rect x="210" width="4" height="52"/>
+          <rect x="217" width="2" height="52"/>
+        </g>
+        
+        <text x="150" y="96" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="600" fill="#8E8E93" text-anchor="middle" letter-spacing="4">CB-2026-1082-TOP</text>
+      </g>
+    </g>
+
+    <!-- Bottom Action Buttons -->
+    <g transform="translate(25, 680)">
+      <rect width="340" height="50" rx="25" fill="url(#goldGrad)"/>
+      <text x="170" y="31" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="800" fill="#0A0A0C" text-anchor="middle" letter-spacing="0.5">MENING BRONLARIM</text>
+
+      <g transform="translate(0, 60)">
+        <rect width="340" height="46" rx="23" fill="transparent" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
+        <text x="170" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="600" fill="#FFFFFF" text-anchor="middle">Yopish (Botga qaytish)</text>
+      </g>
+    </g>
+
+    <rect x="127" y="828" width="136" height="5" rx="2.5" fill="#FFFFFF" opacity="0.3"/>
+  </g>
+</svg>
+`;
+}
+
+// ================= SCREEN 7: MY BOOKINGS DRAWER =================
+function generateScreen7() {
+  return `
+<svg width="390" height="844" viewBox="0 0 390 844" fill="none" xmlns="http://www.w3.org/2000/svg">
+  ${defs}
+  <g clip-path="url(#screenClip)">
+    <!-- Dimmed blurred underlying background -->
+    <rect width="390" height="844" fill="#050507"/>
+    
+    <!-- Drawer Backdrop -->
+    <rect width="390" height="844" fill="rgba(0, 0, 0, 0.75)"/>
+
+    <!-- Bottom Sheet / Modal Panel -->
+    <g transform="translate(0, 160)" filter="url(#cardShadow)">
+      <rect width="390" height="684" rx="28" fill="#121217" stroke="rgba(212, 175, 55, 0.3)" stroke-width="1"/>
+      
+      <!-- Drawer Pull Handle -->
+      <rect x="170" y="12" width="50" height="4.5" rx="2.25" fill="rgba(255, 255, 255, 0.25)"/>
+
+      <!-- Drawer Header -->
+      <g transform="translate(24, 44)">
+        <text x="0" y="16" font-family="'Playfair Display', serif" font-size="22" font-weight="700" fill="#FFFFFF">Mening bronlarim</text>
+        <circle cx="320" cy="10" r="15" fill="rgba(255, 255, 255, 0.08)"/>
+        <text x="320" y="15" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" fill="#8E8E93" text-anchor="middle">✕</text>
+      </g>
+
+      <!-- Active Booking Card 1 -->
+      <g transform="translate(20, 84)" filter="url(#cardShadow)">
+        <rect width="350" height="154" rx="16" fill="url(#popularCardGrad)" stroke="url(#goldBorder)" stroke-width="1.2"/>
+        
+        <text x="18" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="800" fill="#F2D379">#BRON-1082</text>
+        <rect x="236" y="14" width="96" height="22" rx="11" fill="rgba(212, 175, 55, 0.15)"/>
+        <text x="284" y="29" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="700" fill="#F2D379" text-anchor="middle">Kutilmoqda ⏳</text>
+
+        <text x="18" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Sartarosh: <tspan fill="#FFFFFF" font-weight="700">Bobur Karimov (TOP)</tspan></text>
+        <text x="18" y="78" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Sana va Vaqt: <tspan fill="#FFFFFF" font-weight="700">28-Oktabr • 14:00</tspan></text>
+        <text x="18" y="98" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Jami to'lov: <tspan fill="#F2D379" font-weight="800">150 000 UZS</tspan></text>
+
+        <line x1="18" y1="112" x2="332" y2="112" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+
+        <!-- Cancel Button -->
+        <rect x="18" y="120" width="100" height="24" rx="12" fill="rgba(255, 59, 48, 0.1)" stroke="rgba(255, 59, 48, 0.4)" stroke-width="1"/>
+        <text x="68" y="136" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="700" fill="#FF453A" text-anchor="middle">Bekor qilish</text>
+        
+        <text x="332" y="136" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#34C759" text-anchor="end">So'rov qabul qilinmoqda</text>
+      </g>
+
+      <!-- Past Booking Card 2 (Completed) -->
+      <g transform="translate(20, 256)" filter="url(#cardShadow)">
+        <rect width="350" height="136" rx="16" fill="url(#cardGrad)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+        
+        <text x="18" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">#BRON-1045</text>
+        <rect x="236" y="14" width="96" height="22" rx="11" fill="rgba(52, 199, 89, 0.15)"/>
+        <text x="284" y="29" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="700" fill="#34C759" text-anchor="middle">Bajarilgan 💈</text>
+
+        <text x="18" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Sartarosh: <tspan fill="#FFFFFF" font-weight="700">Jasur Aliyev (TOP)</tspan></text>
+        <text x="18" y="78" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Sana va Vaqt: <tspan fill="#FFFFFF" font-weight="700">15-Oktabr • 16:30</tspan></text>
+        <text x="18" y="98" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Jami to'lov: <tspan fill="#D4AF37" font-weight="800">95 000 UZS</tspan></text>
+
+        <rect x="18" y="112" width="120" height="18" rx="9" fill="rgba(255, 255, 255, 0.04)"/>
+        <text x="78" y="125" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="600" fill="#8E8E93" text-anchor="middle">Tashrif amalga oshgan</text>
+      </g>
+    </g>
+
+    <rect x="127" y="828" width="136" height="5" rx="2.5" fill="#FFFFFF" opacity="0.3"/>
+  </g>
+</svg>
+`;
+}
+
+// ================= DESIGN SYSTEM SPEC SHEET =================
+function generateDesignSystemTokens() {
+  return `
+<svg width="600" height="844" viewBox="0 0 600 844" fill="none" xmlns="http://www.w3.org/2000/svg">
+  ${defs}
+  <rect width="600" height="844" rx="24" fill="#0A0A0C"/>
+  <rect x="1" y="1" width="598" height="842" rx="23" stroke="rgba(212, 175, 55, 0.3)" stroke-width="1.5"/>
+
+  <!-- Header -->
+  <g transform="translate(36, 40)">
+    <text x="0" y="24" font-family="'Playfair Display', serif" font-size="26" font-weight="700" fill="#FFFFFF">Culture Barbershop</text>
+    <text x="0" y="46" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" fill="#D4AF37" letter-spacing="2">ATELIER DESIGN SYSTEM &amp; TOKENS</text>
+  </g>
+
+  <!-- Color Palette -->
+  <g transform="translate(36, 120)">
+    <text x="0" y="0" font-family="'Playfair Display', serif" font-size="17" font-weight="700" fill="#FFFFFF">1. Color Palette Tokens</text>
+
+    <!-- Swatch 1: Obsidian Base -->
+    <g transform="translate(0, 16)">
+      <rect width="90" height="54" rx="10" fill="#0A0A0C" stroke="rgba(255, 255, 255, 0.15)"/>
+      <text x="10" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">Obsidian</text>
+      <text x="10" y="44" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" fill="#8E8E93">#0A0A0C</text>
+    </g>
+
+    <!-- Swatch 2: Surface Card -->
+    <g transform="translate(104, 16)">
+      <rect width="90" height="54" rx="10" fill="#141418" stroke="rgba(255, 255, 255, 0.15)"/>
+      <text x="10" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">Glass Card</text>
+      <text x="10" y="44" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" fill="#8E8E93">#141418</text>
+    </g>
+
+    <!-- Swatch 3: Gold Primary -->
+    <g transform="translate(208, 16)">
+      <rect width="90" height="54" rx="10" fill="#D4AF37"/>
+      <text x="10" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="800" fill="#0A0A0C">Gold Main</text>
+      <text x="10" y="44" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="600" fill="#0A0A0C">#D4AF37</text>
+    </g>
+
+    <!-- Swatch 4: Gold Light -->
+    <g transform="translate(312, 16)">
+      <rect width="90" height="54" rx="10" fill="#F2D379"/>
+      <text x="10" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="800" fill="#0A0A0C">Gold Light</text>
+      <text x="10" y="44" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="600" fill="#0A0A0C">#F2D379</text>
+    </g>
+
+    <!-- Swatch 5: Amber Dark -->
+    <g transform="translate(416, 16)">
+      <rect width="90" height="54" rx="10" fill="#9C7A1D"/>
+      <text x="10" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="800" fill="#FFFFFF">Gold Amber</text>
+      <text x="10" y="44" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" fill="#E5E5EA">#9C7A1D</text>
+    </g>
+  </g>
+
+  <!-- Typography Scale -->
+  <g transform="translate(36, 230)">
+    <text x="0" y="0" font-family="'Playfair Display', serif" font-size="17" font-weight="700" fill="#FFFFFF">2. Typography Scale</text>
+    
+    <g transform="translate(0, 16)">
+      <text x="0" y="24" font-family="'Playfair Display', serif" font-size="28" font-weight="700" fill="#FFFFFF">Display 28px — Playfair Display Bold</text>
+      <text x="0" y="52" font-family="'Playfair Display', serif" font-size="20" font-weight="700" fill="#F2D379">Heading 20px — Playfair Display SemiBold</text>
+      <text x="0" y="78" font-family="'Plus Jakarta Sans', sans-serif" font-size="14.5" font-weight="700" fill="#FFFFFF">Body Bold 14.5px — Plus Jakarta Sans 700</text>
+      <text x="0" y="100" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="400" fill="#8E8E93">Caption / Meta 12px — Plus Jakarta Sans 400</text>
+      <text x="0" y="120" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="800" fill="#D4AF37" letter-spacing="1.5">BADGE TRACKING 9.5px — 800 UPPERCASE</text>
+    </g>
+  </g>
+
+  <!-- Key Components Specs -->
+  <g transform="translate(36, 400)">
+    <text x="0" y="0" font-family="'Playfair Display', serif" font-size="17" font-weight="700" fill="#FFFFFF">3. Core Interactive UI Components</text>
+
+    <!-- Component 1: Gold Button -->
+    <g transform="translate(0, 20)">
+      <rect width="240" height="46" rx="23" fill="url(#goldGrad)"/>
+      <text x="120" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="800" fill="#0A0A0C" text-anchor="middle">PRIMARY GOLD BUTTON</text>
+      <text x="260" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" fill="#8E8E93">Height: 46px | Radius: Full</text>
+    </g>
+
+    <!-- Component 2: Language Capsule -->
+    <g transform="translate(0, 80)">
+      <rect width="66" height="26" rx="13" fill="#141418" stroke="rgba(212, 175, 55, 0.4)" stroke-width="1"/>
+      <rect x="2" y="2" width="30" height="22" rx="11" fill="url(#goldGrad)"/>
+      <text x="17" y="17" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="800" fill="#0A0A0C" text-anchor="middle">UZ</text>
+      <text x="49" y="17" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#8E8E93" text-anchor="middle">RU</text>
+      <text x="90" y="18" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" fill="#8E8E93">Bilingual Capsule Toggle (UZ / RU)</text>
+    </g>
+
+    <!-- Component 3: Filter Pills -->
+    <g transform="translate(0, 126)">
+      <rect width="80" height="30" rx="15" fill="rgba(212, 175, 55, 0.18)" stroke="#D4AF37" stroke-width="1"/>
+      <text x="40" y="19" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" fill="#F2D379" text-anchor="middle">Barchasi</text>
+
+      <rect x="90" width="76" height="30" rx="15" fill="#141418" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1"/>
+      <text x="128" y="19" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#AEAEB2" text-anchor="middle">Asosiy</text>
+      <text x="186" y="20" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" fill="#8E8E93">Filter Chips (Active vs Default)</text>
+    </g>
+
+    <!-- Component 4: Status Badges -->
+    <g transform="translate(0, 180)">
+      <rect width="90" height="22" rx="11" fill="rgba(212, 175, 55, 0.15)"/>
+      <text x="45" y="15" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="700" fill="#F2D379" text-anchor="middle">Kutilmoqda ⏳</text>
+
+      <rect x="100" width="96" height="22" rx="11" fill="rgba(52, 199, 89, 0.15)"/>
+      <text x="148" y="15" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="700" fill="#34C759" text-anchor="middle">Bajarilgan 💈</text>
+
+      <rect x="206" width="96" height="22" rx="11" fill="rgba(255, 59, 48, 0.15)"/>
+      <text x="254" y="15" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="700" fill="#FF453A" text-anchor="middle">Bekor qilingan ❌</text>
+    </g>
+  </g>
+
+  <!-- Craft Rules Footer -->
+  <g transform="translate(36, 730)">
+    <rect width="528" height="60" rx="14" fill="rgba(212, 175, 55, 0.08)" stroke="rgba(212, 175, 55, 0.25)" stroke-width="1"/>
+    <text x="20" y="26" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="700" fill="#FFFFFF">Atelier Craft Rules</text>
+    <text x="20" y="44" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="400" fill="#AEAEB2">Hech qanday generik AI shabloni yo'q: Har bir element haqiqiy hashamatli sartaroshxona standartida yaratilgan.</text>
+  </g>
+</svg>
+`;
+}
+
+// ================= COMBINED ALL-SCREENS CANVAS (FIGMA BOARD) =================
+function generateFullCanvas(screens) {
+  // 7 mobile screens (390 each) + 1 design system (600) + margins
+  // Total width: 7 * (390 + 40) + 600 + 100 = ~3710 px
+  const width = 3760;
+  const height = 1080;
+
+  return `
+<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" fill="none" xmlns="http://www.w3.org/2000/svg">
+  ${defs}
+  <!-- Canvas Canvas Background (Figma Dark Canvas) -->
+  <rect width="${width}" height="${height}" fill="#08080A"/>
+  
+  <!-- Subtle Grid lines -->
+  <defs>
+    <pattern id="figmaGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255, 255, 255, 0.03)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="${width}" height="${height}" fill="url(#figmaGrid)"/>
+
+  <!-- Figma Canvas Title Header -->
+  <g transform="translate(60, 40)">
+    <text x="0" y="28" font-family="'Playfair Display', Georgia, serif" font-size="34" font-weight="700" fill="#FFFFFF">Culture Barbershop</text>
+    <text x="0" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="700" fill="#D4AF37" letter-spacing="3">FULL APP PRODUCTION FIGMA DESIGN — ATELIER OBSIDIAN &amp; GOLD SYSTEM</text>
+    <text x="0" y="80" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Tayyor vektor qatlamlar: Toifalar, Ustalar, 18 ta Xizmat, Sana-Vaqt, Tasdiqlash, Raqamli Chek, Mening Bronlarim va Dizayn Tizimi.</text>
+  </g>
+
+  <!-- Screens Flow -->
+  <!-- Screen 1 -->
+  <g transform="translate(60, 140)">
+    <text x="0" y="-14" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" fill="#D4AF37">01 • TOIFALAR (PRO, TOP, VIP)</text>
+    ${screens[0]}
+  </g>
+
+  <!-- Screen 2 -->
+  <g transform="translate(490, 140)">
+    <text x="0" y="-14" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" fill="#D4AF37">02 • SARTAROSH TANLASH</text>
+    ${screens[1]}
+  </g>
+
+  <!-- Screen 3 -->
+  <g transform="translate(920, 140)">
+    <text x="0" y="-14" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" fill="#D4AF37">03 • 18 TA XIZMAT (FILTRLAR)</text>
+    ${screens[2]}
+  </g>
+
+  <!-- Screen 4 -->
+  <g transform="translate(1350, 140)">
+    <text x="0" y="-14" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" fill="#D4AF37">04 • SANA VA BO'SH VAQTLAR</text>
+    ${screens[3]}
+  </g>
+
+  <!-- Screen 5 -->
+  <g transform="translate(1780, 140)">
+    <text x="0" y="-14" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" fill="#D4AF37">05 • BUYURTMANI TEKSHIRISH</text>
+    ${screens[4]}
+  </g>
+
+  <!-- Screen 6 -->
+  <g transform="translate(2210, 140)">
+    <text x="0" y="-14" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" fill="#D4AF37">06 • RAQAMLI CHEK (PASS)</text>
+    ${screens[5]}
+  </g>
+
+  <!-- Screen 7 -->
+  <g transform="translate(2640, 140)">
+    <text x="0" y="-14" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" fill="#D4AF37">07 • MENING BRONLARIM</text>
+    ${screens[6]}
+  </g>
+
+  <!-- Design System Tokens -->
+  <g transform="translate(3070, 140)">
+    <text x="0" y="-14" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" fill="#D4AF37">08 • DESIGN SYSTEM TOKENS</text>
+    ${screens[7]}
+  </g>
+</svg>
+`;
+}
+
+// Generate files
+const s1 = generateScreen1();
+const s2 = generateScreen2();
+const s3 = generateScreen3();
+const s4 = generateScreen4();
+const s5 = generateScreen5();
+const s6 = generateScreen6();
+const s7 = generateScreen7();
+const s8 = generateDesignSystemTokens();
+
+const fullCanvas = generateFullCanvas([s1, s2, s3, s4, s5, s6, s7, s8]);
+
+const outDir = path.resolve(__dirname);
+fs.writeFileSync(path.join(outDir, '01_screen_category_tiers.svg'), s1, 'utf8');
+fs.writeFileSync(path.join(outDir, '02_screen_barber_selection.svg'), s2, 'utf8');
+fs.writeFileSync(path.join(outDir, '03_screen_services_catalog.svg'), s3, 'utf8');
+fs.writeFileSync(path.join(outDir, '04_screen_datetime_picker.svg'), s4, 'utf8');
+fs.writeFileSync(path.join(outDir, '05_screen_confirm_booking.svg'), s5, 'utf8');
+fs.writeFileSync(path.join(outDir, '06_screen_success_receipt.svg'), s6, 'utf8');
+fs.writeFileSync(path.join(outDir, '07_screen_my_bookings.svg'), s7, 'utf8');
+fs.writeFileSync(path.join(outDir, '08_design_system_tokens.svg'), s8, 'utf8');
+fs.writeFileSync(path.join(outDir, '00_full_app_figma_canvas.svg'), fullCanvas, 'utf8');
+
+console.log('Successfully generated all 8 Figma SVG screens and 00_full_app_figma_canvas.svg!');

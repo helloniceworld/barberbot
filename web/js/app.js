@@ -792,7 +792,7 @@ const app = {
     const grid = document.getElementById('slotsGrid');
     if (!grid || !this.state.selectedBarber || !this.state.selectedDate) return;
 
-    grid.innerHTML = `<div style="grid-column: span 3; text-align: center; color: var(--text-muted);">${this.t('slots_loading')}</div>`;
+    grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 24px 10px;">${this.t('slots_loading')}</div>`;
 
     try {
       const res = await fetch(`/api/slots?barber_id=${this.state.selectedBarber.id}&date=${this.state.selectedDate}`);
@@ -828,7 +828,7 @@ const app = {
       this.updateDateTimeSummary();
     } catch (e) {
       console.error(e);
-      grid.innerHTML = `<div style="grid-column: span 3; color: red;">${this.t('loading')}</div>`;
+      grid.innerHTML = `<div style="grid-column: 1 / -1; color: red; padding: 20px 10px; text-align: center;">${this.t('loading')}</div>`;
     }
   },
 

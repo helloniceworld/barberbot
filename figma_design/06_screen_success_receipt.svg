@@ -1,0 +1,196 @@
+
+<svg width="390" height="844" viewBox="0 0 390 844" fill="none" xmlns="http://www.w3.org/2000/svg">
+  
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0E0E12" />
+      <stop offset="100%" stop-color="#070709" />
+    </linearGradient>
+
+    <!-- Card Background Gradient -->
+    <linearGradient id="cardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#18181F" />
+      <stop offset="100%" stop-color="#121216" />
+    </linearGradient>
+
+    <!-- Popular Card Gradient -->
+    <linearGradient id="popularCardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#221C14" />
+      <stop offset="100%" stop-color="#15120F" />
+    </linearGradient>
+
+    <!-- Gold Gradient Primary -->
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F2D379" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#9C7A1D" />
+    </linearGradient>
+
+    <!-- Gold Accent Subtle -->
+    <linearGradient id="goldSubtle" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="rgba(212, 175, 55, 0.4)" />
+      <stop offset="100%" stop-color="rgba(212, 175, 55, 0.08)" />
+    </linearGradient>
+
+    <!-- Shimmer Stroke -->
+    <linearGradient id="goldBorder" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ECC86A" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#6B510B" />
+    </linearGradient>
+
+    <!-- Soft Drop Shadow -->
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+
+    <!-- Clip Paths -->
+    <clipPath id="screenClip">
+      <rect width="390" height="844" rx="44" />
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#screenClip)">
+    <rect width="390" height="844" fill="url(#bgGrad)"/>
+    
+    <!-- iOS Status Bar -->
+    <g id="StatusBar" opacity="0.9">
+      <text x="36" y="34" font-family="'Plus Jakarta Sans', -apple-system, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">9:41</text>
+      <!-- Signal, Wifi, Battery -->
+      <g transform="translate(315, 22)" fill="#FFFFFF">
+        <rect x="0" y="8" width="3" height="4" rx="1"/>
+        <rect x="5" y="6" width="3" height="6" rx="1"/>
+        <rect x="10" y="3" width="3" height="9" rx="1"/>
+        <rect x="15" y="0" width="3" height="12" rx="1"/>
+        <path d="M26 2 C28.5 0.5 32.5 0.5 35 2 M27.5 5 C29.2 3.8 31.8 3.8 33.5 5 M29.5 8 C30.2 7.4 30.8 7.4 31.5 8" stroke="#FFFFFF" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <rect x="42" y="1" width="22" height="11" rx="3.5" fill="none" stroke="#FFFFFF" stroke-width="1.4"/>
+        <rect x="44" y="3" width="14" height="7" rx="2" fill="#FFFFFF"/>
+        <rect x="65" y="4.5" width="1.5" height="4" rx="0.75" fill="#FFFFFF"/>
+      </g>
+    </g>
+  
+
+    <!-- Success Checkmark Badge -->
+    <g transform="translate(195, 110)" filter="url(#goldGlow)">
+      <circle cx="0" cy="0" r="38" fill="rgba(212, 175, 55, 0.12)" stroke="url(#goldBorder)" stroke-width="2"/>
+      <circle cx="0" cy="0" r="28" fill="url(#goldGrad)"/>
+      <path d="M-9 0 L-2 7 L9 -5" stroke="#0A0A0C" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <text x="195" y="180" font-family="'Playfair Display', Georgia, serif" font-size="22" font-weight="700" fill="#FFFFFF" text-anchor="middle">Muvaffaqiyatli bron qilindi!</text>
+    <text x="195" y="202" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="400" fill="#AEAEB2" text-anchor="middle">Sartarosh tez orada so'rovni qabul qiladi</text>
+
+    <!-- Digital Boarding Pass Ticket -->
+    <g transform="translate(25, 230)" filter="url(#cardShadow)">
+      <!-- Main Ticket Body -->
+      <rect width="340" height="420" rx="20" fill="url(#popularCardGrad)" stroke="url(#goldBorder)" stroke-width="1.4"/>
+      
+      <!-- Brand Crest on Ticket -->
+      <g transform="translate(20, 20)">
+        <circle cx="16" cy="16" r="16" fill="#000000" stroke="url(#goldBorder)" stroke-width="1"/>
+        <text x="16" y="20" font-family="'Playfair Display', serif" font-size="11" font-weight="700" fill="#F2D379" text-anchor="middle">CB</text>
+        <text x="42" y="15" font-family="'Playfair Display', serif" font-size="15" font-weight="700" fill="#FFFFFF">Culture Barbershop</text>
+        <text x="42" y="27" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" font-weight="700" fill="#D4AF37" letter-spacing="1.5">OFFICIAL APPOINTMENT PASS</text>
+      </g>
+
+      <!-- Booking ID Chip -->
+      <rect x="238" y="22" width="82" height="24" rx="12" fill="rgba(212, 175, 55, 0.15)"/>
+      <text x="279" y="38" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="800" fill="#F2D379" text-anchor="middle">#BRON-1082</text>
+
+      <line x1="20" y1="64" x2="320" y2="64" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+
+      <!-- Ticket Grid Details -->
+      <g transform="translate(24, 84)">
+        <text x="0" y="0" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="600" fill="#8E8E93" letter-spacing="0.5">SARTAROSH / MASTER</text>
+        <text x="0" y="20" font-family="'Playfair Display', serif" font-size="17" font-weight="700" fill="#FFFFFF">Bobur Karimov</text>
+        <text x="0" y="34" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="600" fill="#D4AF37">TOP BARBER</text>
+
+        <text x="170" y="0" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="600" fill="#8E8E93" letter-spacing="0.5">SANA VA VAQT / TIME</text>
+        <text x="170" y="20" font-family="'Playfair Display', serif" font-size="17" font-weight="700" fill="#FFFFFF">28 Okt, 14:00</text>
+        <text x="170" y="34" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="600" fill="#34C759">● Kutilmoqda</text>
+      </g>
+
+      <g transform="translate(24, 150)">
+        <text x="0" y="0" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="600" fill="#8E8E93" letter-spacing="0.5">MIJOZ / GUEST</text>
+        <text x="0" y="18" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">Alisher Karimov</text>
+
+        <text x="170" y="0" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="600" fill="#8E8E93" letter-spacing="0.5">JAMI TO'LOV / TOTAL</text>
+        <text x="170" y="18" font-family="'Plus Jakarta Sans', sans-serif" font-size="17" font-weight="800" fill="#F2D379">150 000 UZS</text>
+      </g>
+
+      <!-- Perforated Cutout Line -->
+      <line x1="20" y1="230" x2="320" y2="230" stroke="rgba(212, 175, 55, 0.4)" stroke-width="1.2" stroke-dasharray="6 6"/>
+      <circle cx="0" cy="230" r="12" fill="#0E0E12" stroke="url(#goldBorder)" stroke-width="1"/>
+      <circle cx="340" cy="230" r="12" fill="#0E0E12" stroke="url(#goldBorder)" stroke-width="1"/>
+
+      <!-- Barcode / Digital Code Section -->
+      <g transform="translate(20, 260)">
+        <text x="150" y="14" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="700" fill="#8E8E93" text-anchor="middle" letter-spacing="3">AUTHENTIC DIGITAL PASS</text>
+        
+        <!-- Stylized Barcode Bars -->
+        <g transform="translate(40, 28)" fill="#D4AF37">
+          <rect x="0" width="3" height="52"/>
+          <rect x="5" width="1.5" height="52"/>
+          <rect x="9" width="4.5" height="52"/>
+          <rect x="17" width="2" height="52"/>
+          <rect x="22" width="1" height="52"/>
+          <rect x="26" width="4" height="52"/>
+          <rect x="33" width="2.5" height="52"/>
+          <rect x="38" width="5" height="52"/>
+          <rect x="46" width="1" height="52"/>
+          <rect x="50" width="3" height="52"/>
+          <rect x="56" width="2" height="52"/>
+          <rect x="61" width="4" height="52"/>
+          <rect x="68" width="1.5" height="52"/>
+          <rect x="72" width="3" height="52"/>
+          <rect x="78" width="5" height="52"/>
+          <rect x="86" width="2" height="52"/>
+          <rect x="91" width="3.5" height="52"/>
+          <rect x="97" width="1.5" height="52"/>
+          <rect x="101" width="4" height="52"/>
+          <rect x="108" width="2" height="52"/>
+          <rect x="113" width="3" height="52"/>
+          <rect x="118" width="5" height="52"/>
+          <rect x="126" width="1.5" height="52"/>
+          <rect x="130" width="4" height="52"/>
+          <rect x="137" width="2.5" height="52"/>
+          <rect x="143" width="3" height="52"/>
+          <rect x="149" width="1" height="52"/>
+          <rect x="153" width="4.5" height="52"/>
+          <rect x="160" width="2" height="52"/>
+          <rect x="165" width="3" height="52"/>
+          <rect x="171" width="1.5" height="52"/>
+          <rect x="175" width="4" height="52"/>
+          <rect x="182" width="2.5" height="52"/>
+          <rect x="187" width="5" height="52"/>
+          <rect x="195" width="2" height="52"/>
+          <rect x="200" width="3" height="52"/>
+          <rect x="206" width="1.5" height="52"/>
+          <rect x="210" width="4" height="52"/>
+          <rect x="217" width="2" height="52"/>
+        </g>
+        
+        <text x="150" y="96" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="600" fill="#8E8E93" text-anchor="middle" letter-spacing="4">CB-2026-1082-TOP</text>
+      </g>
+    </g>
+
+    <!-- Bottom Action Buttons -->
+    <g transform="translate(25, 680)">
+      <rect width="340" height="50" rx="25" fill="url(#goldGrad)"/>
+      <text x="170" y="31" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="800" fill="#0A0A0C" text-anchor="middle" letter-spacing="0.5">MENING BRONLARIM</text>
+
+      <g transform="translate(0, 60)">
+        <rect width="340" height="46" rx="23" fill="transparent" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1"/>
+        <text x="170" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="600" fill="#FFFFFF" text-anchor="middle">Yopish (Botga qaytish)</text>
+      </g>
+    </g>
+
+    <rect x="127" y="828" width="136" height="5" rx="2.5" fill="#FFFFFF" opacity="0.3"/>
+  </g>
+</svg>

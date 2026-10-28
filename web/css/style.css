@@ -565,7 +565,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 70px;
+  margin-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
 }
 
 .service-card {
@@ -721,11 +721,21 @@ body {
 }
 
 /* ================= STEP 4: DATE & TIME ================= */
+#stepDateTime {
+  position: relative;
+  padding-bottom: 20px;
+}
+
+#stepDateTime .step-header {
+  margin-bottom: 14px;
+}
+
 .date-carousel-wrapper {
-  margin: 0 -20px 24px -20px;
+  margin: 0 -20px 16px -20px;
   overflow-x: auto;
   padding: 0 20px;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .date-carousel-wrapper::-webkit-scrollbar {
@@ -734,23 +744,24 @@ body {
 
 .date-carousel {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   width: max-content;
 }
 
 .date-pill {
-  width: 62px;
-  height: 74px;
-  border-radius: var(--radius-md);
+  width: 58px;
+  height: 68px;
+  border-radius: var(--radius-sm);
   background-color: var(--bg-card);
   border: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 3px;
   cursor: pointer;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .date-pill:active {
@@ -765,10 +776,11 @@ body {
 }
 
 .date-day-name {
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
   color: var(--text-muted);
+  letter-spacing: 0.5px;
 }
 
 .date-pill.active .date-day-name {
@@ -777,7 +789,7 @@ body {
 }
 
 .date-number {
-  font-size: 20px;
+  font-size: 19px;
   font-weight: 800;
   color: var(--text-white);
   line-height: 1;
@@ -788,7 +800,7 @@ body {
 }
 
 .date-month-name {
-  font-size: 10px;
+  font-size: 9.5px;
   color: var(--text-muted);
 }
 
@@ -796,32 +808,37 @@ body {
   color: rgba(0, 0, 0, 0.7);
 }
 
+.slots-container {
+  margin-top: 4px;
+}
+
 .section-subtitle {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   color: var(--text-white);
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   letter-spacing: 0.2px;
 }
 
 .slots-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-bottom: 80px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: calc(130px + env(safe-area-inset-bottom, 0px));
 }
 
 .slot-btn {
   background-color: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 13px 8px;
-  font-size: 14.5px;
-  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: 11px 4px;
+  font-size: 13.5px;
+  font-weight: 700;
   color: var(--text-white);
   cursor: pointer;
   text-align: center;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  letter-spacing: 0.2px;
 }
 
 .slot-btn:active:not(:disabled) {
@@ -842,6 +859,17 @@ body {
   cursor: not-allowed;
   opacity: 0.45;
   text-decoration: line-through;
+}
+
+@media (max-width: 350px) {
+  .slots-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .slot-btn {
+    padding: 10px 2px;
+    font-size: 12.5px;
+  }
 }
 
 /* ================= STEP 5: CONFIRMATION ================= */

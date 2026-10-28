@@ -1,0 +1,120 @@
+
+<svg width="390" height="844" viewBox="0 0 390 844" fill="none" xmlns="http://www.w3.org/2000/svg">
+  
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0E0E12" />
+      <stop offset="100%" stop-color="#070709" />
+    </linearGradient>
+
+    <!-- Card Background Gradient -->
+    <linearGradient id="cardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#18181F" />
+      <stop offset="100%" stop-color="#121216" />
+    </linearGradient>
+
+    <!-- Popular Card Gradient -->
+    <linearGradient id="popularCardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#221C14" />
+      <stop offset="100%" stop-color="#15120F" />
+    </linearGradient>
+
+    <!-- Gold Gradient Primary -->
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F2D379" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#9C7A1D" />
+    </linearGradient>
+
+    <!-- Gold Accent Subtle -->
+    <linearGradient id="goldSubtle" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="rgba(212, 175, 55, 0.4)" />
+      <stop offset="100%" stop-color="rgba(212, 175, 55, 0.08)" />
+    </linearGradient>
+
+    <!-- Shimmer Stroke -->
+    <linearGradient id="goldBorder" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ECC86A" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#6B510B" />
+    </linearGradient>
+
+    <!-- Soft Drop Shadow -->
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+
+    <!-- Clip Paths -->
+    <clipPath id="screenClip">
+      <rect width="390" height="844" rx="44" />
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#screenClip)">
+    <!-- Dimmed blurred underlying background -->
+    <rect width="390" height="844" fill="#050507"/>
+    
+    <!-- Drawer Backdrop -->
+    <rect width="390" height="844" fill="rgba(0, 0, 0, 0.75)"/>
+
+    <!-- Bottom Sheet / Modal Panel -->
+    <g transform="translate(0, 160)" filter="url(#cardShadow)">
+      <rect width="390" height="684" rx="28" fill="#121217" stroke="rgba(212, 175, 55, 0.3)" stroke-width="1"/>
+      
+      <!-- Drawer Pull Handle -->
+      <rect x="170" y="12" width="50" height="4.5" rx="2.25" fill="rgba(255, 255, 255, 0.25)"/>
+
+      <!-- Drawer Header -->
+      <g transform="translate(24, 44)">
+        <text x="0" y="16" font-family="'Playfair Display', serif" font-size="22" font-weight="700" fill="#FFFFFF">Mening bronlarim</text>
+        <circle cx="320" cy="10" r="15" fill="rgba(255, 255, 255, 0.08)"/>
+        <text x="320" y="15" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" fill="#8E8E93" text-anchor="middle">✕</text>
+      </g>
+
+      <!-- Active Booking Card 1 -->
+      <g transform="translate(20, 84)" filter="url(#cardShadow)">
+        <rect width="350" height="154" rx="16" fill="url(#popularCardGrad)" stroke="url(#goldBorder)" stroke-width="1.2"/>
+        
+        <text x="18" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="800" fill="#F2D379">#BRON-1082</text>
+        <rect x="236" y="14" width="96" height="22" rx="11" fill="rgba(212, 175, 55, 0.15)"/>
+        <text x="284" y="29" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="700" fill="#F2D379" text-anchor="middle">Kutilmoqda ⏳</text>
+
+        <text x="18" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Sartarosh: <tspan fill="#FFFFFF" font-weight="700">Bobur Karimov (TOP)</tspan></text>
+        <text x="18" y="78" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Sana va Vaqt: <tspan fill="#FFFFFF" font-weight="700">28-Oktabr • 14:00</tspan></text>
+        <text x="18" y="98" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Jami to'lov: <tspan fill="#F2D379" font-weight="800">150 000 UZS</tspan></text>
+
+        <line x1="18" y1="112" x2="332" y2="112" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+
+        <!-- Cancel Button -->
+        <rect x="18" y="120" width="100" height="24" rx="12" fill="rgba(255, 59, 48, 0.1)" stroke="rgba(255, 59, 48, 0.4)" stroke-width="1"/>
+        <text x="68" y="136" font-family="'Plus Jakarta Sans', sans-serif" font-size="10.5" font-weight="700" fill="#FF453A" text-anchor="middle">Bekor qilish</text>
+        
+        <text x="332" y="136" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#34C759" text-anchor="end">So'rov qabul qilinmoqda</text>
+      </g>
+
+      <!-- Past Booking Card 2 (Completed) -->
+      <g transform="translate(20, 256)" filter="url(#cardShadow)">
+        <rect width="350" height="136" rx="16" fill="url(#cardGrad)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+        
+        <text x="18" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">#BRON-1045</text>
+        <rect x="236" y="14" width="96" height="22" rx="11" fill="rgba(52, 199, 89, 0.15)"/>
+        <text x="284" y="29" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="700" fill="#34C759" text-anchor="middle">Bajarilgan 💈</text>
+
+        <text x="18" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Sartarosh: <tspan fill="#FFFFFF" font-weight="700">Jasur Aliyev (TOP)</tspan></text>
+        <text x="18" y="78" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Sana va Vaqt: <tspan fill="#FFFFFF" font-weight="700">15-Oktabr • 16:30</tspan></text>
+        <text x="18" y="98" font-family="'Plus Jakarta Sans', sans-serif" font-size="12" font-weight="500" fill="#8E8E93">Jami to'lov: <tspan fill="#D4AF37" font-weight="800">95 000 UZS</tspan></text>
+
+        <rect x="18" y="112" width="120" height="18" rx="9" fill="rgba(255, 255, 255, 0.04)"/>
+        <text x="78" y="125" font-family="'Plus Jakarta Sans', sans-serif" font-size="9.5" font-weight="600" fill="#8E8E93" text-anchor="middle">Tashrif amalga oshgan</text>
+      </g>
+    </g>
+
+    <rect x="127" y="828" width="136" height="5" rx="2.5" fill="#FFFFFF" opacity="0.3"/>
+  </g>
+</svg>
