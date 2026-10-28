@@ -2,324 +2,473 @@
 <html lang="uz">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Culture Barbershop | Luxury Booking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Culture Barbershop | Olmaliq</title>
   
   <!-- Telegram Web App SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-  <!-- Google Fonts: Playfair Display (Luxury Serif) & Plus Jakarta Sans (Modern UI) -->
+  <!-- Google Fonts: Cinzel (Display), Onest (Body), Playfair Display, Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Onest:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Custom Stylesheet with cache-busting -->
-  <link rel="stylesheet" href="/static/css/style.css?v=2.3">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/static/css/landing.css?v=2.4">
+  <link rel="stylesheet" href="/static/css/style.css?v=2.4">
 </head>
 <body>
-  <div id="app" class="app-container">
+
+  <!-- BARBER POLE TOP STRIPE -->
+  <div class="pole" aria-hidden="true"></div>
+
+  <!-- MAIN LANDING PAGE CONTAINER -->
+  <div class="page">
     
-    <!-- TOP BRAND HEADER -->
-    <header class="app-header">
-      <div class="brand-container" id="brandHomeBtn">
-        <div class="brand-logo">
-          <!-- Official Culture Barbershop Monogram Logo -->
-          <img src="/static/images/logo.jpg" alt="Culture Barbershop" class="brand-logo-img">
-        </div>
-        <div class="brand-text">
-          <h1 class="brand-name">Culture</h1>
-          <span class="brand-tagline">BARBERSHOP</span>
-        </div>
-      </div>
+    <!-- TOP NAVIGATION BAR -->
+    <header class="bar">
+      <a class="bar-brand" href="#top">
+        <img src="/static/images/logo.jpg" alt="Culture Barbershop" class="bar-logo-img">
+        <span class="bar-name">Culture</span>
+      </a>
 
-      <div class="header-actions">
+      <div class="bar-right">
+        <nav class="bar-links" aria-label="Sahifa bo'limlari">
+          <a href="#narxlar" data-landing-i18n="nav_prices">Narxlar</a>
+          <a href="#yozilish" data-landing-i18n="nav_booking">Yozilish</a>
+          <a class="opt" href="#manzil" data-landing-i18n="nav_location">Manzil</a>
+          <a class="opt" href="https://www.instagram.com/culture.olmaliq" target="_blank" rel="noopener">Instagram</a>
+        </nav>
+
         <!-- Language Switcher: UZ / RU -->
-        <div class="lang-switch-wrap">
-          <button class="lang-btn active" data-lang="uz" id="langBtnUz" type="button">UZ</button>
-          <span class="lang-divider">/</span>
-          <button class="lang-btn" data-lang="ru" id="langBtnRu" type="button">RU</button>
+        <div class="lang-toggle-wrap">
+          <button class="lang-toggle-btn active" id="landingLangUz" type="button">UZ</button>
+          <button class="lang-toggle-btn" id="landingLangRu" type="button">RU</button>
         </div>
 
-        <!-- Profile / My Bookings Icon -->
-        <button class="profile-btn" id="openBookingsBtn" title="Mening bronlarim" data-i18n-title="profile_title" type="button">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-          <span class="badge-dot" id="bookingsDot" style="display: none;"></span>
-        </button>
+        <button class="nav-cta-btn btn-open-booking" type="button" data-landing-i18n="nav_book_btn">Onlayn yozilish</button>
       </div>
     </header>
 
-    <!-- MAIN CONTENT VIEW -->
-    <main class="app-main">
+    <!-- MAIN BODY -->
+    <main id="top">
       
-      <!-- ================= STEP 1: CHOOSE YOUR LEVEL OF CRAFT ================= -->
-      <section id="stepCategories" class="view-step active">
-        <div class="step-header">
-          <span class="step-eyebrow" data-i18n="step1_eyebrow">1-BOSQICH (4 TADAN)</span>
-          <h2 class="step-title" data-i18n="step1_title">Sartarosh toifasini tanlang</h2>
-          <p class="step-desc" data-i18n="step1_desc">O'zingizga mos bo'lgan mahorat darajasini tanlang</p>
+      <!-- ================= HERO & SHAVE-THE-WORDMARK CANVAS ================= -->
+      <section aria-labelledby="hero-title">
+        <h1 id="hero-title" class="sr-only">Culture barbershop, Olmaliq</h1>
+        
+        <div class="stage" id="stage">
+          <canvas class="base" id="cBase" aria-hidden="true"></canvas>
+          <canvas class="top" id="cTop" aria-hidden="true"></canvas>
+          <div class="clipper" id="clipper" aria-hidden="true"></div>
         </div>
 
-        <div class="tier-list" id="tierListContainer">
-          <!-- PRO Barber Card -->
-          <div class="tier-card" data-category="PRO">
-            <div class="tier-icon"><span>✦</span></div>
-            <div class="tier-info">
-              <div class="tier-top">
-                <span class="tier-name" data-i18n="tier_pro_name">PRO Barber</span>
-                <span class="tier-subtag" data-i18n="tier_pro_sub">Standart sifat</span>
-              </div>
-              <p class="tier-desc" data-i18n="tier_pro_desc">Kundalik uslub va klassik soch turmaklari</p>
-              <div class="tier-bottom">
-                <span class="tier-price" data-i18n="tier_pro_price">75 000 UZS dan</span>
-              </div>
+        <p class="lockup" aria-hidden="true">BARBERSHOP</p>
+
+        <div class="hero-foot">
+          <p class="hero-line" data-landing-i18n="hero_line">Professional parvarish. Sizning uslubingiz.</p>
+          <div class="hero-act">
+            <button class="btn btn-open-booking" type="button" data-landing-i18n="hero_book_btn">Onlayn yozilish</button>
+            <button class="linkbtn" id="clearAll" type="button" data-landing-i18n="hero_clear_btn">Hammasini tozalash</button>
+          </div>
+        </div>
+
+        <div class="hero-meta">
+          <span id="hint" data-landing-i18n="hero_hint">Yozuv soqol bilan qoplangan. Chapga va o‘ngga suring.</span>
+          <span id="pct">Tozalandi: 0%</span>
+        </div>
+      </section>
+
+      <!-- ================= ABOUT SECTION ================= -->
+      <section class="sec" aria-labelledby="about-h">
+        <div class="about-grid">
+          <h2 class="h2" id="about-h" data-landing-i18n="about_title">More than a haircut</h2>
+          <p data-landing-i18n="about_desc">Culture Olmaliqdagi zamonaviy va hashamatli barbershop. Barber darajasini o‘zingiz tanlaysiz: PRO, TOP yoki VIP. Xizmatlarni belgilab, qulay vaqtga yoziling va navbatda turmang.</p>
+        </div>
+      </section>
+
+      <!-- ================= PRICE TABLE SECTION (18 SERVICES) ================= -->
+      <section class="sec" id="narxlar" aria-labelledby="menu-h">
+        <h2 class="h2" id="menu-h" data-landing-i18n="prices_title">Narxlar</h2>
+        <p class="tier-note" id="tierNote"></p>
+        
+        <div class="ptable" id="ptable" data-tier="1">
+          <div class="phead">
+            <span data-landing-i18n="prices_table_service">Xizmat</span>
+            <button class="tier" type="button" data-i="0" aria-pressed="false">PRO</button>
+            <button class="tier" type="button" data-i="1" aria-pressed="true">TOP</button>
+            <button class="tier" type="button" data-i="2" aria-pressed="false">VIP</button>
+          </div>
+          <div id="pbody"></div>
+        </div>
+        
+        <p class="note" data-landing-i18n="prices_footnote">Narxlar so‘mda ko‘rsatilgan. Daraja nomini bossangiz, ustun ajralib turadi.</p>
+      </section>
+
+      <!-- ================= BOOKING ROADMAP SECTION ================= -->
+      <section class="sec" id="yozilish" aria-labelledby="book-h">
+        <div class="book">
+          <div>
+            <h2 class="h2" id="book-h" data-landing-i18n="booking_title">Onlayn yozilish</h2>
+            <p class="lede" data-landing-i18n="booking_desc">Yozilish qulay interaktiv ilovada ochiladi. Barbershopning bron tizimi barcha bo‘sh vaqtlarni real vaqt rejimida ko‘rsatadi.</p>
+            <div class="book-act">
+              <button class="btn btn-open-booking" type="button" data-landing-i18n="booking_act_btn">Yozilish</button>
+              <a class="btn quiet" href="https://t.me/culturebarbersbot" target="_blank" rel="noopener" data-landing-i18n="booking_bot_btn">Telegram bot</a>
             </div>
-            <div class="tier-arrow">›</div>
+            <p class="book-url">culture-barbershop.onrender.com</p>
           </div>
-
-          <!-- TOP Barber Card (POPULAR) -->
-          <div class="tier-card popular-card" data-category="TOP">
-            <div class="tier-badge" data-i18n="badge_popular">OMMABOP</div>
-            <div class="tier-icon"><span>★</span></div>
-            <div class="tier-info">
-              <div class="tier-top">
-                <span class="tier-name" data-i18n="tier_top_name">TOP Barber</span>
-                <span class="tier-subtag" data-i18n="tier_top_sub">Tajribali usta</span>
-              </div>
-              <p class="tier-desc" data-i18n="tier_top_desc">Yuqori aniqlik va individual uslub</p>
-              <div class="tier-bottom">
-                <span class="tier-price" data-i18n="tier_top_price">95 000 UZS dan</span>
-              </div>
-            </div>
-            <div class="tier-arrow">›</div>
-          </div>
-
-          <!-- VIP Barber Card (SIGNATURE) -->
-          <div class="tier-card" data-category="VIP">
-            <div class="tier-badge signature-badge" data-i18n="badge_signature">PREMIUM</div>
-            <div class="tier-icon"><span>👑</span></div>
-            <div class="tier-info">
-              <div class="tier-top">
-                <span class="tier-name" data-i18n="tier_vip_name">VIP Barber</span>
-                <span class="tier-subtag" data-i18n="tier_vip_sub">Eksklyuziv parvarish</span>
-              </div>
-              <p class="tier-desc" data-i18n="tier_vip_desc">Mualliflik soch kesimi, soqol parvarishi va spa</p>
-              <div class="tier-bottom">
-                <span class="tier-price" data-i18n="tier_vip_price">125 000 UZS dan</span>
-              </div>
-            </div>
-            <div class="tier-arrow">›</div>
-          </div>
+          
+          <ol class="steps">
+            <li data-landing-i18n="step_1">Barber darajasini tanlang: PRO, TOP yoki VIP.</li>
+            <li data-landing-i18n="step_2">Shu darajadagi professional ustalardan birini tanlang.</li>
+            <li data-landing-i18n="step_3">Kerakli xizmatlarni belgilang, jami narx avtomatik hisoblanadi.</li>
+            <li data-landing-i18n="step_4">Sana va qulay vaqtni tanlab, ismingiz va raqamingizni yozing. Usta tasdiqlashi bilan botdan xabar olasiz.</li>
+          </ol>
         </div>
       </section>
 
-      <!-- ================= STEP 2: SELECT BARBER ================= -->
-      <section id="stepBarbers" class="view-step">
-        <div class="step-nav">
-          <button class="back-link-btn" onclick="app.goToStep('stepCategories')" type="button">‹ <span data-i18n="btn_back">Orqaga</span></button>
-          <span class="step-pill" id="selectedTierPill">TOP BARBER</span>
-        </div>
-        <div class="step-header">
-          <span class="step-eyebrow" data-i18n="step2_eyebrow">2-BOSQICH (4 TADAN)</span>
-          <h2 class="step-title" data-i18n="step2_title">Sartaroshni tanlang</h2>
-          <p class="step-desc" data-i18n="step2_desc">O'z mahoratiga ega ustalardan birini tanlang</p>
-        </div>
-
-        <div class="barbers-grid" id="barbersListContainer">
-          <!-- Dynamically populated via API -->
-        </div>
-      </section>
-
-      <!-- ================= STEP 3: SELECT SERVICES ================= -->
-      <section id="stepServices" class="view-step">
-        <div class="step-nav">
-          <button class="back-link-btn" onclick="app.goToStep('stepBarbers')" type="button">‹ <span data-i18n="btn_back">Orqaga</span></button>
-          <span class="step-pill" id="selectedBarberPill">Usta</span>
-        </div>
-        <div class="step-header">
-          <span class="step-eyebrow" data-i18n="step3_eyebrow">3-BOSQICH (4 TADAN)</span>
-          <h2 class="step-title" data-i18n="step3_title">Xizmatlarni tanlang</h2>
-          <p class="step-desc" data-i18n="step3_desc">Bir yoki bir nechta xizmat turini tanlang</p>
-        </div>
-
-        <!-- Service Category Filter Tabs (18 ta xizmatni toifalar bo'yicha saralash) -->
-        <div class="service-filter-bar">
-          <button class="filter-pill active" data-filter="all" id="filterAllBtn" type="button">
-            <span data-i18n="filter_all">Barchasi</span>
-          </button>
-          <button class="filter-pill" data-filter="main" id="filterMainBtn" type="button">
-            <span data-i18n="filter_main">Asosiy</span>
-          </button>
-          <button class="filter-pill" data-filter="extra" id="filterExtraBtn" type="button">
-            <span data-i18n="filter_extra">Qo'shimcha</span>
-          </button>
-          <button class="filter-pill" data-filter="complex" id="filterComplexBtn" type="button">
-            <span data-i18n="filter_complex">Kompleks</span>
-          </button>
-        </div>
-
-        <div class="services-list" id="servicesListContainer">
-          <!-- Dynamically populated via API -->
-        </div>
-
-        <!-- Sticky Footer for Step 3 -->
-        <div class="sticky-action-bar">
-          <div class="bar-summary">
-            <span class="bar-count" id="servicesSelectedCount">0 ta xizmat tanlandi</span>
-            <span class="bar-total" id="servicesSelectedTotal">0 UZS</span>
+      <!-- ================= LOCATION & CONTACTS ================= -->
+      <section class="sec" id="manzil" aria-labelledby="visit-h">
+        <h2 class="h2" id="visit-h" data-landing-i18n="location_title">Qayerda va qachon</h2>
+        <div class="visit-grid">
+          <div>
+            <h3 data-landing-i18n="loc_city_title">Shahar</h3>
+            <p data-landing-i18n="loc_city_desc">Olmaliq shahri. Aniq manzil va yo'nalish Instagram sahifamizda.</p>
           </div>
-          <button class="gold-cta-btn" id="toDateTimeBtn" disabled type="button">
-            <span data-i18n="btn_continue">Davom etish</span> ›
-          </button>
-        </div>
-      </section>
-
-      <!-- ================= STEP 4: SELECT DATE & TIME ================= -->
-      <section id="stepDateTime" class="view-step">
-        <div class="step-nav">
-          <button class="back-link-btn" onclick="app.goToStep('stepServices')" type="button">‹ <span data-i18n="btn_back">Orqaga</span></button>
-          <span class="step-pill" data-i18n="pill_datetime">Sana va Vaqt</span>
-        </div>
-        <div class="step-header">
-          <span class="step-eyebrow" data-i18n="step4_eyebrow">4-BOSQICH (4 TADAN)</span>
-          <h2 class="step-title" data-i18n="step4_title">Sana va Vaqtni tanlang</h2>
-          <p class="step-desc" data-i18n="step4_desc">O'zingizga qulay bo'sh vaqt oralig'ini tanlang</p>
-        </div>
-
-        <!-- Date Carousel -->
-        <div class="date-carousel-wrapper">
-          <div class="date-carousel" id="dateCarousel">
-            <!-- Dynamically populated 7-10 days -->
+          <div>
+            <h3 data-landing-i18n="loc_hours_title">Ish vaqti</h3>
+            <p data-landing-i18n="loc_hours_desc">Har kuni 10:00 dan 22:00 gacha dam olish kunlarisiz.</p>
           </div>
-        </div>
-
-        <!-- Time Slots Grid -->
-        <div class="slots-container">
-          <h3 class="section-subtitle" data-i18n="available_slots">Mavjud vaqtlar</h3>
-          <div class="slots-grid" id="slotsGrid">
-            <!-- Dynamically populated -->
-          </div>
-        </div>
-
-        <!-- Sticky Footer for Step 4 -->
-        <div class="sticky-action-bar">
-          <div class="bar-summary">
-            <span class="bar-count" id="dateTimeSelectedInfo">Vaqt tanlanmagan</span>
-            <span class="bar-total" id="dateTimeTotal">0 UZS</span>
-          </div>
-          <button class="gold-cta-btn" id="toConfirmBtn" disabled type="button">
-            <span data-i18n="btn_to_confirm">Tasdiqlashga o'tish</span> ›
-          </button>
-        </div>
-      </section>
-
-      <!-- ================= STEP 5: REVIEW & CONTACT CONFIRMATION ================= -->
-      <section id="stepConfirm" class="view-step">
-        <div class="step-nav">
-          <button class="back-link-btn" onclick="app.goToStep('stepDateTime')" type="button">‹ <span data-i18n="btn_back">Orqaga</span></button>
-          <span class="step-pill" data-i18n="pill_review">Ko'rib chiqish</span>
-        </div>
-        <div class="step-header">
-          <h2 class="step-title" data-i18n="step5_title">Buyurtma ma'lumotlari</h2>
-          <p class="step-desc" data-i18n="step5_desc">Buyurtma ma'lumotlarini tekshiring va tasdiqlang</p>
-        </div>
-
-        <!-- Summary Card -->
-        <div class="summary-card">
-          <div class="summary-row">
-            <span class="summary-label" data-i18n="label_barber">Sartarosh:</span>
-            <span class="summary-value highlight-gold" id="sumBarberName">—</span>
-          </div>
-          <div class="summary-row">
-            <span class="summary-label" data-i18n="label_category">Toifasi:</span>
-            <span class="summary-value" id="sumBarberCategory">—</span>
-          </div>
-          <div class="summary-row">
-            <span class="summary-label" data-i18n="label_datetime">Sana va Vaqt:</span>
-            <span class="summary-value highlight-white" id="sumDateTime">—</span>
-          </div>
-          <div class="summary-divider"></div>
-          <div class="summary-row">
-            <span class="summary-label" data-i18n="label_services">Tanlangan xizmatlar:</span>
-            <div class="summary-services-list" id="sumServicesList"></div>
-          </div>
-          <div class="summary-divider"></div>
-          <div class="summary-row total-row">
-            <span class="summary-label" data-i18n="label_total">Jami to'lov:</span>
-            <span class="summary-total-price" id="sumTotalPrice">0 UZS</span>
-          </div>
-        </div>
-
-        <!-- Contact Inputs -->
-        <div class="contact-box">
-          <h3 class="section-subtitle" data-i18n="contact_info_title">Bog'lanish ma'lumotlari</h3>
-          <div class="input-group">
-            <label for="clientNameInput" data-i18n="input_name_label">Ism va Familiya</label>
-            <input type="text" id="clientNameInput" placeholder="Masalan: Alisher Karimov" data-i18n-placeholder="input_name_placeholder" required>
-          </div>
-          <div class="input-group">
-            <label for="clientPhoneInput" data-i18n="input_phone_label">Telefon raqam</label>
-            <input type="tel" id="clientPhoneInput" placeholder="+998 90 123 45 67" data-i18n-placeholder="input_phone_placeholder" required>
-          </div>
-        </div>
-
-        <button class="gold-cta-btn large-cta" id="confirmBookingBtn" type="button">
-          <span data-i18n="btn_submit_booking">TASDIQLASH VA BRON QILISH</span>
-        </button>
-      </section>
-
-      <!-- ================= STEP 6: SUCCESS SCREEN ================= -->
-      <section id="stepSuccess" class="view-step">
-        <div class="success-card">
-          <div class="success-icon-wrap">
-            <svg viewBox="0 0 60 60" width="60" height="60" fill="none">
-              <circle cx="30" cy="30" r="28" stroke="#D4AF37" stroke-width="2"/>
-              <path d="M18 30L26 38L42 22" stroke="#D4AF37" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <h2 class="success-title" data-i18n="success_title">Muvaffaqiyatli bron qilindi!</h2>
-          <p class="success-desc" data-i18n="success_desc">
-            Sizning buyurtmangiz qabul qilindi. Sartarosh so'rovni qabul qilishi bilanoq <b>@culturebarbersbot</b> orqali xabarnoma olasiz.
-          </p>
-
-          <div class="booking-receipt" id="successReceipt">
-            <!-- Details rendered here -->
-          </div>
-
-          <div class="success-actions">
-            <button class="gold-cta-btn" id="successMyBookingsBtn" type="button">
-              <span data-i18n="btn_my_bookings">Mening bronlarim</span>
-            </button>
-            <button class="ghost-btn" id="successCloseBtn" type="button">
-              <span data-i18n="btn_close">Yopish</span>
-            </button>
+          <div>
+            <h3 data-landing-i18n="loc_contact_title">Bog‘lanish</h3>
+            <p><a href="https://www.instagram.com/culture.olmaliq" target="_blank" rel="noopener">@culture.olmaliq</a> yoki <a href="https://t.me/culturebarbersbot" target="_blank" rel="noopener">@culturebarbersbot</a></p>
           </div>
         </div>
       </section>
 
     </main>
 
-    <!-- ================= MY BOOKINGS MODAL / DRAWER ================= -->
-    <div class="drawer-backdrop" id="bookingsDrawer">
-      <div class="drawer-panel">
-        <div class="drawer-header">
-          <h3 class="drawer-title" data-i18n="my_bookings_title">Mening bronlarim</h3>
-          <button class="drawer-close-btn" id="closeBookingsBtn" type="button">✕</button>
-        </div>
-        <div class="drawer-body" id="myBookingsList">
-          <div class="drawer-empty" data-i18n="loading">Yuklanmoqda...</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Notification Toast -->
-    <div class="toast-message" id="toastMessage"></div>
+    <!-- FOOTER -->
+    <footer class="foot">
+      <span data-landing-i18n="footer_text">Culture barbershop, Olmaliq</span>
+      <a href="https://www.instagram.com/culture.olmaliq" target="_blank" rel="noopener">@culture.olmaliq</a>
+    </footer>
 
   </div>
 
-  <!-- Custom Application Script with cache-busting -->
-  <script src="/static/js/app.js?v=2.3"></script>
+  <!-- ================= INTERACTIVE BOOKING MODAL (FULL WEB APP ENGINE) ================= -->
+  <div id="bookingModal" class="booking-modal-backdrop" aria-hidden="true">
+    <div class="booking-modal-panel">
+      
+      <!-- Close Button -->
+      <button class="booking-modal-close-btn" id="closeBookingModalBtn" type="button" aria-label="Yopish">✕</button>
+
+      <!-- WEB APP BOOKING CONTAINER -->
+      <div id="app" class="app-container modal-app">
+        
+        <!-- MODAL HEADER -->
+        <header class="app-header">
+          <div class="brand-container" id="brandHomeBtn">
+            <div class="brand-logo">
+              <img src="/static/images/logo.jpg" alt="Culture Barbershop" class="brand-logo-img">
+            </div>
+            <div class="brand-text">
+              <h1 class="brand-name">Culture</h1>
+              <span class="brand-tagline">BARBERSHOP</span>
+            </div>
+          </div>
+
+          <div class="header-actions">
+            <!-- Language Switcher inside modal: UZ / RU -->
+            <div class="lang-switch-wrap">
+              <button class="lang-btn active" data-lang="uz" id="langBtnUz" type="button">UZ</button>
+              <span class="lang-divider">/</span>
+              <button class="lang-btn" data-lang="ru" id="langBtnRu" type="button">RU</button>
+            </div>
+
+            <!-- Profile / My Bookings Icon -->
+            <button class="profile-btn" id="openBookingsBtn" title="Mening bronlarim" data-i18n-title="profile_title" type="button">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span class="badge-dot" id="bookingsDot" style="display: none;"></span>
+            </button>
+          </div>
+        </header>
+
+        <!-- BOOKING MAIN VIEWS -->
+        <main class="app-main">
+          
+          <!-- ================= STEP 1: CATEGORY SELECTION ================= -->
+          <section id="stepCategories" class="view-step active">
+            <div class="step-header">
+              <span class="step-eyebrow" data-i18n="step1_eyebrow">1-BOSQICH (4 TADAN)</span>
+              <h2 class="step-title" data-i18n="step1_title">Sartarosh toifasini tanlang</h2>
+              <p class="step-desc" data-i18n="step1_desc">O'zingizga mos bo'lgan mahorat darajasini tanlang</p>
+            </div>
+
+            <div class="tier-list" id="tierListContainer">
+              <!-- PRO Barber Card -->
+              <div class="tier-card" data-category="PRO">
+                <div class="tier-icon"><span>✦</span></div>
+                <div class="tier-info">
+                  <div class="tier-top">
+                    <span class="tier-name" data-i18n="tier_pro_name">PRO Barber</span>
+                    <span class="tier-subtag" data-i18n="tier_pro_sub">Standart sifat</span>
+                  </div>
+                  <p class="tier-desc" data-i18n="tier_pro_desc">Kundalik uslub va klassik soch turmaklari</p>
+                  <div class="tier-bottom">
+                    <span class="tier-price" data-i18n="tier_pro_price">75 000 UZS dan</span>
+                  </div>
+                </div>
+                <div class="tier-arrow">›</div>
+              </div>
+
+              <!-- TOP Barber Card (POPULAR) -->
+              <div class="tier-card popular-card" data-category="TOP">
+                <div class="tier-badge" data-i18n="badge_popular">OMMABOP</div>
+                <div class="tier-icon"><span>★</span></div>
+                <div class="tier-info">
+                  <div class="tier-top">
+                    <span class="tier-name" data-i18n="tier_top_name">TOP Barber</span>
+                    <span class="tier-subtag" data-i18n="tier_top_sub">Tajribali usta</span>
+                  </div>
+                  <p class="tier-desc" data-i18n="tier_top_desc">Yuqori aniqlik va individual uslub</p>
+                  <div class="tier-bottom">
+                    <span class="tier-price" data-i18n="tier_top_price">95 000 UZS dan</span>
+                  </div>
+                </div>
+                <div class="tier-arrow">›</div>
+              </div>
+
+              <!-- VIP Barber Card (SIGNATURE) -->
+              <div class="tier-card" data-category="VIP">
+                <div class="tier-badge signature-badge" data-i18n="badge_signature">PREMIUM</div>
+                <div class="tier-icon"><span>👑</span></div>
+                <div class="tier-info">
+                  <div class="tier-top">
+                    <span class="tier-name" data-i18n="tier_vip_name">VIP Barber</span>
+                    <span class="tier-subtag" data-i18n="tier_vip_sub">Eksklyuziv parvarish</span>
+                  </div>
+                  <p class="tier-desc" data-i18n="tier_vip_desc">Mualliflik soch kesimi, soqol parvarishi va spa</p>
+                  <div class="tier-bottom">
+                    <span class="tier-price" data-i18n="tier_vip_price">125 000 UZS dan</span>
+                  </div>
+                </div>
+                <div class="tier-arrow">›</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= STEP 2: SELECT BARBER ================= -->
+          <section id="stepBarbers" class="view-step">
+            <div class="step-nav">
+              <button class="back-link-btn" onclick="app.goToStep('stepCategories')" type="button">‹ <span data-i18n="btn_back">Orqaga</span></button>
+              <span class="step-pill" id="selectedTierPill">TOP BARBER</span>
+            </div>
+            <div class="step-header">
+              <span class="step-eyebrow" data-i18n="step2_eyebrow">2-BOSQICH (4 TADAN)</span>
+              <h2 class="step-title" data-i18n="step2_title">Sartaroshni tanlang</h2>
+              <p class="step-desc" data-i18n="step2_desc">O'z mahoratiga ega ustalardan birini tanlang</p>
+            </div>
+
+            <div class="barbers-grid" id="barbersListContainer">
+              <!-- Dynamically populated via API -->
+            </div>
+          </section>
+
+          <!-- ================= STEP 3: SELECT SERVICES ================= -->
+          <section id="stepServices" class="view-step">
+            <div class="step-nav">
+              <button class="back-link-btn" onclick="app.goToStep('stepBarbers')" type="button">‹ <span data-i18n="btn_back">Orqaga</span></button>
+              <span class="step-pill" id="selectedBarberPill">Usta</span>
+            </div>
+            <div class="step-header">
+              <span class="step-eyebrow" data-i18n="step3_eyebrow">3-BOSQICH (4 TADAN)</span>
+              <h2 class="step-title" data-i18n="step3_title">Xizmatlarni tanlang</h2>
+              <p class="step-desc" data-i18n="step3_desc">Bir yoki bir nechta xizmat turini tanlang</p>
+            </div>
+
+            <!-- Service Category Filter Tabs -->
+            <div class="service-filter-bar">
+              <button class="filter-pill active" data-filter="all" id="filterAllBtn" type="button">
+                <span data-i18n="filter_all">Barchasi</span>
+              </button>
+              <button class="filter-pill" data-filter="main" id="filterMainBtn" type="button">
+                <span data-i18n="filter_main">Asosiy</span>
+              </button>
+              <button class="filter-pill" data-filter="extra" id="filterExtraBtn" type="button">
+                <span data-i18n="filter_extra">Qo'shimcha</span>
+              </button>
+              <button class="filter-pill" data-filter="complex" id="filterComplexBtn" type="button">
+                <span data-i18n="filter_complex">Kompleks</span>
+              </button>
+            </div>
+
+            <div class="services-list" id="servicesListContainer">
+              <!-- Dynamically populated via API -->
+            </div>
+
+            <!-- Sticky Footer for Step 3 -->
+            <div class="sticky-action-bar">
+              <div class="bar-summary">
+                <span class="bar-count" id="servicesSelectedCount">0 ta xizmat tanlandi</span>
+                <span class="bar-total" id="servicesSelectedTotal">0 UZS</span>
+              </div>
+              <button class="gold-cta-btn" id="toDateTimeBtn" disabled type="button">
+                <span data-i18n="btn_continue">Davom etish</span> ›
+              </button>
+            </div>
+          </section>
+
+          <!-- ================= STEP 4: SELECT DATE & TIME ================= -->
+          <section id="stepDateTime" class="view-step">
+            <div class="step-nav">
+              <button class="back-link-btn" onclick="app.goToStep('stepServices')" type="button">‹ <span data-i18n="btn_back">Orqaga</span></button>
+              <span class="step-pill" data-i18n="pill_datetime">Sana va Vaqt</span>
+            </div>
+            <div class="step-header">
+              <span class="step-eyebrow" data-i18n="step4_eyebrow">4-BOSQICH (4 TADAN)</span>
+              <h2 class="step-title" data-i18n="step4_title">Sana va Vaqtni tanlang</h2>
+              <p class="step-desc" data-i18n="step4_desc">O'zingizga qulay bo'sh vaqt oralig'ini tanlang</p>
+            </div>
+
+            <!-- Date Carousel -->
+            <div class="date-carousel-wrapper">
+              <div class="date-carousel" id="dateCarousel">
+                <!-- Dynamically populated 7-10 days -->
+              </div>
+            </div>
+
+            <!-- Time Slots Grid (4 Columns) -->
+            <div class="slots-container">
+              <h3 class="section-subtitle" data-i18n="available_slots">Mavjud vaqtlar</h3>
+              <div class="slots-grid" id="slotsGrid">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Sticky Footer for Step 4 -->
+            <div class="sticky-action-bar">
+              <div class="bar-summary">
+                <span class="bar-count" id="dateTimeSelectedInfo">Vaqt tanlanmagan</span>
+                <span class="bar-total" id="dateTimeTotal">0 UZS</span>
+              </div>
+              <button class="gold-cta-btn" id="toConfirmBtn" disabled type="button">
+                <span data-i18n="btn_to_confirm">Tasdiqlashga o'tish</span> ›
+              </button>
+            </div>
+          </section>
+
+          <!-- ================= STEP 5: REVIEW & CONTACT CONFIRMATION ================= -->
+          <section id="stepConfirm" class="view-step">
+            <div class="step-nav">
+              <button class="back-link-btn" onclick="app.goToStep('stepDateTime')" type="button">‹ <span data-i18n="btn_back">Orqaga</span></button>
+              <span class="step-pill" data-i18n="pill_review">Ko'rib chiqish</span>
+            </div>
+            <div class="step-header">
+              <h2 class="step-title" data-i18n="step5_title">Buyurtma ma'lumotlari</h2>
+              <p class="step-desc" data-i18n="step5_desc">Buyurtma ma'lumotlarini tekshiring va tasdiqlang</p>
+            </div>
+
+            <!-- Summary Card -->
+            <div class="summary-card">
+              <div class="summary-row">
+                <span class="summary-label" data-i18n="label_barber">Sartarosh:</span>
+                <span class="summary-value highlight-gold" id="sumBarberName">—</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label" data-i18n="label_category">Toifasi:</span>
+                <span class="summary-value" id="sumBarberCategory">—</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label" data-i18n="label_datetime">Sana va Vaqt:</span>
+                <span class="summary-value highlight-white" id="sumDateTime">—</span>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-row">
+                <span class="summary-label" data-i18n="label_services">Tanlangan xizmatlar:</span>
+                <div class="summary-services-list" id="sumServicesList"></div>
+              </div>
+              <div class="summary-divider"></div>
+              <div class="summary-row total-row">
+                <span class="summary-label" data-i18n="label_total">Jami to'lov:</span>
+                <span class="summary-total-price" id="sumTotalPrice">0 UZS</span>
+              </div>
+            </div>
+
+            <!-- Contact Inputs -->
+            <div class="contact-box">
+              <h3 class="section-subtitle" data-i18n="contact_info_title">Bog'lanish ma'lumotlari</h3>
+              <div class="input-group">
+                <label for="clientNameInput" data-i18n="input_name_label">Ism va Familiya</label>
+                <input type="text" id="clientNameInput" placeholder="Masalan: Alisher Karimov" data-i18n-placeholder="input_name_placeholder" required>
+              </div>
+              <div class="input-group">
+                <label for="clientPhoneInput" data-i18n="input_phone_label">Telefon raqam</label>
+                <input type="tel" id="clientPhoneInput" placeholder="+998 90 123 45 67" data-i18n-placeholder="input_phone_placeholder" required>
+              </div>
+            </div>
+
+            <button class="gold-cta-btn large-cta" id="confirmBookingBtn" type="button">
+              <span data-i18n="btn_submit_booking">TASDIQLASH VA BRON QILISH</span>
+            </button>
+          </section>
+
+          <!-- ================= STEP 6: SUCCESS SCREEN ================= -->
+          <section id="stepSuccess" class="view-step">
+            <div class="success-card">
+              <div class="success-icon-wrap">
+                <svg viewBox="0 0 60 60" width="60" height="60" fill="none">
+                  <circle cx="30" cy="30" r="28" stroke="#D4AF37" stroke-width="2"/>
+                  <path d="M18 30L26 38L42 22" stroke="#D4AF37" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <h2 class="success-title" data-i18n="success_title">Muvaffaqiyatli bron qilindi!</h2>
+              <p class="success-desc" data-i18n="success_desc">
+                Sizning buyurtmangiz qabul qilindi. Sartarosh so'rovni qabul qilishi bilanoq <b>@culturebarbersbot</b> orqali xabarnoma olasiz.
+              </p>
+
+              <div class="booking-receipt" id="successReceipt">
+                <!-- Details rendered here -->
+              </div>
+
+              <div class="success-actions">
+                <button class="gold-cta-btn" id="successMyBookingsBtn" type="button">
+                  <span data-i18n="btn_my_bookings">Mening bronlarim</span>
+                </button>
+                <button class="ghost-btn" id="successCloseBtn" type="button" onclick="closeBooking()">
+                  <span data-i18n="btn_close">Yopish</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+        </main>
+
+        <!-- ================= MY BOOKINGS MODAL / DRAWER ================= -->
+        <div class="drawer-backdrop" id="bookingsDrawer">
+          <div class="drawer-panel">
+            <div class="drawer-header">
+              <h3 class="drawer-title" data-i18n="my_bookings_title">Mening bronlarim</h3>
+              <button class="drawer-close-btn" id="closeBookingsBtn" type="button">✕</button>
+            </div>
+            <div class="drawer-body" id="myBookingsList">
+              <div class="drawer-empty" data-i18n="loading">Yuklanmoqda...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notification Toast -->
+        <div class="toast-message" id="toastMessage"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/js/app.js?v=2.4"></script>
+  <script src="/static/js/landing.js?v=2.4"></script>
 </body>
 </html>

@@ -75,11 +75,19 @@ app.mount("/static", StaticFiles(directory=WEB_DIR), name="static")
 app.include_router(api_router)
 
 
-# Asosiy sahifa - Telegram Web App Mini App
+# Asosiy sahifa - To'liq Barbershop Veb-sayti
 @app.get("/")
 async def serve_webapp():
     index_path = os.path.join(WEB_DIR, "index.html")
     return FileResponse(index_path)
+
+
+# Standalone Booking Web App
+@app.get("/booking")
+@app.get("/app")
+async def serve_standalone_booking():
+    booking_path = os.path.join(WEB_DIR, "booking.html")
+    return FileResponse(booking_path)
 
 
 # Health check
