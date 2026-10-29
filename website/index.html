@@ -115,13 +115,13 @@
     background: repeating-linear-gradient(135deg, var(--accent-gold) 0 8px, #FFFFFF 8px 16px, #A59E92 16px 24px);
   }
 
-  [data-theme="day"] .clipper-stage {
+  [data-theme="day"] .razor-stage {
     background: var(--stage-bg);
     border: 1px solid var(--line);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
   }
 
-  [data-theme="day"] .clipper-stage-hint {
+  [data-theme="day"] .razor-stage-hint {
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(0, 0, 0, 0.1);
     color: var(--fg);
@@ -749,14 +749,15 @@
   }
   @media (max-width: 800px) { .about-grid { grid-template-columns: minmax(0, 1fr); } }
 
-  /* 3D Cordless Barber Clipper Section */
-  .clipper-showcase {
+  /* 3D Straight Razor Section */
+  .razor {
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     gap: clamp(24px, 4vw, 48px);
     align-items: center;
   }
-  .clipper-tag {
+  .razor .btn { margin-top: clamp(16px, 2.5vw, 22px); }
+  .razor-tag {
     display: inline-block;
     font-size: 11px;
     font-weight: 700;
@@ -765,74 +766,30 @@
     color: var(--accent-gold);
     margin-bottom: 8px;
   }
-  .clipper-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px;
-    margin-top: clamp(16px, 2.5vw, 24px);
-  }
-  .clipper-btn-led {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #22d3ee;
-    box-shadow: 0 0 8px #22d3ee;
-    transition: background 0.2s, box-shadow 0.2s;
-    display: inline-block;
-  }
-  .clipper-btn-led.off {
-    background: #555;
-    box-shadow: none;
-  }
-  .clipper-stats {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(10px, 2vw, 16px);
-    margin-top: clamp(20px, 3vw, 28px);
-    padding-top: clamp(14px, 2vw, 20px);
-    border-top: 1px solid var(--line);
-  }
-  .cstat { display: flex; flex-direction: column; }
-  .cval {
-    font-size: clamp(16px, 1.8vw, 22px);
-    font-weight: 700;
-    color: var(--fg);
-    letter-spacing: 0.02em;
-    font-family: var(--font-body);
-  }
-  .clbl {
-    font-size: 11px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-top: 4px;
-  }
-  .clipper-stage {
+  .razor-stage {
     position: relative;
-    aspect-ratio: 1.45;
-    min-height: clamp(230px, 36vw, 360px);
+    aspect-ratio: 1.5;
+    min-height: clamp(220px, 35vw, 340px);
     max-width: 100%;
     touch-action: pan-y;
     cursor: grab;
-    border-radius: 8px;
+    border-radius: 6px;
     background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.06) 0%, rgba(12, 12, 13, 0) 72%);
     border: 1px solid rgba(255, 255, 255, 0.05);
     overflow: hidden;
   }
-  .clipper-stage:active { cursor: grabbing; }
-  .clipper-stage canvas { display: block; width: 100%; height: 100%; }
-  .clipper-stage-hint {
+  .razor-stage:active { cursor: grabbing; }
+  .razor-stage canvas { display: block; width: 100%; height: 100%; }
+  .razor-stage-hint {
     position: absolute;
-    bottom: 14px;
-    right: 14px;
+    bottom: 12px;
+    right: 12px;
     background: rgba(18, 18, 20, 0.85);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: var(--muted);
     font-size: 11px;
     font-weight: 500;
-    letter-spacing: 0.04em;
-    padding: 5px 10px;
+    padding: 4px 10px;
     border-radius: 999px;
     display: inline-flex;
     align-items: center;
@@ -841,9 +798,13 @@
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
-  .clipper-stage-hint .hint-icon {
+  .razor-stage-hint .hint-icon {
     color: var(--accent-gold);
     font-size: 12px;
+  }
+  @media (max-width: 800px) {
+    .razor { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .razor-stage { aspect-ratio: 1.35; min-height: 220px; }
   }
 
   /* ================= VELIS.UZ STYLE SCROLL CLIPPER RAIL ================= */
@@ -1311,32 +1272,19 @@
       </div>
     </section>
 
-    <!-- ================= 3D ELECTRIC CLIPPER SECTION ================= -->
-    <section class="sec" id="mashinka" aria-labelledby="clipper-h">
-      <div class="clipper-showcase">
+    <!-- ================= 3D STRAIGHT RAZOR SECTION ================= -->
+    <section class="sec" id="ustara" aria-labelledby="razor-h">
+      <div class="razor">
         <div>
-          <span class="clipper-tag" id="clipperTag">3D Atelier &bull; Barbershop uskunasi</span>
-          <h2 class="h2" id="clipper-h">Mashinka, professional aniqlik</h2>
-          <p class="lede" id="clipperDesc">Mukammal fade va toza chiziqlar aynan shunday professional mashinka bilan yaratiladi. Mashinkani sudrab 3D ko‘rinishda aylantiring, quvvatini yoqing va pichoq tebranishini his qiling.</p>
-          <div class="clipper-actions">
-            <button class="btn gold" id="clipperToggle" type="button">
-              <span class="clipper-btn-led" id="clipperBtnLed"></span>
-              <span id="clipperToggleText">Mashinkani o'chirish</span>
-            </button>
-            <button class="btn quiet" id="clipperLeverToggle" type="button">
-              <span id="clipperLeverText">Taper: 0.5 mm (Open)</span>
-            </button>
-          </div>
-          <div class="clipper-stats">
-            <div class="cstat"><span class="cval">7,200</span><span class="clbl" id="statRpmLabel">RPM Motor</span></div>
-            <div class="cstat"><span class="cval">0.1 mm</span><span class="clbl" id="statGapLabel">Zero Gap</span></div>
-            <div class="cstat"><span class="cval">DLC Titanium</span><span class="clbl" id="statBladeLabel">Blade</span></div>
-          </div>
+          <span class="razor-tag" id="razorTag">3D Atelier &bull; Barbershop ustasi</span>
+          <h2 class="h2" id="razor-h">Ustara, aniq chiziq</h2>
+          <p class="lede" id="razorDesc">Soqol chizig‘i ustara bilan shunday tozalanadi. Ustarani sudrab aylantiring, bosib oching yoki yoping.</p>
+          <button class="btn quiet" id="razorToggle" type="button">Ustarani yopish</button>
         </div>
-        <div class="clipper-stage" id="clipperStage" aria-hidden="true" title="3D ko'rinishda aylantiring">
-          <div class="clipper-stage-hint" id="clipperStageHint">
+        <div class="razor-stage" id="razorStage" aria-hidden="true" title="Ustarani 3D ko'rinishda aylantiring">
+          <div class="razor-stage-hint" id="razorStageHint">
             <span class="hint-icon">&#x21BB;</span>
-            <span id="clipperHintText">3D aylantirish uchun suring</span>
+            <span id="razorHintText">3D aylantirish / ochish uchun bosing</span>
           </div>
         </div>
       </div>
@@ -1413,9 +1361,9 @@
         <span class="wp-dot"></span>
         <span class="wp-label" id="wpLabelAbout">02 Culture</span>
       </button>
-      <button class="scroll-clipper-wp" style="top: 40%;" data-target="#mashinka" title="03 Mashinka" aria-label="Mashinka 3D Atelier">
+      <button class="scroll-clipper-wp" style="top: 40%;" data-target="#ustara" title="03 Ustara" aria-label="Ustara 3D bo'limiga o'tish">
         <span class="wp-dot"></span>
-        <span class="wp-label" id="wpLabelClipper">03 Mashinka</span>
+        <span class="wp-label" id="wpLabelRazor">03 Ustara</span>
       </button>
       <button class="scroll-clipper-wp" style="top: 60%;" data-target="#narxlar" title="04 Narxlar" aria-label="Narxlar jadvali">
         <span class="wp-dot"></span>
@@ -1524,20 +1472,15 @@
       hero_pct: "Tozalandi: {n}%",
       about_title: "More than a haircut",
       about_desc: "Culture Olmaliqdagi zamonaviy va hashamatli barbershop. Barber darajasini o‘zingiz tanlaysiz: PRO, TOP yoki VIP. Xizmatlarni belgilab, qulay vaqtga yoziling va navbatda turmang.",
-      clipper_tag: "3D Atelier • Barbershop asbobi",
-      clipper_title: "Mashinka, professional aniqlik",
-      clipper_desc: "Mukammal fade va toza chiziqlar aynan shunday professional mashinka bilan yaratiladi. Mashinkani sudrab 3D ko‘rinishda aylantiring, quvvatini yoqing va pichoq tebranishini his qiling.",
-      clipper_toggle_on: "Mashinkani yoqish",
-      clipper_toggle_off: "Mashinkani o'chirish",
-      clipper_lever_open: "Taper: 0.5 mm (Open)",
-      clipper_lever_closed: "Taper: 0.1 mm (Zero Gap)",
-      clipper_hint: "3D aylantirish uchun suring",
-      clipper_stat_rpm: "RPM Motor",
-      clipper_stat_gap: "Zero Gap",
-      clipper_stat_blade: "Titanium Blade",
+      razor_tag: "3D Atelier • Barbershop ustasi",
+      razor_title: "Ustara, aniq chiziq",
+      razor_desc: "Soqol chizig‘i ustara bilan shunday tozalanadi. Ustarani sudrab aylantiring, bosib oching yoki yoping.",
+      razor_toggle_close: "Ustarani yopish",
+      razor_toggle_open: "Ustarani ochish",
+      razor_hint: "3D aylantirish / ochish uchun bosing",
       rail_hero: "01 Start",
       rail_about: "02 Culture",
-      rail_clipper: "03 Mashinka",
+      rail_razor: "03 Ustara",
       rail_prices: "04 Narxlar",
       rail_booking: "05 Yozilish",
       rail_location: "06 Manzil",
@@ -1585,20 +1528,15 @@
       hero_pct: "Сбрито: {n}%",
       about_title: "More than a haircut",
       about_desc: "Culture — премиальный барбершоп в Алмалыке. Вы сами выбираете категорию барбера: PRO, TOP или VIP. Бронируйте удобное время онлайн без ожидания в очереди.",
-      clipper_tag: "3D Ателье • Профессиональный инструмент",
-      clipper_title: "Машинка, профессиональная точность",
-      clipper_desc: "Идеальный фейд и чистые линии создаются именно такой профессиональной машинкой. Вращайте машинку в 3D, переключайте мощность и почувствуйте вибрацию лезвий.",
-      clipper_toggle_on: "Включить машинку",
-      clipper_toggle_off: "Выключить машинку",
-      clipper_lever_open: "Рычаг: 0.5 мм (Открыт)",
-      clipper_lever_closed: "Рычаг: 0.1 мм (Zero Gap)",
-      clipper_hint: "3D вращение",
-      clipper_stat_rpm: "Об/мин мотор",
-      clipper_stat_gap: "Zero Gap",
-      clipper_stat_blade: "Titanium лезвия",
+      razor_tag: "3D Ателье • Инструмент барбера",
+      razor_title: "Опасная бритва, чистые линии",
+      razor_desc: "Идеальные контуры бороды создаются опасной бритвой. Поворачивайте клинок курсором или откройте/закройте кликом.",
+      razor_toggle_close: "Закрыть бритву",
+      razor_toggle_open: "Открыть бритву",
+      razor_hint: "3D вращение / клик для открытия",
       rail_hero: "01 Старт",
       rail_about: "02 Culture",
-      rail_clipper: "03 Машинка",
+      rail_razor: "03 Бритва",
       rail_prices: "04 Цены",
       rail_booking: "05 Запись",
       rail_location: "06 Адрес",
@@ -1655,27 +1593,21 @@
     document.getElementById("clearAll").textContent = t("hero_clear_btn");
     document.getElementById("hint").textContent = t("hero_hint");
     document.getElementById("aboutDesc").textContent = t("about_desc");
-    const clipH = document.getElementById("clipper-h");
-    if (clipH) clipH.textContent = t("clipper_title");
-    const clipDesc = document.getElementById("clipperDesc");
-    if (clipDesc) clipDesc.textContent = t("clipper_desc");
-    const clipTag = document.getElementById("clipperTag");
-    if (clipTag) clipTag.textContent = t("clipper_tag");
-    const clipHint = document.getElementById("clipperHintText");
-    if (clipHint) clipHint.textContent = t("clipper_hint");
-    const statRpm = document.getElementById("statRpmLabel");
-    if (statRpm) statRpm.textContent = t("clipper_stat_rpm");
-    const statGap = document.getElementById("statGapLabel");
-    if (statGap) statGap.textContent = t("clipper_stat_gap");
-    const statBld = document.getElementById("statBladeLabel");
-    if (statBld) statBld.textContent = t("clipper_stat_blade");
+    const razorH = document.getElementById("razor-h");
+    if (razorH) razorH.textContent = t("razor_title");
+    const razorDesc = document.getElementById("razorDesc");
+    if (razorDesc) razorDesc.textContent = t("razor_desc");
+    const razorTag = document.getElementById("razorTag");
+    if (razorTag) razorTag.textContent = t("razor_tag");
+    const razorHint = document.getElementById("razorHintText");
+    if (razorHint) razorHint.textContent = t("razor_hint");
 
     const wpHero = document.getElementById("wpLabelHero");
     if (wpHero) wpHero.textContent = t("rail_hero");
     const wpAbout = document.getElementById("wpLabelAbout");
     if (wpAbout) wpAbout.textContent = t("rail_about");
-    const wpClip = document.getElementById("wpLabelClipper");
-    if (wpClip) wpClip.textContent = t("rail_clipper");
+    const wpRazor = document.getElementById("wpLabelRazor");
+    if (wpRazor) wpRazor.textContent = t("rail_razor");
     const wpPrices = document.getElementById("wpLabelPrices");
     if (wpPrices) wpPrices.textContent = t("rail_prices");
     const wpBook = document.getElementById("wpLabelBooking");
@@ -1683,7 +1615,7 @@
     const wpLoc = document.getElementById("wpLabelLocation");
     if (wpLoc) wpLoc.textContent = t("rail_location");
 
-    if (window.__updateClipperLabels) window.__updateClipperLabels();
+    if (window.__updateRazorLabel) window.__updateRazorLabel();
     document.getElementById("pricesHeaderService").textContent = t("prices_service");
     document.getElementById("pricesFootnote").textContent = t("prices_footnote");
     document.getElementById("book-h").textContent = t("book_title");
@@ -2239,7 +2171,7 @@
         document.addEventListener("pointermove", function (e) {
           rx(e.clientX - 17);
           ry(e.clientY - 17);
-          const m = e.target.closest && e.target.closest(".stage") ? "hide" : (e.target.closest && e.target.closest("a, button, .clipper-stage, .scroll-clipper-vehicle, .scroll-clipper-wp") ? "big" : "idle");
+          const m = e.target.closest && e.target.closest(".stage") ? "hide" : (e.target.closest && e.target.closest("a, button, .razor-stage, .scroll-clipper-vehicle, .scroll-clipper-wp") ? "big" : "idle");
           if (m !== mode) {
             mode = m;
             gsap.to(ring, { opacity: m === "hide" ? 0 : 1, scale: m === "big" ? 1.8 : 1, duration: 0.25, overwrite: "auto" });
@@ -2255,18 +2187,14 @@
     });
   }
 
-  /* ---------- 3D CORDLESS CLIPPER (THREE.JS) ---------- */
-  function init3DClipper() {
-    const wrap = document.getElementById("clipperStage");
-    const toggle = document.getElementById("clipperToggle");
-    const toggleText = document.getElementById("clipperToggleText");
-    const leverBtn = document.getElementById("clipperLeverToggle");
-    const leverText = document.getElementById("clipperLeverText");
-    const btnLed = document.getElementById("clipperBtnLed");
+  /* ---------- THREE.JS 3D STRAIGHT RAZOR (USTARA) ---------- */
+  function init3DRazor() {
+    const wrap = document.getElementById("razorStage");
+    const toggle = document.getElementById("razorToggle");
     if (!wrap) return;
 
     function fail() {
-      const s = (wrap.closest ? wrap.closest(".clipper-showcase") : null);
+      const s = wrap.closest ? wrap.closest(".razor") : null;
       if (s) s.style.display = "none";
     }
 
@@ -2281,366 +2209,174 @@
     wrap.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(34, 1.5, 0.1, 60);
+    const camera = new THREE.PerspectiveCamera(32, 1.5, 0.1, 60);
 
-    /* Studio reflection cube texture */
+    /* Studio environment map for realistic steel reflection */
     function face(top, bottom, strips) {
       const c = document.createElement("canvas");
       c.width = c.height = 128;
       const g = c.getContext("2d"), grd = g.createLinearGradient(0, 0, 0, 128);
-      grd.addColorStop(0, top); grd.addColorStop(1, bottom);
-      g.fillStyle = grd; g.fillRect(0, 0, 128, 128);
+      grd.addColorStop(0, top);
+      grd.addColorStop(1, bottom);
+      g.fillStyle = grd;
+      g.fillRect(0, 0, 128, 128);
       g.fillStyle = "#ffffff";
       strips.forEach(s => g.fillRect(s[0], s[1], s[2], s[3]));
       return c;
     }
 
     const env = new THREE.CubeTexture([
-      face("#454a52", "#111215", [[20, 10, 26, 108]]),
-      face("#454a52", "#111215", [[84, 10, 20, 108]]),
-      face("#ffffff", "#c9cdd4", []),
+      face("#3a3f46", "#0d0e10", [[20, 10, 26, 108]]),
+      face("#3a3f46", "#0d0e10", [[84, 10, 20, 108]]),
+      face("#ffffff", "#b9bdc4", []),
       face("#08090a", "#08090a", []),
-      face("#555b63", "#111215", [[40, 16, 48, 40]]),
-      face("#363a40", "#0b0c0d", [[10, 20, 14, 90], [104, 20, 14, 90]])
+      face("#454b53", "#0d0e10", [[40, 16, 48, 40]]),
+      face("#2b2f35", "#0b0c0d", [[10, 20, 14, 90], [104, 20, 14, 90]])
     ]);
     env.needsUpdate = true;
 
-    /* Materials */
-    const goldMat = new THREE.MeshStandardMaterial({
-      color: 0xd4af37, metalness: 0.92, roughness: 0.22, envMap: env, envMapIntensity: 1.5
-    });
-    const darkMetal = new THREE.MeshStandardMaterial({
-      color: 0x161619, metalness: 0.85, roughness: 0.3, envMap: env, envMapIntensity: 1.1
-    });
-    const chromeSteel = new THREE.MeshStandardMaterial({
-      color: 0xeef2f7, metalness: 0.98, roughness: 0.15, envMap: env, envMapIntensity: 1.6
-    });
-    const ledMat = new THREE.MeshStandardMaterial({
-      color: 0x22d3ee, emissive: 0x0ea5e9, emissiveIntensity: 1.0
+    const steel = new THREE.MeshStandardMaterial({
+      color: 0xdfe3e8,
+      metalness: 1,
+      roughness: 0.2,
+      envMap: env,
+      envMapIntensity: 1.3
     });
 
-    const clipper = new THREE.Group();
-
-    /* 1. Main handle body */
-    const bodyGeo = new THREE.CylinderGeometry(0.58, 0.46, 3.2, 32);
-    const bodyMesh = new THREE.Mesh(bodyGeo, darkMetal);
-    bodyMesh.position.y = -0.3;
-    clipper.add(bodyMesh);
-
-    /* Gold grip rings */
-    for (let i = -6; i <= 3; i++) {
-      const ringGeo = new THREE.TorusGeometry(0.53 + (i * 0.008), 0.015, 8, 32);
-      ringGeo.rotateX(Math.PI / 2);
-      const ringMesh = new THREE.Mesh(ringGeo, goldMat);
-      ringMesh.position.y = -0.4 + i * 0.16;
-      clipper.add(ringMesh);
-    }
-
-    /* Top collar & base cap */
-    const collarGeo = new THREE.CylinderGeometry(0.72, 0.58, 0.5, 32);
-    const collarMesh = new THREE.Mesh(collarGeo, goldMat);
-    collarMesh.position.y = 1.45;
-    clipper.add(collarMesh);
-
-    const capGeo = new THREE.CylinderGeometry(0.46, 0.40, 0.35, 32);
-    const capMesh = new THREE.Mesh(capGeo, goldMat);
-    capMesh.position.y = -1.95;
-    clipper.add(capMesh);
-
-    const loopGeo = new THREE.TorusGeometry(0.24, 0.04, 12, 28);
-    const loopMesh = new THREE.Mesh(loopGeo, chromeSteel);
-    loopMesh.position.set(0, -2.25, 0);
-    clipper.add(loopMesh);
-
-    /* Power switch & plate */
-    const plateGeo = new THREE.BoxGeometry(0.28, 0.9, 0.08);
-    const plateMesh = new THREE.Mesh(plateGeo, goldMat);
-    plateMesh.position.set(0, 0.2, 0.54);
-    clipper.add(plateMesh);
-
-    const switchGeo = new THREE.BoxGeometry(0.18, 0.28, 0.1);
-    const switchMesh = new THREE.Mesh(switchGeo, chromeSteel);
-    switchMesh.position.set(0, 0.25, 0.57); // ON position
-    clipper.add(switchMesh);
-
-    /* LED Bar */
-    const ledGeo = new THREE.BoxGeometry(0.08, 0.35, 0.04);
-    const ledMesh = new THREE.Mesh(ledGeo, ledMat);
-    ledMesh.position.set(0, -0.85, 0.52);
-    clipper.add(ledMesh);
-
-    /* 2. Cutter Head Assembly */
-    const headGroup = new THREE.Group();
-    headGroup.position.set(0, 1.7, 0);
-    headGroup.rotation.x = -0.22;
-
-    const neckGeo = new THREE.BoxGeometry(1.1, 0.35, 0.5);
-    const neckMesh = new THREE.Mesh(neckGeo, darkMetal);
-    neckMesh.position.set(0, 0.15, 0.05);
-    headGroup.add(neckMesh);
-
-    /* Stationary Comb Blade */
-    const combShape = new THREE.Shape();
-    combShape.moveTo(-0.85, 0); combShape.lineTo(0.85, 0);
-    combShape.lineTo(0.95, 0.65); combShape.lineTo(-0.95, 0.65);
-    combShape.closePath();
-    const combGeo = new THREE.ExtrudeGeometry(combShape, {
-      depth: 0.08, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02, bevelSegments: 2
+    const handleMat = new THREE.MeshStandardMaterial({
+      color: 0x18181b,
+      metalness: 0.55,
+      roughness: 0.34,
+      envMap: env,
+      envMapIntensity: 0.9
     });
-    combGeo.translate(0, 0, -0.04);
-    const combMesh = new THREE.Mesh(combGeo, chromeSteel);
-    combMesh.position.set(0, 0.25, 0.2);
-    headGroup.add(combMesh);
 
-    /* Stationary Comb Teeth */
-    const teethCount = 21, teethWidth = 1.8;
-    for (let i = 0; i < teethCount; i++) {
-      const tGeo = new THREE.BoxGeometry(0.04, 0.22, 0.09);
-      const tMesh = new THREE.Mesh(tGeo, chromeSteel);
-      tMesh.position.set(-teethWidth / 2 + (i / (teethCount - 1)) * teethWidth, 0.9, 0.2);
-      headGroup.add(tMesh);
-    }
+    /* Razor Blade: spine on top, edge below, rounded toe */
+    const bs = new THREE.Shape();
+    bs.moveTo(0, 0.26);
+    bs.lineTo(3.0, 0.26);
+    bs.bezierCurveTo(3.28, 0.26, 3.42, 0.1, 3.36, -0.08);
+    bs.lineTo(3.24, -0.28);
+    bs.lineTo(0.4, -0.28);
+    bs.lineTo(0, -0.18);
+    bs.closePath();
 
-    /* Moving Cutting Blade */
-    const topBladeGroup = new THREE.Group();
-    const cutShape = new THREE.Shape();
-    cutShape.moveTo(-0.78, 0); cutShape.lineTo(0.78, 0);
-    cutShape.lineTo(0.85, 0.5); cutShape.lineTo(-0.85, 0.5);
-    cutShape.closePath();
-    const cutGeo = new THREE.ExtrudeGeometry(cutShape, {
-      depth: 0.06, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 1
+    const bg = new THREE.ExtrudeGeometry(bs, { depth: 0.04, bevelEnabled: false });
+    bg.translate(0, 0, -0.02);
+    const blade = new THREE.Mesh(bg, steel);
+
+    /* Handle scales along +x from the pivot */
+    const hs = new THREE.Shape();
+    hs.moveTo(-0.2, 0.24);
+    hs.lineTo(3.3, 0.2);
+    hs.quadraticCurveTo(3.6, 0.2, 3.6, 0);
+    hs.quadraticCurveTo(3.6, -0.2, 3.3, -0.2);
+    hs.lineTo(-0.2, -0.24);
+    hs.quadraticCurveTo(-0.38, -0.24, -0.38, 0);
+    hs.quadraticCurveTo(-0.38, 0.24, -0.2, 0.24);
+
+    const hg = new THREE.ExtrudeGeometry(hs, {
+      depth: 0.06,
+      bevelEnabled: true,
+      bevelThickness: 0.012,
+      bevelSize: 0.012,
+      bevelSegments: 2
     });
-    cutGeo.translate(0, 0, -0.03);
-    const cutMesh = new THREE.Mesh(cutGeo, goldMat);
-    cutMesh.position.set(0, 0.27, 0.27);
-    topBladeGroup.add(cutMesh);
+    hg.translate(0, 0, -0.03);
 
-    const cutTeethCount = 19, cutTeethWidth = 1.6;
-    for (let i = 0; i < cutTeethCount; i++) {
-      const ctGeo = new THREE.BoxGeometry(0.035, 0.16, 0.07);
-      const ctMesh = new THREE.Mesh(ctGeo, goldMat);
-      ctMesh.position.set(-cutTeethWidth / 2 + (i / (cutTeethCount - 1)) * cutTeethWidth, 0.77, 0.27);
-      topBladeGroup.add(ctMesh);
-    }
-    headGroup.add(topBladeGroup);
+    const handle = new THREE.Group();
+    [-0.075, 0.075].forEach(z => {
+      const m = new THREE.Mesh(hg, handleMat);
+      m.position.z = z;
+      handle.add(m);
+    });
 
-    /* Side Taper Lever */
-    const leverGroup = new THREE.Group();
-    leverGroup.position.set(0.68, 0.2, 0.1);
-    const pinGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.2, 16);
-    pinGeo.rotateZ(Math.PI / 2);
-    leverGroup.add(new THREE.Mesh(pinGeo, goldMat));
+    const spacer = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.17, 20), steel);
+    spacer.rotation.x = Math.PI / 2;
+    spacer.position.set(3.25, 0, 0);
+    handle.add(spacer);
 
-    const armGeo = new THREE.BoxGeometry(0.1, 0.42, 0.07);
-    const armMesh = new THREE.Mesh(armGeo, goldMat);
-    armMesh.position.set(0.12, -0.15, 0.02);
-    armMesh.rotation.z = -0.3;
-    leverGroup.add(armMesh);
+    const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.27, 28), steel);
+    pin.rotation.x = Math.PI / 2;
 
-    const knobGeo = new THREE.SphereGeometry(0.09, 12, 12);
-    const knobMesh = new THREE.Mesh(knobGeo, chromeSteel);
-    knobMesh.position.set(0.22, -0.32, 0.03);
-    leverGroup.add(knobMesh);
-    headGroup.add(leverGroup);
-
-    clipper.add(headGroup);
-
-    /* Lighting */
-    const keyLight = new THREE.DirectionalLight(0xfff5ea, 1.3);
-    keyLight.position.set(4, 5, 6);
-    scene.add(keyLight);
-
-    const fillLight = new THREE.DirectionalLight(0xcfd8ff, 0.6);
-    fillLight.position.set(-5, -2, 4);
-    scene.add(fillLight);
-
-    const rimLight = new THREE.DirectionalLight(0xd4af37, 0.7);
-    rimLight.position.set(0, -6, -4);
-    scene.add(rimLight);
-
-    scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+    const razor = new THREE.Group();
+    razor.add(blade, handle, pin);
 
     const holder = new THREE.Group();
-    holder.add(clipper);
+    holder.add(razor);
     scene.add(holder);
 
+    const key = new THREE.DirectionalLight(0xffffff, 1.1);
+    key.position.set(3, 4, 6);
+    scene.add(key);
+
+    const rim = new THREE.DirectionalLight(0xcfd8ff, 0.5);
+    rim.position.set(-4, -2, 3);
+    scene.add(rim);
+
+    const amb = new THREE.AmbientLight(0xffffff, 0.35);
+    scene.add(amb);
+
+    /* Adapt lighting on theme switch */
     window.__updateThemeLighting = function(thm) {
       if (!scene) return;
       if (thm === "day") {
-        keyLight.color.setHex(0xfff8ee);
-        keyLight.intensity = 1.45;
-        fillLight.color.setHex(0xe8eeff);
-        fillLight.intensity = 0.85;
-        rimLight.color.setHex(0xc59b27);
-        rimLight.intensity = 0.85;
-        ambientLight.color.setHex(0xffffff);
-        ambientLight.intensity = 0.65;
+        key.color.setHex(0xfff8ee);
+        key.intensity = 1.35;
+        rim.color.setHex(0xd4af37);
+        rim.intensity = 0.75;
+        amb.color.setHex(0xffffff);
+        amb.intensity = 0.55;
       } else {
-        keyLight.color.setHex(0xfff5ea);
-        keyLight.intensity = 1.3;
-        fillLight.color.setHex(0xcfd8ff);
-        fillLight.intensity = 0.6;
-        rimLight.color.setHex(0xd4af37);
-        rimLight.intensity = 0.7;
-        ambientLight.color.setHex(0xffffff);
-        ambientLight.intensity = 0.4;
+        key.color.setHex(0xffffff);
+        key.intensity = 1.1;
+        rim.color.setHex(0xcfd8ff);
+        rim.intensity = 0.5;
+        amb.color.setHex(0xffffff);
+        amb.intensity = 0.35;
       }
     };
-    if (currentTheme) window.__updateThemeLighting(currentTheme);
+    if (typeof currentTheme !== "undefined") window.__updateThemeLighting(currentTheme);
 
-    /* State & Interactivity */
-    let isRunning = true;
-    let taperOpen = true;
-    const state = { dragX: 0, dragY: 0, scrollY: 0 };
-
-    /* Synthesized polite clipper hum via Web Audio API */
-    let audioCtx = null, motorOsc = null, motorGain = null;
-    function setAudioMotor(active) {
-      try {
-        if (!audioCtx) {
-          const AC = window.AudioContext || window.webkitAudioContext;
-          if (AC) audioCtx = new AC();
-        }
-        if (!audioCtx) return;
-        if (audioCtx.state === "suspended") audioCtx.resume();
-
-        if (active) {
-          if (motorOsc) return;
-          motorOsc = audioCtx.createOscillator();
-          motorGain = audioCtx.createGain();
-          const filter = audioCtx.createBiquadFilter();
-
-          motorOsc.type = "sawtooth";
-          motorOsc.frequency.setValueAtTime(118, audioCtx.currentTime);
-
-          filter.type = "lowpass";
-          filter.frequency.setValueAtTime(420, audioCtx.currentTime);
-
-          motorGain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-          motorGain.gain.exponentialRampToValueAtTime(0.035, audioCtx.currentTime + 0.08);
-
-          motorOsc.connect(filter);
-          filter.connect(motorGain);
-          motorGain.connect(audioCtx.destination);
-          motorOsc.start();
-        } else if (motorGain && motorOsc) {
-          motorGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.06);
-          setTimeout(() => {
-            if (motorOsc) {
-              try { motorOsc.stop(); motorOsc.disconnect(); } catch (err) {}
-              motorOsc = null;
-            }
-          }, 80);
-        }
-      } catch (err) {}
-    }
+    const state = { open: reduce ? 1 : 0, scrollY: 0, dragY: 0, dragX: 0 };
+    let target = 1;
 
     function size() {
       const w = wrap.clientWidth, h = wrap.clientHeight;
       if (!w || !h) return;
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
-      let dist = 10.5;
-      if (camera.aspect < 1.0) dist = 10.5 * (1.35 / camera.aspect);
-      else if (camera.aspect < 1.4) dist = 10.5 * (1.15 / camera.aspect);
-      camera.position.set(0, 0, Math.min(dist, 22));
+
+      let targetDist = 10.6;
+      if (camera.aspect < 1.0) {
+        targetDist = 10.6 * (1.45 / camera.aspect);
+      } else if (camera.aspect < 1.4) {
+        targetDist = 10.6 * (1.2 / camera.aspect);
+      }
+      camera.position.set(0, 0, Math.min(targetDist, 24));
       camera.updateProjectionMatrix();
     }
     size();
     window.addEventListener("resize", size);
     window.addEventListener("orientationchange", () => setTimeout(size, 200));
 
-    function updatePowerUI() {
-      if (toggleText) toggleText.textContent = isRunning ? t("clipper_toggle_off") : t("clipper_toggle_on");
-      if (btnLed) btnLed.className = isRunning ? "clipper-btn-led" : "clipper-btn-led off";
-      switchMesh.position.y = isRunning ? 0.25 : 0.05;
-      ledMat.emissiveIntensity = isRunning ? 1.0 : 0.08;
+    function draw(tVal) {
+      const sway = reduce ? 0 : Math.sin(tVal / 1400);
+      holder.rotation.y = -0.45 + state.scrollY + state.dragY;
+      holder.rotation.x = -0.28 + state.dragX;
+      holder.rotation.z = -0.22 + sway * 0.03;
+      holder.position.x = -1.6 * (1 - state.open);
+      handle.rotation.z = Math.PI * 0.97 * state.open;
+      renderer.render(scene, camera);
     }
 
-    function updateLeverUI() {
-      if (leverText) leverText.textContent = taperOpen ? t("clipper_lever_open") : t("clipper_lever_closed");
-      leverGroup.rotation.x = taperOpen ? 0 : 0.45;
-      topBladeGroup.position.y = taperOpen ? 0 : -0.06;
-    }
-
-    window.__updateClipperLabels = function () {
-      updatePowerUI();
-      updateLeverUI();
-    };
-
-    if (toggle) {
-      toggle.addEventListener("click", () => {
-        isRunning = !isRunning;
-        setAudioMotor(isRunning);
-        updatePowerUI();
-      });
-    }
-    if (leverBtn) {
-      leverBtn.addEventListener("click", () => {
-        taperOpen = !taperOpen;
-        updateLeverUI();
-      });
-    }
-
-    /* Drag to rotate in 3D */
-    let down = null;
-    wrap.addEventListener("pointerdown", e => {
-      down = { x: e.clientX, y: e.clientY, moved: 0 };
-      try { wrap.setPointerCapture(e.pointerId); } catch (err) {}
-    });
-
-    wrap.addEventListener("pointermove", e => {
-      if (!down) return;
-      const dx = e.clientX - down.x, dy = e.clientY - down.y;
-      down.x = e.clientX; down.y = e.clientY;
-      down.moved += Math.abs(dx) + Math.abs(dy);
-      state.dragY += dx * 0.012;
-      state.dragX = Math.max(-0.8, Math.min(0.8, state.dragX + dy * 0.008));
-    });
-
-    function up() {
-      if (down && down.moved < 6) {
-        isRunning = !isRunning;
-        setAudioMotor(isRunning);
-        updatePowerUI();
-      }
-      down = null;
-    }
-    wrap.addEventListener("pointerup", up);
-    wrap.addEventListener("pointercancel", () => { down = null; });
-
-    /* GSAP ScrollTrigger for 3D rotation scrub */
-    if (window.gsap && window.ScrollTrigger && !reduce) {
-      gsap.fromTo(state, { scrollY: -0.6 }, {
-        scrollY: 0.6, ease: "none",
-        scrollTrigger: { trigger: wrap, start: "top bottom", end: "bottom top", scrub: true }
-      });
-    }
-
-    let visible = true, raf = 0, t = 0;
+    let visible = true, raf = 0;
     function loop(tVal) {
       raf = 0;
       if (!visible) return;
-      t += 0.02;
-
-      const sway = reduce ? 0 : Math.sin(t * 0.7) * 0.08;
-      holder.rotation.y = -0.4 + state.scrollY + state.dragY + sway;
-      holder.rotation.x = -0.22 + state.dragX;
-
-      if (isRunning && !reduce) {
-        topBladeGroup.position.x = Math.sin(t * 80) * 0.045; // 80 rad/s high frequency blade buzz
-        clipper.position.x = (Math.random() - 0.5) * 0.007;
-        clipper.position.y = (Math.random() - 0.5) * 0.007;
-        ledMat.emissiveIntensity = 0.8 + Math.sin(t * 12) * 0.3;
-      } else {
-        topBladeGroup.position.x = 0;
-        clipper.position.set(0, 0, 0);
-      }
-
-      renderer.render(scene, camera);
+      draw(tVal);
       raf = requestAnimationFrame(loop);
     }
-
     function kick() {
       if (!raf && visible) raf = requestAnimationFrame(loop);
     }
@@ -2652,6 +2388,67 @@
       }).observe(wrap);
     }
     kick();
+
+    function setLabel() {
+      if (toggle) {
+        toggle.textContent = target > 0.5 ? t("razor_toggle_close") : t("razor_toggle_open");
+      }
+    }
+    window.__updateRazorLabel = setLabel;
+
+    function flip() {
+      target = target > 0.5 ? 0 : 1;
+      setLabel();
+      if (window.gsap && !reduce) {
+        gsap.to(state, { open: target, duration: 1.1, ease: "power3.inOut", overwrite: true });
+      } else {
+        state.open = target;
+      }
+    }
+
+    if (toggle) toggle.addEventListener("click", flip);
+
+    /* Drag to rotate in 3D space, tap to open / close */
+    let down = null;
+    wrap.addEventListener("pointerdown", function (e) {
+      down = { x: e.clientX, y: e.clientY, moved: 0 };
+      try { wrap.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+
+    wrap.addEventListener("pointermove", function (e) {
+      if (!down) return;
+      const dx = e.clientX - down.x, dy = e.clientY - down.y;
+      down.x = e.clientX;
+      down.y = e.clientY;
+      down.moved += Math.abs(dx) + Math.abs(dy);
+      state.dragY += dx * 0.012;
+      state.dragX = Math.max(-0.6, Math.min(0.6, state.dragX + dy * 0.006));
+      if (reduce) draw(0);
+    });
+
+    function up() {
+      if (down && down.moved < 6) flip();
+      down = null;
+    }
+    wrap.addEventListener("pointerup", up);
+    wrap.addEventListener("pointercancel", function () { down = null; });
+
+    /* Auto-opens on scroll and turns with page */
+    if (!reduce && window.gsap) {
+      gsap.to(state, {
+        open: 1, duration: 1.6, ease: "power3.out",
+        scrollTrigger: window.ScrollTrigger ? { trigger: wrap, start: "top 75%", once: true } : undefined
+      });
+      if (window.ScrollTrigger) {
+        gsap.fromTo(state, { scrollY: -0.7 }, {
+          scrollY: 0.7, ease: "none",
+          scrollTrigger: { trigger: wrap, start: "top bottom", end: "bottom top", scrub: true }
+        });
+      }
+    } else {
+      state.open = 1;
+      draw(0);
+    }
   }
 
   /* ---------- VELIS.UZ STYLE SCROLL-SCRUBBED CLIPPER JOURNEY ---------- */
@@ -2710,7 +2507,7 @@
 
     /* Clicking vehicle scrolls smoothly to 3D section */
     vehicle.addEventListener("click", () => {
-      const mash = document.getElementById("mashinka");
+      const mash = document.getElementById("ustara");
       if (mash) {
         if (window.lenis) {
           window.lenis.scrollTo(mash, { offset: -30, duration: 1.2 });
@@ -2802,7 +2599,7 @@
     // 2. Safely initialize all subsystems with independent error guards
     try { setTheme(currentTheme, true); } catch (e) { console.warn("Theme init error:", e); }
     try { initGSAP(); } catch (e) { console.warn("GSAP init error:", e); }
-    try { init3DClipper(); } catch (e) { console.warn("3D Clipper init error:", e); }
+    try { init3DRazor(); } catch (e) { console.warn("3D Clipper init error:", e); }
     try { initScrollClipper(); } catch (e) { console.warn("Scroll Clipper init error:", e); }
   }
 
