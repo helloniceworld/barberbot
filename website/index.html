@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="uz">
+<html lang="uz" data-theme="night">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
@@ -23,19 +23,160 @@
   :root {
     --bg: #0C0C0D;
     --panel: #151517;
+    --panel-elevated: #1D1D20;
     --fg: #ECECEE;
     --muted: #9A9AA1;
     --line: #2A2A2E;
     --accent: #CFCFD6;
     --accent-gold: #D4AF37;
+    --accent-gold-hover: #E5C358;
     --accent-ink: #0C0C0D;
     --letter: #ECECEE;
     --stub-base: #2B2B2F;
     --stub-a: #5C5C63;
     --stub-b: #19191B;
+    --card-bg: #151517;
+    --card-border: #2A2A2E;
+    --header-bg: rgba(12, 12, 13, 0.85);
+    --header-border: rgba(212, 175, 55, 0.25);
+    --stage-bg: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.06) 0%, rgba(12, 12, 13, 0) 72%);
+    --toggle-bg: rgba(255, 255, 255, 0.05);
+    --toggle-border: rgba(212, 175, 55, 0.35);
+    --glow-shadow: rgba(212, 175, 55, 0.45);
+    --phead-bg: #111113;
+    --prow-hover: rgba(212, 175, 55, 0.06);
+    --btn-quiet-bg: rgba(255, 255, 255, 0.06);
+    --btn-quiet-hover: rgba(255, 255, 255, 0.12);
     --font-display: "Cinzel", "Trajan Pro", "Times New Roman", serif;
     --font-body: "Onest", "Segoe UI", -apple-system, system-ui, sans-serif;
     color-scheme: dark;
+  }
+
+  /* ================= TONGI (MORNING / DAY) LUXURY ATELIER THEME ================= */
+  [data-theme="day"] {
+    --bg: #F5F3EF;                 /* Warm luxury ivory/alabaster */
+    --panel: #FFFFFF;              /* Crisp pure silk white cards */
+    --panel-elevated: #F9F8F5;
+    --fg: #151518;                 /* Deep charcoal obsidian text */
+    --muted: #6B6B78;              /* Soft refined slate */
+    --line: #E2DFD7;               /* Champagne hairline borders */
+    --accent: #2A2A30;             /* Bold text accents */
+    --accent-gold: #B88B2A;        /* Warm burnished radiant gold */
+    --accent-gold-hover: #A0751E;
+    --accent-ink: #FFFFFF;         /* White text on dark accents */
+    --letter: #151518;
+    --stub-base: #C2BCB0;          /* Barber hair stubble visible on light canvas */
+    --stub-a: #8F8778;
+    --stub-b: #544E43;
+    --card-bg: #FFFFFF;
+    --card-border: #E2DFD7;
+    --header-bg: rgba(245, 243, 239, 0.9);
+    --header-border: rgba(184, 139, 42, 0.3);
+    --stage-bg: radial-gradient(ellipse at center, rgba(184, 139, 42, 0.08) 0%, rgba(245, 243, 239, 0) 72%);
+    --toggle-bg: rgba(0, 0, 0, 0.04);
+    --toggle-border: rgba(184, 139, 42, 0.4);
+    --glow-shadow: rgba(184, 139, 42, 0.35);
+    --phead-bg: #EBE7DF;
+    --prow-hover: rgba(184, 139, 42, 0.08);
+    --btn-quiet-bg: rgba(0, 0, 0, 0.05);
+    --btn-quiet-hover: rgba(0, 0, 0, 0.09);
+    color-scheme: light;
+  }
+
+  /* ================= SMOOTH THEME TRANSITION ================= */
+  html.theme-transitioning,
+  html.theme-transitioning *,
+  html.theme-transitioning *::before,
+  html.theme-transitioning *::after {
+    transition: background-color 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+                color 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+                border-color 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+                box-shadow 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+                fill 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+                stroke 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+    transition-delay: 0s !important;
+  }
+
+  body {
+    transition: background-color 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+                color 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  [data-theme="day"] .bar-name {
+    color: var(--fg);
+  }
+
+  [data-theme="day"] .bar-logo-img {
+    border-color: rgba(184, 139, 42, 0.8);
+    box-shadow: 0 0 10px rgba(184, 139, 42, 0.25);
+  }
+
+  [data-theme="day"] .polebig {
+    background: repeating-linear-gradient(135deg, var(--accent-gold) 0 8px, #FFFFFF 8px 16px, #A59E92 16px 24px);
+  }
+
+  [data-theme="day"] .clipper-stage {
+    background: var(--stage-bg);
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  }
+
+  [data-theme="day"] .clipper-stage-hint {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--fg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  [data-theme="day"] .ptable[data-tier="1"] .tier-pro,
+  [data-theme="day"] .ptable[data-tier="2"] .tier-top,
+  [data-theme="day"] .ptable[data-tier="3"] .tier-vip {
+    background: rgba(184, 139, 42, 0.08);
+  }
+
+  [data-theme="day"] .scroll-clipper-track {
+    background: rgba(0, 0, 0, 0.08);
+  }
+
+  [data-theme="day"] .scroll-clipper-glow {
+    background: linear-gradient(180deg, rgba(184, 139, 42, 0.3) 0%, #B88B2A 85%, #8A6515 100%);
+    box-shadow: 0 0 10px rgba(184, 139, 42, 0.6);
+  }
+
+  [data-theme="day"] .wp-dot {
+    background: #D2CDC3;
+    border-color: rgba(0, 0, 0, 0.15);
+  }
+
+  [data-theme="day"] .scroll-clipper-wp:hover .wp-dot,
+  [data-theme="day"] .scroll-clipper-wp.active .wp-dot {
+    background: var(--accent-gold);
+    box-shadow: 0 0 10px var(--accent-gold);
+    border-color: #fff;
+  }
+
+  [data-theme="day"] .wp-label {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(184, 139, 42, 0.4);
+    color: #8A6515;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  }
+
+  [data-theme="day"] .scroll-clipper-badge {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(184, 139, 42, 0.4);
+    color: #151518;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  [data-theme="day"] .scroll-clipper-vehicle {
+    filter: drop-shadow(0 4px 14px rgba(184, 139, 42, 0.4));
+  }
+
+  [data-theme="day"] .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
   }
 
   *, *::before, *::after {
@@ -349,16 +490,61 @@
   }
   .bar-links a:hover { color: var(--fg); }
 
+  /* Theme Switcher (Tun / Tong) */
+  .theme-toggle-wrap {
+    display: flex;
+    align-items: center;
+    background: var(--toggle-bg);
+    border: 1px solid var(--toggle-border);
+    border-radius: 9999px;
+    padding: 3px 5px;
+    gap: 2px;
+    flex-shrink: 0;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+  .theme-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+  }
+  .theme-toggle-btn .theme-icon {
+    display: block;
+    flex-shrink: 0;
+    width: 13px;
+    height: 13px;
+  }
+  .theme-toggle-btn.active {
+    background: var(--accent-gold);
+    color: #000;
+    font-weight: 700;
+    box-shadow: 0 1px 6px var(--glow-shadow);
+  }
+  .theme-toggle-btn:not(.active):hover {
+    color: var(--fg);
+  }
+
   /* Language Switcher */
   .lang-toggle-wrap {
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(212, 175, 55, 0.35);
+    background: var(--toggle-bg);
+    border: 1px solid var(--toggle-border);
     border-radius: 9999px;
     padding: 3px 6px;
     gap: 2px;
     flex-shrink: 0;
+    transition: background 0.3s ease, border-color 0.3s ease;
   }
   .lang-toggle-btn {
     background: transparent;
@@ -397,9 +583,20 @@
   @media (max-width: 680px) {
     .bar-links a.opt { display: none; }
   }
+  @media (max-width: 620px) {
+    .theme-toggle-btn .theme-text { display: none; } /* Show sleek icons only on mobile */
+    .theme-toggle-btn { padding: 4px 6px; }
+    .bar-right { gap: 8px; }
+  }
   @media (max-width: 480px) {
     .bar-links { display: none; } /* keep header uncluttered on mobile */
     .bar { padding-block: 10px; }
+    .bar-right { gap: 6px; }
+    .lang-toggle-wrap { padding: 2px 4px; }
+    .lang-toggle-btn { padding: 2px 5px; font-size: 11px; }
+    .theme-toggle-wrap { padding: 2px 4px; }
+    .theme-toggle-btn { padding: 3px 5px; }
+    .nav-cta-btn { padding: 6px 10px; font-size: 11px; }
   }
 
   /* Hero Section */
@@ -1034,6 +1231,23 @@
         <a class="opt" href="https://www.instagram.com/culture.olmaliq" target="_blank" rel="noopener">Instagram</a>
       </nav>
 
+      <!-- Theme Switcher: Tun (Night) / Tong (Morning) -->
+      <div class="theme-toggle-wrap" id="themeToggleWrap" role="group" aria-label="Mavzu rejimi">
+        <button class="theme-toggle-btn active" id="themeNightBtn" type="button" title="Tungi rejim">
+          <svg class="theme-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <span class="theme-text" id="themeNightText">Tun</span>
+        </button>
+        <button class="theme-toggle-btn" id="themeDayBtn" type="button" title="Tongi rejim">
+          <svg class="theme-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+          <span class="theme-text" id="themeDayText">Tong</span>
+        </button>
+      </div>
+
       <!-- Language Switcher: UZ / RU -->
       <div class="lang-toggle-wrap">
         <button class="lang-toggle-btn active" id="langUzBtn" type="button">UZ</button>
@@ -1091,7 +1305,7 @@
     <section class="sec" id="mashinka" aria-labelledby="clipper-h">
       <div class="clipper-showcase">
         <div>
-          <span class="clipper-tag" id="clipperTag">3D Atelier &bull; Barbershop asbobi</span>
+          <span class="clipper-tag" id="clipperTag">3D Atelier &bull; Barbershop uskunasi</span>
           <h2 class="h2" id="clipper-h">Mashinka, professional aniqlik</h2>
           <p class="lede" id="clipperDesc">Mukammal fade va toza chiziqlar aynan shunday professional mashinka bilan yaratiladi. Mashinkani sudrab 3D ko‘rinishda aylantiring, quvvatini yoqing va pichoq tebranishini his qiling.</p>
           <div class="clipper-actions">
@@ -1144,7 +1358,7 @@
             <a class="btn gold" id="bookActBtn" href="https://culture-barbershop.onrender.com/" target="_blank" rel="noopener">Yozilish</a>
             <a class="btn quiet" id="bookBotBtn" href="https://t.me/culturebarbersbot" target="_blank" rel="noopener">Telegram bot</a>
           </div>
-          <p class="book-url">culture-barbershop.onrender.com</p>
+         
         </div>
         <ol class="steps">
           <li id="step1">Barber darajasini tanlang: PRO, TOP yoki VIP.</li>
@@ -1287,6 +1501,10 @@
       nav_booking: "Yozilish",
       nav_location: "Manzil",
       nav_cta: "Onlayn yozilish",
+      theme_night: "Tun",
+      theme_day: "Tong",
+      theme_night_title: "Tungi rejim",
+      theme_day_title: "Tongi rejim",
       hero_line: "Professional parvarish. Sizning uslubingiz.",
       hero_book_btn: "Onlayn yozilish",
       hero_clear_btn: "Hammasini tozalash",
@@ -1344,6 +1562,10 @@
       nav_booking: "Запись",
       nav_location: "Адрес",
       nav_cta: "Онлайн запись",
+      theme_night: "Ночь",
+      theme_day: "День",
+      theme_night_title: "Ночной режим",
+      theme_day_title: "Дневной режим",
       hero_line: "Профессиональный уход. Ваш безупречный стиль.",
       hero_book_btn: "Онлайн запись",
       hero_clear_btn: "Очистить всё",
@@ -1410,6 +1632,14 @@
     document.getElementById("navBooking").textContent = t("nav_booking");
     document.getElementById("navLocation").textContent = t("nav_location");
     document.getElementById("navCtaBtn").textContent = t("nav_cta");
+    const thNight = document.getElementById("themeNightText");
+    if (thNight) thNight.textContent = t("theme_night");
+    const thDay = document.getElementById("themeDayText");
+    if (thDay) thDay.textContent = t("theme_day");
+    const btnNight = document.getElementById("themeNightBtn");
+    if (btnNight) btnNight.title = t("theme_night_title");
+    const btnDay = document.getElementById("themeDayBtn");
+    if (btnDay) btnDay.title = t("theme_day_title");
     document.getElementById("heroLine").textContent = t("hero_line");
     document.getElementById("heroBookBtn").textContent = t("hero_book_btn");
     document.getElementById("clearAll").textContent = t("hero_clear_btn");
@@ -1464,11 +1694,49 @@
     renderPriceTable();
   }
 
+  /* ---------- THEME SWITCHER (TUN / TONG) ---------- */
+  let currentTheme = localStorage.getItem("culture_theme") || "night";
+
+  function setTheme(t, force) {
+    if (t === currentTheme && !force) return;
+    currentTheme = t;
+    localStorage.setItem("culture_theme", t);
+
+    // Trigger smooth transition
+    document.documentElement.classList.add("theme-transitioning");
+    document.documentElement.setAttribute("data-theme", t);
+
+    const nightBtn = document.getElementById("themeNightBtn");
+    const dayBtn = document.getElementById("themeDayBtn");
+    if (nightBtn) nightBtn.classList.toggle("active", t === "night");
+    if (dayBtn) dayBtn.classList.toggle("active", t === "day");
+
+    // Redraw hero wordmark canvas with new theme colors
+    if (typeof buildCanvas === "function") {
+      const wasDone = stage && stage.classList.contains("is-done");
+      buildCanvas();
+      if (wasDone && stage) stage.classList.add("is-done");
+    }
+
+    // Update Three.js 3D Clipper scene lighting
+    if (window.__updateThemeLighting) window.__updateThemeLighting(t);
+
+    setTimeout(() => {
+      document.documentElement.classList.remove("theme-transitioning");
+    }, 550);
+  }
+
+  const themeNightBtn = document.getElementById("themeNightBtn");
+  const themeDayBtn = document.getElementById("themeDayBtn");
+  if (themeNightBtn) themeNightBtn.addEventListener("click", () => setTheme("night"));
+  if (themeDayBtn) themeDayBtn.addEventListener("click", () => setTheme("day"));
+
   function setLanguage(l) {
     curLang = l;
     localStorage.setItem("culture_lang", l);
     document.getElementById("langUzBtn").classList.toggle("active", l === "uz");
     document.getElementById("langRuBtn").classList.toggle("active", l === "ru");
+    document.documentElement.lang = l;
     applyTranslations();
   }
 
@@ -2171,6 +2439,30 @@
     holder.add(clipper);
     scene.add(holder);
 
+    window.__updateThemeLighting = function(thm) {
+      if (!scene) return;
+      if (thm === "day") {
+        keyLight.color.setHex(0xfff8ee);
+        keyLight.intensity = 1.45;
+        fillLight.color.setHex(0xe8eeff);
+        fillLight.intensity = 0.85;
+        rimLight.color.setHex(0xc59b27);
+        rimLight.intensity = 0.85;
+        ambientLight.color.setHex(0xffffff);
+        ambientLight.intensity = 0.65;
+      } else {
+        keyLight.color.setHex(0xfff5ea);
+        keyLight.intensity = 1.3;
+        fillLight.color.setHex(0xcfd8ff);
+        fillLight.intensity = 0.6;
+        rimLight.color.setHex(0xd4af37);
+        rimLight.intensity = 0.7;
+        ambientLight.color.setHex(0xffffff);
+        ambientLight.intensity = 0.4;
+      }
+    };
+    if (currentTheme) window.__updateThemeLighting(currentTheme);
+
     /* State & Interactivity */
     let isRunning = true;
     let taperOpen = true;
@@ -2478,6 +2770,7 @@
     initGSAP();
     init3DClipper();
     initScrollClipper();
+    setTheme(currentTheme, true);
 
     initPreloader(() => {
       // Preloader curtains opened:
