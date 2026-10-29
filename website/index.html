@@ -552,28 +552,271 @@
   }
   @media (max-width: 800px) { .about-grid { grid-template-columns: minmax(0, 1fr); } }
 
-  /* 3D Straight Razor Section */
-  .razor {
+  /* 3D Cordless Barber Clipper Section */
+  .clipper-showcase {
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     gap: clamp(24px, 4vw, 48px);
     align-items: center;
   }
-  .razor .btn { margin-top: clamp(16px, 2.5vw, 22px); }
-  .razor-stage {
+  .clipper-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin-bottom: 8px;
+  }
+  .clipper-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: clamp(16px, 2.5vw, 24px);
+  }
+  .clipper-btn-led {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22d3ee;
+    box-shadow: 0 0 8px #22d3ee;
+    transition: background 0.2s, box-shadow 0.2s;
+    display: inline-block;
+  }
+  .clipper-btn-led.off {
+    background: #555;
+    box-shadow: none;
+  }
+  .clipper-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(10px, 2vw, 16px);
+    margin-top: clamp(20px, 3vw, 28px);
+    padding-top: clamp(14px, 2vw, 20px);
+    border-top: 1px solid var(--line);
+  }
+  .cstat { display: flex; flex-direction: column; }
+  .cval {
+    font-size: clamp(16px, 1.8vw, 22px);
+    font-weight: 700;
+    color: var(--fg);
+    letter-spacing: 0.02em;
+    font-family: var(--font-body);
+  }
+  .clbl {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+  .clipper-stage {
     position: relative;
-    aspect-ratio: 1.5;
-    min-height: clamp(220px, 35vw, 340px);
+    aspect-ratio: 1.45;
+    min-height: clamp(230px, 36vw, 360px);
     max-width: 100%;
     touch-action: pan-y;
     cursor: grab;
-    border-radius: 4px;
+    border-radius: 8px;
+    background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.06) 0%, rgba(12, 12, 13, 0) 72%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
   }
-  .razor-stage:active { cursor: grabbing; }
-  .razor-stage canvas { display: block; width: 100%; height: 100%; }
+  .clipper-stage:active { cursor: grabbing; }
+  .clipper-stage canvas { display: block; width: 100%; height: 100%; }
+  .clipper-stage-hint {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    background: rgba(18, 18, 20, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 5px 10px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .clipper-stage-hint .hint-icon {
+    color: var(--accent-gold);
+    font-size: 12px;
+  }
+
+  /* ================= VELIS.UZ STYLE SCROLL CLIPPER RAIL ================= */
+  .scroll-clipper-rail {
+    position: fixed;
+    right: clamp(12px, 2.8vw, 36px);
+    top: 14vh;
+    bottom: 14vh;
+    width: 44px;
+    z-index: 85;
+    pointer-events: none;
+    user-select: none;
+    display: flex;
+    justify-content: center;
+  }
+  .scroll-clipper-track {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 21px;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 2px;
+  }
+  .scroll-clipper-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(180deg, rgba(212, 175, 55, 0.3) 0%, #d4af37 85%, #ffffff 100%);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+    border-radius: 2px;
+  }
+  .scroll-clipper-wp {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+  .wp-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #333338;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.25s ease;
+  }
+  .scroll-clipper-wp:hover .wp-dot,
+  .scroll-clipper-wp.active .wp-dot {
+    width: 9px;
+    height: 9px;
+    background: var(--accent-gold);
+    box-shadow: 0 0 10px var(--accent-gold);
+    border-color: #fff;
+  }
+  .wp-label {
+    position: absolute;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(21, 21, 23, 0.94);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    color: var(--accent-gold);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+  }
+  .scroll-clipper-wp:hover .wp-label {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-4px);
+  }
+
+  /* Traveling Barber Clipper (Velis-style vehicle) */
+  .scroll-clipper-vehicle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 44px;
+    height: 54px;
+    pointer-events: auto;
+    cursor: pointer;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+    filter: drop-shadow(0 4px 14px rgba(212, 175, 55, 0.45));
+    transition: filter 0.25s ease;
+    z-index: 5;
+  }
+  .scroll-clipper-vehicle:hover {
+    filter: drop-shadow(0 6px 20px rgba(212, 175, 55, 0.85));
+  }
+  .clipper-svg-box {
+    width: 44px;
+    height: 54px;
+    transform-origin: 50% 30%;
+    transition: transform 0.12s ease-out;
+  }
+  .scroll-clipper-badge {
+    position: absolute;
+    right: 48px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(18, 18, 20, 0.94);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+    pointer-events: none;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  }
+  .scroll-clipper-badge .badge-accent {
+    color: var(--accent-gold);
+    font-weight: 700;
+  }
+
+  /* Spark particles emitted while cutting */
+  .clipper-spark {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: #d4af37;
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow: 0 0 6px #d4af37;
+    animation: sparkFade 0.45s ease-out forwards;
+  }
+  @keyframes sparkFade {
+    0% { opacity: 0.95; transform: translate(0, 0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.2); }
+  }
+
   @media (max-width: 800px) {
-    .razor { grid-template-columns: minmax(0, 1fr); gap: 20px; }
-    .razor-stage { aspect-ratio: 1.35; min-height: 220px; }
+    .clipper-showcase { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .clipper-stage { aspect-ratio: 1.35; min-height: 230px; }
+    .scroll-clipper-rail {
+      right: 6px;
+      width: 32px;
+      top: 18vh;
+      bottom: 18vh;
+    }
+    .scroll-clipper-track { left: 15px; }
+    .scroll-clipper-vehicle { width: 32px; height: 40px; left: -1px; }
+    .clipper-svg-box { width: 32px; height: 40px; }
+    .wp-label { display: none; }
+    .scroll-clipper-badge { display: none; }
   }
 
   /* Price Table */
@@ -803,7 +1046,7 @@
 
   <main id="top">
     <!-- ================= HERO & SHAVE CANVAS ================= -->
-    <section aria-labelledby="h1">
+    <section id="hero" aria-labelledby="h1">
       <h1 id="h1" class="sr-only">Culture barbershop, Olmaliq</h1>
       <div class="stage" id="stage">
         <canvas class="base" id="cBase" aria-hidden="true"></canvas>
@@ -834,7 +1077,7 @@
     </div>
 
     <!-- ================= ABOUT SECTION ================= -->
-    <section class="sec" aria-labelledby="about-h">
+    <section class="sec" id="about-sec" aria-labelledby="about-h">
       <div class="about-grid">
         <h2 class="h2" id="about-h">More than a haircut</h2>
         <div class="about-side">
@@ -844,15 +1087,34 @@
       </div>
     </section>
 
-    <!-- ================= 3D STRAIGHT RAZOR SECTION ================= -->
-    <section class="sec" aria-labelledby="razor-h">
-      <div class="razor">
+    <!-- ================= 3D ELECTRIC CLIPPER SECTION ================= -->
+    <section class="sec" id="mashinka" aria-labelledby="clipper-h">
+      <div class="clipper-showcase">
         <div>
-          <h2 class="h2" id="razor-h">Ustara, aniq chiziq</h2>
-          <p class="lede" id="razorDesc">Soqol chizig‘i ustara bilan shunday tozalanadi. Ustarani sudrab aylantiring, bosib oching yoki yoping.</p>
-          <button class="btn quiet" id="razorToggle" type="button">Ustarani yopish</button>
+          <span class="clipper-tag" id="clipperTag">3D Atelier &bull; Barbershop asbobi</span>
+          <h2 class="h2" id="clipper-h">Mashinka, professional aniqlik</h2>
+          <p class="lede" id="clipperDesc">Mukammal fade va toza chiziqlar aynan shunday professional mashinka bilan yaratiladi. Mashinkani sudrab 3D ko‘rinishda aylantiring, quvvatini yoqing va pichoq tebranishini his qiling.</p>
+          <div class="clipper-actions">
+            <button class="btn gold" id="clipperToggle" type="button">
+              <span class="clipper-btn-led" id="clipperBtnLed"></span>
+              <span id="clipperToggleText">Mashinkani o'chirish</span>
+            </button>
+            <button class="btn quiet" id="clipperLeverToggle" type="button">
+              <span id="clipperLeverText">Taper: 0.5 mm (Open)</span>
+            </button>
+          </div>
+          <div class="clipper-stats">
+            <div class="cstat"><span class="cval">7,200</span><span class="clbl" id="statRpmLabel">RPM Motor</span></div>
+            <div class="cstat"><span class="cval">0.1 mm</span><span class="clbl" id="statGapLabel">Zero Gap</span></div>
+            <div class="cstat"><span class="cval">DLC Titanium</span><span class="clbl" id="statBladeLabel">Blade</span></div>
+          </div>
         </div>
-        <div class="razor-stage" id="razorStage" aria-hidden="true"></div>
+        <div class="clipper-stage" id="clipperStage" aria-hidden="true" title="3D ko'rinishda aylantiring">
+          <div class="clipper-stage-hint" id="clipperStageHint">
+            <span class="hint-icon">&#x21BB;</span>
+            <span id="clipperHintText">3D aylantirish uchun suring</span>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -913,6 +1175,88 @@
     </section>
   </main>
 
+  <!-- ================= VELIS.UZ STYLE SCROLL CLIPPER JOURNEY ================= -->
+  <aside class="scroll-clipper-rail" id="scrollClipperRail" aria-label="Sayt bo'ylab mashinka harakati">
+    <div class="scroll-clipper-track" id="scrollClipperTrack">
+      <div class="scroll-clipper-glow" id="scrollClipperGlow"></div>
+
+      <!-- Milestone Waypoints matching website sections -->
+      <button class="scroll-clipper-wp active" style="top: 0%;" data-target="#hero" title="01 Start" aria-label="Bosh sahifa">
+        <span class="wp-dot"></span>
+        <span class="wp-label" id="wpLabelHero">01 Start</span>
+      </button>
+      <button class="scroll-clipper-wp" style="top: 20%;" data-target="#about-sec" title="02 Culture" aria-label="Culture falsafasi">
+        <span class="wp-dot"></span>
+        <span class="wp-label" id="wpLabelAbout">02 Culture</span>
+      </button>
+      <button class="scroll-clipper-wp" style="top: 40%;" data-target="#mashinka" title="03 Mashinka" aria-label="Mashinka 3D Atelier">
+        <span class="wp-dot"></span>
+        <span class="wp-label" id="wpLabelClipper">03 Mashinka</span>
+      </button>
+      <button class="scroll-clipper-wp" style="top: 60%;" data-target="#narxlar" title="04 Narxlar" aria-label="Narxlar jadvali">
+        <span class="wp-dot"></span>
+        <span class="wp-label" id="wpLabelPrices">04 Narxlar</span>
+      </button>
+      <button class="scroll-clipper-wp" style="top: 80%;" data-target="#yozilish" title="05 Yozilish" aria-label="Onlayn yozilish">
+        <span class="wp-dot"></span>
+        <span class="wp-label" id="wpLabelBooking">05 Yozilish</span>
+      </button>
+      <button class="scroll-clipper-wp" style="top: 100%;" data-target="#manzil" title="06 Manzil" aria-label="Manzil va ish vaqti">
+        <span class="wp-dot"></span>
+        <span class="wp-label" id="wpLabelLocation">06 Manzil</span>
+      </button>
+    </div>
+
+    <!-- Traveling Barber Clipper Vehicle -->
+    <div class="scroll-clipper-vehicle" id="scrollClipperVehicle" role="button" tabindex="0" title="Mashinka: bosilsa 3D bo'limiga o'tadi" aria-label="3D mashinkaga o'tish">
+      <div class="clipper-svg-box" id="scrollClipperSvgBox">
+        <svg viewBox="0 0 52 64" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="bodyGrd" x1="10" y1="20" x2="42" y2="60" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#2c2d33"/>
+              <stop offset="50%" stop-color="#151518"/>
+              <stop offset="100%" stop-color="#0a0a0c"/>
+            </linearGradient>
+            <linearGradient id="goldGrd" x1="0" y1="0" x2="52" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#f7e59b"/>
+              <stop offset="50%" stop-color="#d4af37"/>
+              <stop offset="100%" stop-color="#9a7410"/>
+            </linearGradient>
+          </defs>
+          <!-- Clipper Handle -->
+          <rect x="15" y="20" width="22" height="34" rx="7" fill="url(#bodyGrd)" stroke="url(#goldGrd)" stroke-width="1.6"/>
+          <!-- Grip Texture Grooves -->
+          <line x1="18" y1="30" x2="34" y2="30" stroke="#38383e" stroke-width="1.4"/>
+          <line x1="18" y1="35" x2="34" y2="35" stroke="url(#goldGrd)" stroke-width="1.2" stroke-opacity="0.8"/>
+          <line x1="18" y1="40" x2="34" y2="40" stroke="#38383e" stroke-width="1.4"/>
+          <line x1="18" y1="45" x2="34" y2="45" stroke="url(#goldGrd)" stroke-width="1.2" stroke-opacity="0.8"/>
+          <!-- Power Switch -->
+          <rect x="23" y="23" width="6" height="5" rx="1.5" fill="url(#goldGrd)"/>
+          <!-- LED power glow -->
+          <circle cx="26" cy="50" r="2" fill="#22d3ee" id="scrollClipperLedDot"/>
+          <!-- Hanging loop at base -->
+          <circle cx="26" cy="58" r="4" stroke="url(#goldGrd)" stroke-width="1.5"/>
+          <!-- Side Taper Lever -->
+          <path d="M37 22L44 26L42 29L37 25Z" fill="url(#goldGrd)"/>
+          <!-- Blade Neck -->
+          <path d="M13 20L17 12H35L39 20H13Z" fill="#1d1d22" stroke="url(#goldGrd)" stroke-width="1.4"/>
+          <!-- Stationary Comb Blade -->
+          <rect x="8" y="7" width="36" height="6" rx="1.5" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1"/>
+          <!-- Oscillating Gold Cutting Blade Teeth -->
+          <g id="scrollClipperTeeth">
+            <path d="M10 7L11.5 2L13 7L14.5 2L16 7L17.5 2L19 7L20.5 2L22 7L23.5 2L25 7L26.5 2L28 7L29.5 2L31 7L32.5 2L34 7L35.5 2L37 7L38.5 2L40 7L41.5 2L43 7" stroke="url(#goldGrd)" stroke-width="1.6" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Floating Info Badge -->
+      <div class="scroll-clipper-badge" id="scrollClipperBadge">
+        <span class="badge-accent">Fade</span>
+        <span id="scrollClipperBadgeVal">0%</span>
+      </div>
+    </div>
+  </aside>
+
   <!-- ================= FOOTER ================= -->
   <footer class="foot">
     <span id="footerBrand">Culture barbershop, Olmaliq</span>
@@ -925,7 +1269,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
-<!-- Three.js CDN for 3D Straight Razor -->
+<!-- Three.js CDN for 3D Cordless Barber Clipper -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <script>
@@ -952,10 +1296,23 @@
       hero_pct: "Tozalandi: {n}%",
       about_title: "More than a haircut",
       about_desc: "Culture Olmaliqdagi zamonaviy va hashamatli barbershop. Barber darajasini o‘zingiz tanlaysiz: PRO, TOP yoki VIP. Xizmatlarni belgilab, qulay vaqtga yoziling va navbatda turmang.",
-      razor_title: "Ustara, aniq chiziq",
-      razor_desc: "Soqol chizig‘i ustara bilan shunday tozalanadi. Ustarani sudrab aylantiring, bosib oching yoki yoping.",
-      razor_toggle_close: "Ustarani yopish",
-      razor_toggle_open: "Ustarani ochish",
+      clipper_tag: "3D Atelier • Barbershop asbobi",
+      clipper_title: "Mashinka, professional aniqlik",
+      clipper_desc: "Mukammal fade va toza chiziqlar aynan shunday professional mashinka bilan yaratiladi. Mashinkani sudrab 3D ko‘rinishda aylantiring, quvvatini yoqing va pichoq tebranishini his qiling.",
+      clipper_toggle_on: "Mashinkani yoqish",
+      clipper_toggle_off: "Mashinkani o'chirish",
+      clipper_lever_open: "Taper: 0.5 mm (Open)",
+      clipper_lever_closed: "Taper: 0.1 mm (Zero Gap)",
+      clipper_hint: "3D aylantirish uchun suring",
+      clipper_stat_rpm: "RPM Motor",
+      clipper_stat_gap: "Zero Gap",
+      clipper_stat_blade: "Titanium Blade",
+      rail_hero: "01 Start",
+      rail_about: "02 Culture",
+      rail_clipper: "03 Mashinka",
+      rail_prices: "04 Narxlar",
+      rail_booking: "05 Yozilish",
+      rail_location: "06 Manzil",
       prices_title: "Narxlar",
       prices_service: "Xizmat",
       prices_footnote: "Narxlar so‘mda. Daraja nomini bossangiz, ustun ajralib turadi.",
@@ -996,10 +1353,23 @@
       hero_pct: "Сбрито: {n}%",
       about_title: "More than a haircut",
       about_desc: "Culture — премиальный барбершоп в Алмалыке. Вы сами выбираете категорию барбера: PRO, TOP или VIP. Бронируйте удобное время онлайн без ожидания в очереди.",
-      razor_title: "Опасная бритва, чистые линии",
-      razor_desc: "Идеальные контуры бороды создаются опасной бритвой. Поворачивайте клинок курсором или откройте/закройте кликом.",
-      razor_toggle_close: "Закрыть бритву",
-      razor_toggle_open: "Открыть бритву",
+      clipper_tag: "3D Ателье • Профессиональный инструмент",
+      clipper_title: "Машинка, профессиональная точность",
+      clipper_desc: "Идеальный фейд и чистые линии создаются именно такой профессиональной машинкой. Вращайте машинку в 3D, переключайте мощность и почувствуйте вибрацию лезвий.",
+      clipper_toggle_on: "Включить машинку",
+      clipper_toggle_off: "Выключить машинку",
+      clipper_lever_open: "Рычаг: 0.5 мм (Открыт)",
+      clipper_lever_closed: "Рычаг: 0.1 мм (Zero Gap)",
+      clipper_hint: "3D вращение",
+      clipper_stat_rpm: "Об/мин мотор",
+      clipper_stat_gap: "Zero Gap",
+      clipper_stat_blade: "Titanium лезвия",
+      rail_hero: "01 Старт",
+      rail_about: "02 Culture",
+      rail_clipper: "03 Машинка",
+      rail_prices: "04 Цены",
+      rail_booking: "05 Запись",
+      rail_location: "06 Адрес",
       prices_title: "Прайс-лист",
       prices_service: "Услуга",
       prices_footnote: "Цены указаны в сумах. Нажмите на категорию, чтобы выделить колонку.",
@@ -1045,8 +1415,35 @@
     document.getElementById("clearAll").textContent = t("hero_clear_btn");
     document.getElementById("hint").textContent = t("hero_hint");
     document.getElementById("aboutDesc").textContent = t("about_desc");
-    document.getElementById("razor-h").textContent = t("razor_title");
-    document.getElementById("razorDesc").textContent = t("razor_desc");
+    const clipH = document.getElementById("clipper-h");
+    if (clipH) clipH.textContent = t("clipper_title");
+    const clipDesc = document.getElementById("clipperDesc");
+    if (clipDesc) clipDesc.textContent = t("clipper_desc");
+    const clipTag = document.getElementById("clipperTag");
+    if (clipTag) clipTag.textContent = t("clipper_tag");
+    const clipHint = document.getElementById("clipperHintText");
+    if (clipHint) clipHint.textContent = t("clipper_hint");
+    const statRpm = document.getElementById("statRpmLabel");
+    if (statRpm) statRpm.textContent = t("clipper_stat_rpm");
+    const statGap = document.getElementById("statGapLabel");
+    if (statGap) statGap.textContent = t("clipper_stat_gap");
+    const statBld = document.getElementById("statBladeLabel");
+    if (statBld) statBld.textContent = t("clipper_stat_blade");
+
+    const wpHero = document.getElementById("wpLabelHero");
+    if (wpHero) wpHero.textContent = t("rail_hero");
+    const wpAbout = document.getElementById("wpLabelAbout");
+    if (wpAbout) wpAbout.textContent = t("rail_about");
+    const wpClip = document.getElementById("wpLabelClipper");
+    if (wpClip) wpClip.textContent = t("rail_clipper");
+    const wpPrices = document.getElementById("wpLabelPrices");
+    if (wpPrices) wpPrices.textContent = t("rail_prices");
+    const wpBook = document.getElementById("wpLabelBooking");
+    if (wpBook) wpBook.textContent = t("rail_booking");
+    const wpLoc = document.getElementById("wpLabelLocation");
+    if (wpLoc) wpLoc.textContent = t("rail_location");
+
+    if (window.__updateClipperLabels) window.__updateClipperLabels();
     document.getElementById("pricesHeaderService").textContent = t("prices_service");
     document.getElementById("pricesFootnote").textContent = t("prices_footnote");
     document.getElementById("book-h").textContent = t("book_title");
@@ -1549,7 +1946,7 @@
         document.addEventListener("pointermove", function (e) {
           rx(e.clientX - 17);
           ry(e.clientY - 17);
-          const m = e.target.closest && e.target.closest(".stage") ? "hide" : (e.target.closest && e.target.closest("a, button, .razor-stage") ? "big" : "idle");
+          const m = e.target.closest && e.target.closest(".stage") ? "hide" : (e.target.closest && e.target.closest("a, button, .clipper-stage, .scroll-clipper-vehicle, .scroll-clipper-wp") ? "big" : "idle");
           if (m !== mode) {
             mode = m;
             gsap.to(ring, { opacity: m === "hide" ? 0 : 1, scale: m === "big" ? 1.8 : 1, duration: 0.25, overwrite: "auto" });
@@ -1565,14 +1962,18 @@
     });
   }
 
-  /* ---------- THREE.JS 3D STRAIGHT RAZOR (USTARA) ---------- */
-  function init3DRazor() {
-    const wrap = document.getElementById("razorStage");
-    const toggle = document.getElementById("razorToggle");
+  /* ---------- 3D CORDLESS CLIPPER (THREE.JS) ---------- */
+  function init3DClipper() {
+    const wrap = document.getElementById("clipperStage");
+    const toggle = document.getElementById("clipperToggle");
+    const toggleText = document.getElementById("clipperToggleText");
+    const leverBtn = document.getElementById("clipperLeverToggle");
+    const leverText = document.getElementById("clipperLeverText");
+    const btnLed = document.getElementById("clipperBtnLed");
     if (!wrap) return;
 
     function fail() {
-      const s = wrap.closest(".razor");
+      const s = wrap.closest(".clipper-showcase");
       if (s) s.style.display = "none";
     }
 
@@ -1587,153 +1988,342 @@
     wrap.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(32, 1.5, 0.1, 60);
+    const camera = new THREE.PerspectiveCamera(34, 1.5, 0.1, 60);
 
-    /* Studio environment map for realistic steel reflection */
+    /* Studio reflection cube texture */
     function face(top, bottom, strips) {
       const c = document.createElement("canvas");
       c.width = c.height = 128;
       const g = c.getContext("2d"), grd = g.createLinearGradient(0, 0, 0, 128);
-      grd.addColorStop(0, top);
-      grd.addColorStop(1, bottom);
-      g.fillStyle = grd;
-      g.fillRect(0, 0, 128, 128);
+      grd.addColorStop(0, top); grd.addColorStop(1, bottom);
+      g.fillStyle = grd; g.fillRect(0, 0, 128, 128);
       g.fillStyle = "#ffffff";
       strips.forEach(s => g.fillRect(s[0], s[1], s[2], s[3]));
       return c;
     }
 
     const env = new THREE.CubeTexture([
-      face("#3a3f46", "#0d0e10", [[20, 10, 26, 108]]),
-      face("#3a3f46", "#0d0e10", [[84, 10, 20, 108]]),
-      face("#ffffff", "#b9bdc4", []),
+      face("#454a52", "#111215", [[20, 10, 26, 108]]),
+      face("#454a52", "#111215", [[84, 10, 20, 108]]),
+      face("#ffffff", "#c9cdd4", []),
       face("#08090a", "#08090a", []),
-      face("#454b53", "#0d0e10", [[40, 16, 48, 40]]),
-      face("#2b2f35", "#0b0c0d", [[10, 20, 14, 90], [104, 20, 14, 90]])
+      face("#555b63", "#111215", [[40, 16, 48, 40]]),
+      face("#363a40", "#0b0c0d", [[10, 20, 14, 90], [104, 20, 14, 90]])
     ]);
     env.needsUpdate = true;
 
-    const steel = new THREE.MeshStandardMaterial({
-      color: 0xdfe3e8,
-      metalness: 1,
-      roughness: 0.2,
-      envMap: env,
-      envMapIntensity: 1.3
+    /* Materials */
+    const goldMat = new THREE.MeshStandardMaterial({
+      color: 0xd4af37, metalness: 0.92, roughness: 0.22, envMap: env, envMapIntensity: 1.5
+    });
+    const darkMetal = new THREE.MeshStandardMaterial({
+      color: 0x161619, metalness: 0.85, roughness: 0.3, envMap: env, envMapIntensity: 1.1
+    });
+    const chromeSteel = new THREE.MeshStandardMaterial({
+      color: 0xeef2f7, metalness: 0.98, roughness: 0.15, envMap: env, envMapIntensity: 1.6
+    });
+    const ledMat = new THREE.MeshStandardMaterial({
+      color: 0x22d3ee, emissive: 0x0ea5e9, emissiveIntensity: 1.0
     });
 
-    const handleMat = new THREE.MeshStandardMaterial({
-      color: 0x18181b,
-      metalness: 0.55,
-      roughness: 0.34,
-      envMap: env,
-      envMapIntensity: 0.9
+    const clipper = new THREE.Group();
+
+    /* 1. Main handle body */
+    const bodyGeo = new THREE.CylinderGeometry(0.58, 0.46, 3.2, 32);
+    const bodyMesh = new THREE.Mesh(bodyGeo, darkMetal);
+    bodyMesh.position.y = -0.3;
+    clipper.add(bodyMesh);
+
+    /* Gold grip rings */
+    for (let i = -6; i <= 3; i++) {
+      const ringGeo = new THREE.TorusGeometry(0.53 + (i * 0.008), 0.015, 8, 32);
+      ringGeo.rotateX(Math.PI / 2);
+      const ringMesh = new THREE.Mesh(ringGeo, goldMat);
+      ringMesh.position.y = -0.4 + i * 0.16;
+      clipper.add(ringMesh);
+    }
+
+    /* Top collar & base cap */
+    const collarGeo = new THREE.CylinderGeometry(0.72, 0.58, 0.5, 32);
+    const collarMesh = new THREE.Mesh(collarGeo, goldMat);
+    collarMesh.position.y = 1.45;
+    clipper.add(collarMesh);
+
+    const capGeo = new THREE.CylinderGeometry(0.46, 0.40, 0.35, 32);
+    const capMesh = new THREE.Mesh(capGeo, goldMat);
+    capMesh.position.y = -1.95;
+    clipper.add(capMesh);
+
+    const loopGeo = new THREE.TorusGeometry(0.24, 0.04, 12, 28);
+    const loopMesh = new THREE.Mesh(loopGeo, chromeSteel);
+    loopMesh.position.set(0, -2.25, 0);
+    clipper.add(loopMesh);
+
+    /* Power switch & plate */
+    const plateGeo = new THREE.BoxGeometry(0.28, 0.9, 0.08);
+    const plateMesh = new THREE.Mesh(plateGeo, goldMat);
+    plateMesh.position.set(0, 0.2, 0.54);
+    clipper.add(plateMesh);
+
+    const switchGeo = new THREE.BoxGeometry(0.18, 0.28, 0.1);
+    const switchMesh = new THREE.Mesh(switchGeo, chromeSteel);
+    switchMesh.position.set(0, 0.25, 0.57); // ON position
+    clipper.add(switchMesh);
+
+    /* LED Bar */
+    const ledGeo = new THREE.BoxGeometry(0.08, 0.35, 0.04);
+    const ledMesh = new THREE.Mesh(ledGeo, ledMat);
+    ledMesh.position.set(0, -0.85, 0.52);
+    clipper.add(ledMesh);
+
+    /* 2. Cutter Head Assembly */
+    const headGroup = new THREE.Group();
+    headGroup.position.set(0, 1.7, 0);
+    headGroup.rotation.x = -0.22;
+
+    const neckGeo = new THREE.BoxGeometry(1.1, 0.35, 0.5);
+    const neckMesh = new THREE.Mesh(neckGeo, darkMetal);
+    neckMesh.position.set(0, 0.15, 0.05);
+    headGroup.add(neckMesh);
+
+    /* Stationary Comb Blade */
+    const combShape = new THREE.Shape();
+    combShape.moveTo(-0.85, 0); combShape.lineTo(0.85, 0);
+    combShape.lineTo(0.95, 0.65); combShape.lineTo(-0.95, 0.65);
+    combShape.closePath();
+    const combGeo = new THREE.ExtrudeGeometry(combShape, {
+      depth: 0.08, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02, bevelSegments: 2
     });
+    combGeo.translate(0, 0, -0.04);
+    const combMesh = new THREE.Mesh(combGeo, chromeSteel);
+    combMesh.position.set(0, 0.25, 0.2);
+    headGroup.add(combMesh);
 
-    /* Razor Blade: spine on top, edge below, rounded toe */
-    const bs = new THREE.Shape();
-    bs.moveTo(0, 0.26);
-    bs.lineTo(3.0, 0.26);
-    bs.bezierCurveTo(3.28, 0.26, 3.42, 0.1, 3.36, -0.08);
-    bs.lineTo(3.24, -0.28);
-    bs.lineTo(0.4, -0.28);
-    bs.lineTo(0, -0.18);
-    bs.closePath();
+    /* Stationary Comb Teeth */
+    const teethCount = 21, teethWidth = 1.8;
+    for (let i = 0; i < teethCount; i++) {
+      const tGeo = new THREE.BoxGeometry(0.04, 0.22, 0.09);
+      const tMesh = new THREE.Mesh(tGeo, chromeSteel);
+      tMesh.position.set(-teethWidth / 2 + (i / (teethCount - 1)) * teethWidth, 0.9, 0.2);
+      headGroup.add(tMesh);
+    }
 
-    const bg = new THREE.ExtrudeGeometry(bs, { depth: 0.04, bevelEnabled: false });
-    bg.translate(0, 0, -0.02);
-    const blade = new THREE.Mesh(bg, steel);
-
-    /* Handle scales along +x from the pivot */
-    const hs = new THREE.Shape();
-    hs.moveTo(-0.2, 0.24);
-    hs.lineTo(3.3, 0.2);
-    hs.quadraticCurveTo(3.6, 0.2, 3.6, 0);
-    hs.quadraticCurveTo(3.6, -0.2, 3.3, -0.2);
-    hs.lineTo(-0.2, -0.24);
-    hs.quadraticCurveTo(-0.38, -0.24, -0.38, 0);
-    hs.quadraticCurveTo(-0.38, 0.24, -0.2, 0.24);
-
-    const hg = new THREE.ExtrudeGeometry(hs, {
-      depth: 0.06,
-      bevelEnabled: true,
-      bevelThickness: 0.012,
-      bevelSize: 0.012,
-      bevelSegments: 2
+    /* Moving Cutting Blade */
+    const topBladeGroup = new THREE.Group();
+    const cutShape = new THREE.Shape();
+    cutShape.moveTo(-0.78, 0); cutShape.lineTo(0.78, 0);
+    cutShape.lineTo(0.85, 0.5); cutShape.lineTo(-0.85, 0.5);
+    cutShape.closePath();
+    const cutGeo = new THREE.ExtrudeGeometry(cutShape, {
+      depth: 0.06, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 1
     });
-    hg.translate(0, 0, -0.03);
+    cutGeo.translate(0, 0, -0.03);
+    const cutMesh = new THREE.Mesh(cutGeo, goldMat);
+    cutMesh.position.set(0, 0.27, 0.27);
+    topBladeGroup.add(cutMesh);
 
-    const handle = new THREE.Group();
-    [-0.075, 0.075].forEach(z => {
-      const m = new THREE.Mesh(hg, handleMat);
-      m.position.z = z;
-      handle.add(m);
-    });
+    const cutTeethCount = 19, cutTeethWidth = 1.6;
+    for (let i = 0; i < cutTeethCount; i++) {
+      const ctGeo = new THREE.BoxGeometry(0.035, 0.16, 0.07);
+      const ctMesh = new THREE.Mesh(ctGeo, goldMat);
+      ctMesh.position.set(-cutTeethWidth / 2 + (i / (cutTeethCount - 1)) * cutTeethWidth, 0.77, 0.27);
+      topBladeGroup.add(ctMesh);
+    }
+    headGroup.add(topBladeGroup);
 
-    const spacer = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.17, 20), steel);
-    spacer.rotation.x = Math.PI / 2;
-    spacer.position.set(3.25, 0, 0);
-    handle.add(spacer);
+    /* Side Taper Lever */
+    const leverGroup = new THREE.Group();
+    leverGroup.position.set(0.68, 0.2, 0.1);
+    const pinGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.2, 16);
+    pinGeo.rotateZ(Math.PI / 2);
+    leverGroup.add(new THREE.Mesh(pinGeo, goldMat));
 
-    const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.27, 28), steel);
-    pin.rotation.x = Math.PI / 2;
+    const armGeo = new THREE.BoxGeometry(0.1, 0.42, 0.07);
+    const armMesh = new THREE.Mesh(armGeo, goldMat);
+    armMesh.position.set(0.12, -0.15, 0.02);
+    armMesh.rotation.z = -0.3;
+    leverGroup.add(armMesh);
 
-    const razor = new THREE.Group();
-    razor.add(blade, handle, pin);
+    const knobGeo = new THREE.SphereGeometry(0.09, 12, 12);
+    const knobMesh = new THREE.Mesh(knobGeo, chromeSteel);
+    knobMesh.position.set(0.22, -0.32, 0.03);
+    leverGroup.add(knobMesh);
+    headGroup.add(leverGroup);
+
+    clipper.add(headGroup);
+
+    /* Lighting */
+    const keyLight = new THREE.DirectionalLight(0xfff5ea, 1.3);
+    keyLight.position.set(4, 5, 6);
+    scene.add(keyLight);
+
+    const fillLight = new THREE.DirectionalLight(0xcfd8ff, 0.6);
+    fillLight.position.set(-5, -2, 4);
+    scene.add(fillLight);
+
+    const rimLight = new THREE.DirectionalLight(0xd4af37, 0.7);
+    rimLight.position.set(0, -6, -4);
+    scene.add(rimLight);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.4));
 
     const holder = new THREE.Group();
-    holder.add(razor);
+    holder.add(clipper);
     scene.add(holder);
 
-    const key = new THREE.DirectionalLight(0xffffff, 1.1);
-    key.position.set(3, 4, 6);
-    scene.add(key);
+    /* State & Interactivity */
+    let isRunning = true;
+    let taperOpen = true;
+    const state = { dragX: 0, dragY: 0, scrollY: 0 };
 
-    const rim = new THREE.DirectionalLight(0xcfd8ff, 0.5);
-    rim.position.set(-4, -2, 3);
-    scene.add(rim);
+    /* Synthesized polite clipper hum via Web Audio API */
+    let audioCtx = null, motorOsc = null, motorGain = null;
+    function setAudioMotor(active) {
+      try {
+        if (!audioCtx) {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) audioCtx = new AC();
+        }
+        if (!audioCtx) return;
+        if (audioCtx.state === "suspended") audioCtx.resume();
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+        if (active) {
+          if (motorOsc) return;
+          motorOsc = audioCtx.createOscillator();
+          motorGain = audioCtx.createGain();
+          const filter = audioCtx.createBiquadFilter();
 
-    const state = { open: reduce ? 1 : 0, scrollY: 0, dragY: 0, dragX: 0 };
-    let target = 1;
+          motorOsc.type = "sawtooth";
+          motorOsc.frequency.setValueAtTime(118, audioCtx.currentTime);
+
+          filter.type = "lowpass";
+          filter.frequency.setValueAtTime(420, audioCtx.currentTime);
+
+          motorGain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+          motorGain.gain.exponentialRampToValueAtTime(0.035, audioCtx.currentTime + 0.08);
+
+          motorOsc.connect(filter);
+          filter.connect(motorGain);
+          motorGain.connect(audioCtx.destination);
+          motorOsc.start();
+        } else if (motorGain && motorOsc) {
+          motorGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.06);
+          setTimeout(() => {
+            if (motorOsc) {
+              try { motorOsc.stop(); motorOsc.disconnect(); } catch (err) {}
+              motorOsc = null;
+            }
+          }, 80);
+        }
+      } catch (err) {}
+    }
 
     function size() {
       const w = wrap.clientWidth, h = wrap.clientHeight;
       if (!w || !h) return;
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
-      
-      // Responsive camera distance: pulls back proportionally on portrait mobile
-      let targetDist = 10.6;
-      if (camera.aspect < 1.0) {
-        targetDist = 10.6 * (1.45 / camera.aspect);
-      } else if (camera.aspect < 1.4) {
-        targetDist = 10.6 * (1.2 / camera.aspect);
-      }
-      camera.position.set(0, 0, Math.min(targetDist, 24));
+      let dist = 10.5;
+      if (camera.aspect < 1.0) dist = 10.5 * (1.35 / camera.aspect);
+      else if (camera.aspect < 1.4) dist = 10.5 * (1.15 / camera.aspect);
+      camera.position.set(0, 0, Math.min(dist, 22));
       camera.updateProjectionMatrix();
     }
     size();
     window.addEventListener("resize", size);
     window.addEventListener("orientationchange", () => setTimeout(size, 200));
 
-    function draw(tVal) {
-      const sway = reduce ? 0 : Math.sin(tVal / 1400);
-      holder.rotation.y = -0.45 + state.scrollY + state.dragY;
-      holder.rotation.x = -0.28 + state.dragX;
-      holder.rotation.z = -0.22 + sway * 0.03;
-      holder.position.x = -1.6 * (1 - state.open);
-      handle.rotation.z = Math.PI * 0.97 * state.open;
-      renderer.render(scene, camera);
+    function updatePowerUI() {
+      if (toggleText) toggleText.textContent = isRunning ? t("clipper_toggle_off") : t("clipper_toggle_on");
+      if (btnLed) btnLed.className = isRunning ? "clipper-btn-led" : "clipper-btn-led off";
+      switchMesh.position.y = isRunning ? 0.25 : 0.05;
+      ledMat.emissiveIntensity = isRunning ? 1.0 : 0.08;
     }
 
-    let visible = true, raf = 0;
+    function updateLeverUI() {
+      if (leverText) leverText.textContent = taperOpen ? t("clipper_lever_open") : t("clipper_lever_closed");
+      leverGroup.rotation.x = taperOpen ? 0 : 0.45;
+      topBladeGroup.position.y = taperOpen ? 0 : -0.06;
+    }
+
+    window.__updateClipperLabels = function () {
+      updatePowerUI();
+      updateLeverUI();
+    };
+
+    if (toggle) {
+      toggle.addEventListener("click", () => {
+        isRunning = !isRunning;
+        setAudioMotor(isRunning);
+        updatePowerUI();
+      });
+    }
+    if (leverBtn) {
+      leverBtn.addEventListener("click", () => {
+        taperOpen = !taperOpen;
+        updateLeverUI();
+      });
+    }
+
+    /* Drag to rotate in 3D */
+    let down = null;
+    wrap.addEventListener("pointerdown", e => {
+      down = { x: e.clientX, y: e.clientY, moved: 0 };
+      try { wrap.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+
+    wrap.addEventListener("pointermove", e => {
+      if (!down) return;
+      const dx = e.clientX - down.x, dy = e.clientY - down.y;
+      down.x = e.clientX; down.y = e.clientY;
+      down.moved += Math.abs(dx) + Math.abs(dy);
+      state.dragY += dx * 0.012;
+      state.dragX = Math.max(-0.8, Math.min(0.8, state.dragX + dy * 0.008));
+    });
+
+    function up() {
+      if (down && down.moved < 6) {
+        isRunning = !isRunning;
+        setAudioMotor(isRunning);
+        updatePowerUI();
+      }
+      down = null;
+    }
+    wrap.addEventListener("pointerup", up);
+    wrap.addEventListener("pointercancel", () => { down = null; });
+
+    /* GSAP ScrollTrigger for 3D rotation scrub */
+    if (window.gsap && window.ScrollTrigger && !reduce) {
+      gsap.fromTo(state, { scrollY: -0.6 }, {
+        scrollY: 0.6, ease: "none",
+        scrollTrigger: { trigger: wrap, start: "top bottom", end: "bottom top", scrub: true }
+      });
+    }
+
+    let visible = true, raf = 0, t = 0;
     function loop(tVal) {
       raf = 0;
       if (!visible) return;
-      draw(tVal);
+      t += 0.02;
+
+      const sway = reduce ? 0 : Math.sin(t * 0.7) * 0.08;
+      holder.rotation.y = -0.4 + state.scrollY + state.dragY + sway;
+      holder.rotation.x = -0.22 + state.dragX;
+
+      if (isRunning && !reduce) {
+        topBladeGroup.position.x = Math.sin(t * 80) * 0.045; // 80 rad/s high frequency blade buzz
+        clipper.position.x = (Math.random() - 0.5) * 0.007;
+        clipper.position.y = (Math.random() - 0.5) * 0.007;
+        ledMat.emissiveIntensity = 0.8 + Math.sin(t * 12) * 0.3;
+      } else {
+        topBladeGroup.position.x = 0;
+        clipper.position.set(0, 0, 0);
+      }
+
+      renderer.render(scene, camera);
       raf = requestAnimationFrame(loop);
     }
+
     function kick() {
       if (!raf && visible) raf = requestAnimationFrame(loop);
     }
@@ -1745,72 +2335,149 @@
       }).observe(wrap);
     }
     kick();
+  }
 
-    function setLabel() {
-      if (toggle) {
-        toggle.textContent = target > 0.5 ? t("razor_toggle_close") : t("razor_toggle_open");
-      }
+  /* ---------- VELIS.UZ STYLE SCROLL-SCRUBBED CLIPPER JOURNEY ---------- */
+  function initScrollClipper() {
+    const rail = document.getElementById("scrollClipperRail");
+    const track = document.getElementById("scrollClipperTrack");
+    const glow = document.getElementById("scrollClipperGlow");
+    const vehicle = document.getElementById("scrollClipperVehicle");
+    const svgBox = document.getElementById("scrollClipperSvgBox");
+    const badgeVal = document.getElementById("scrollClipperBadgeVal");
+    const teeth = document.getElementById("scrollClipperTeeth");
+    const ledDot = document.getElementById("scrollClipperLedDot");
+    const waypoints = document.querySelectorAll(".scroll-clipper-wp");
+    if (!rail || !track || !vehicle) return;
+
+    let currentProgress = 0;
+    let targetProgress = 0;
+    let lastScrollY = window.scrollY;
+    let scrollVel = 0;
+    let isScrolling = false;
+    let scrollTimeout = null;
+    let sparkFrame = 0;
+
+    function calcScroll() {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      targetProgress = Math.max(0, Math.min(1, (window.scrollY / (maxScroll || 1))));
+      
+      scrollVel = window.scrollY - lastScrollY;
+      lastScrollY = window.scrollY;
+
+      isScrolling = true;
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        isScrolling = false;
+        scrollVel = 0;
+      }, 150);
     }
 
-    function flip() {
-      target = target > 0.5 ? 0 : 1;
-      setLabel();
-      if (window.gsap && !reduce) {
-        gsap.to(state, { open: target, duration: 1.1, ease: "power3.inOut", overwrite: true });
-      } else {
-        state.open = target;
-      }
-    }
+    window.addEventListener("scroll", calcScroll, { passive: true });
+    calcScroll();
 
-    if (toggle) toggle.addEventListener("click", flip);
-
-    /* Drag to rotate in 3D space, tap to open / close */
-    let down = null;
-    wrap.addEventListener("pointerdown", function (e) {
-      down = { x: e.clientX, y: e.clientY, moved: 0 };
-      try { wrap.setPointerCapture(e.pointerId); } catch (err) {}
-    });
-
-    wrap.addEventListener("pointermove", function (e) {
-      if (!down) return;
-      const dx = e.clientX - down.x, dy = e.clientY - down.y;
-      down.x = e.clientX;
-      down.y = e.clientY;
-      down.moved += Math.abs(dx) + Math.abs(dy);
-      state.dragY += dx * 0.012;
-      state.dragX = Math.max(-0.6, Math.min(0.6, state.dragX + dy * 0.006));
-      if (reduce) draw(0);
-    });
-
-    function up() {
-      if (down && down.moved < 6) flip();
-      down = null;
-    }
-    wrap.addEventListener("pointerup", up);
-    wrap.addEventListener("pointercancel", function () { down = null; });
-
-    /* Auto-opens on scroll and turns with page */
-    if (!reduce && window.gsap) {
-      gsap.to(state, {
-        open: 1, duration: 1.6, ease: "power3.out",
-        scrollTrigger: window.ScrollTrigger ? { trigger: wrap, start: "top 75%", once: true } : undefined
+    /* Waypoint smooth scrolling */
+    waypoints.forEach(wp => {
+      wp.addEventListener("click", () => {
+        const targetSel = wp.getAttribute("data-target");
+        const targetEl = document.querySelector(targetSel);
+        if (targetEl) {
+          if (window.lenis) {
+            window.lenis.scrollTo(targetEl, { offset: -20, duration: 1.2 });
+          } else {
+            targetEl.scrollIntoView({ behavior: "smooth" });
+          }
+        }
       });
-      if (window.ScrollTrigger) {
-        gsap.fromTo(state, { scrollY: -0.7 }, {
-          scrollY: 0.7, ease: "none",
-          scrollTrigger: { trigger: wrap, start: "top bottom", end: "bottom top", scrub: true }
-        });
+    });
+
+    /* Clicking vehicle scrolls smoothly to 3D section */
+    vehicle.addEventListener("click", () => {
+      const mash = document.getElementById("mashinka");
+      if (mash) {
+        if (window.lenis) {
+          window.lenis.scrollTo(mash, { offset: -30, duration: 1.2 });
+        } else {
+          mash.scrollIntoView({ behavior: "smooth" });
+        }
       }
-    } else {
-      state.open = 1;
-      draw(0);
+    });
+
+    /* Emit micro gold sparks when cutting down during active scroll */
+    function emitSpark() {
+      if (reduce) return;
+      const s = document.createElement("div");
+      s.className = "clipper-spark";
+      const dx = (Math.random() - 0.5) * 22 + "px";
+      const dy = (Math.random() * -16 - 4) + "px";
+      s.style.setProperty("--dx", dx);
+      s.style.setProperty("--dy", dy);
+      s.style.left = "21px";
+      s.style.top = "6px";
+      vehicle.appendChild(s);
+      setTimeout(() => s.remove(), 450);
     }
+
+    let teethTick = 0;
+    function loop() {
+      /* Smooth lerp interpolation for silky motion */
+      currentProgress += (targetProgress - currentProgress) * 0.14;
+
+      const trackHeight = track.offsetHeight || 300;
+      const vehicleY = currentProgress * (trackHeight - 34);
+
+      vehicle.style.transform = `translate3d(0, ${vehicleY}px, 0)`;
+      glow.style.height = `${currentProgress * 100}%`;
+
+      /* Dynamic tilt based on scroll velocity (like car steering on velis.uz) */
+      if (!reduce) {
+        const tilt = Math.max(-12, Math.min(12, scrollVel * 0.25));
+        svgBox.style.transform = `rotate(${tilt}deg)`;
+      }
+
+      /* Blade teeth buzz animation during active scrolling */
+      if (isScrolling && !reduce) {
+        teethTick += 0.45;
+        const tx = Math.sin(teethTick * 12) * 1.6;
+        if (teeth) teeth.setAttribute("transform", `translate(${tx}, 0)`);
+        if (ledDot) ledDot.setAttribute("fill", "#ffffff");
+
+        sparkFrame++;
+        if (sparkFrame % 6 === 0 && Math.abs(scrollVel) > 3) {
+          emitSpark();
+        }
+      } else {
+        if (teeth) teeth.removeAttribute("transform");
+        if (ledDot) ledDot.setAttribute("fill", "#22d3ee");
+      }
+
+      const pct = Math.round(currentProgress * 100);
+      if (badgeVal) badgeVal.textContent = `${pct}%`;
+
+      /* Active milestone detection */
+      waypoints.forEach(wp => {
+        const targetSel = wp.getAttribute("data-target");
+        const targetEl = document.querySelector(targetSel);
+        if (targetEl) {
+          const rect = targetEl.getBoundingClientRect();
+          if (rect.top <= window.innerHeight * 0.45 && rect.bottom >= window.innerHeight * 0.15) {
+            wp.classList.add("active");
+          } else {
+            wp.classList.remove("active");
+          }
+        }
+      });
+
+      requestAnimationFrame(loop);
+    }
+    loop();
   }
 
   /* ---------- INITIALIZATION COORDINATOR ---------- */
   document.addEventListener("DOMContentLoaded", function () {
     initGSAP();
-    init3DRazor();
+    init3DClipper();
+    initScrollClipper();
 
     initPreloader(() => {
       // Preloader curtains opened:
