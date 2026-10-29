@@ -1208,9 +1208,19 @@
       </div>
     </div>
 
-    <button class="preloader-skip" id="preloaderSkip" type="button">O‘tkazib yuborish &rsaquo;</button>
+    <button class="preloader-skip" id="preloaderSkip" type="button" onclick="var p=document.getElementById('preloader');if(p){p.classList.add('preloader-dismiss');setTimeout(function(){p.classList.add('preloader-finished')},600);}">O‘tkazib yuborish &rsaquo;</button>
   </div>
 </div>
+<script>
+  /* Immediate preloader emergency safety */
+  setTimeout(function() {
+    var p = document.getElementById('preloader');
+    if (p && !p.classList.contains('preloader-finished')) {
+      p.classList.add('preloader-dismiss');
+      setTimeout(function() { p.classList.add('preloader-finished'); }, 600);
+    }
+  }, 2000);
+</script>
 
 <!-- BARBER POLE TOP STRIPE -->
 <div class="pole" aria-hidden="true"></div>
@@ -1711,15 +1721,20 @@
     if (nightBtn) nightBtn.classList.toggle("active", t === "night");
     if (dayBtn) dayBtn.classList.toggle("active", t === "day");
 
-    // Redraw hero wordmark canvas with new theme colors
-    if (typeof buildCanvas === "function") {
-      const wasDone = stage && stage.classList.contains("is-done");
-      buildCanvas();
-      if (wasDone && stage) stage.classList.add("is-done");
+    // Redraw hero wordmark canvas with new theme colors safely
+    const stageEl = document.getElementById("stage");
+    if (typeof buildCanvas === "function" && stageEl && document.getElementById("cBase")) {
+      try {
+        const wasDone = stageEl.classList.contains("is-done");
+        buildCanvas();
+        if (wasDone) stageEl.classList.add("is-done");
+      } catch (err) {}
     }
 
-    // Update Three.js 3D Clipper scene lighting
-    if (window.__updateThemeLighting) window.__updateThemeLighting(t);
+    // Update Three.js 3D Clipper scene lighting safely
+    try {
+      if (window.__updateThemeLighting) window.__updateThemeLighting(t);
+    } catch (err) {}
 
     setTimeout(() => {
       document.documentElement.classList.remove("theme-transitioning");
@@ -2084,13 +2099,23 @@
       if (bar) bar.style.width = val + "%";
       if (pct) pct.textContent = val + "%";
 
-      if (p < 1) animFrame = requestAnimationFrame(loop);
-      else dismiss();
+      if (p < 1) {
+        animFrame = requestAnimationFrame(loop);
+      } else {
+        dismiss();
+      }
     }
     animFrame = requestAnimationFrame(loop);
 
-    skipBtn?.addEventListener("click", (e) => { e.stopPropagation(); dismiss(); });
-    preloader.addEventListener("click", (e) => { if (e.target.id !== "preloaderSkip") dismiss(); });
+    if (skipBtn) {
+      skipBtn.addEventListener("click", (e) => { e.stopPropagation(); dismiss(); });
+    }
+    preloader.addEventListener("click", (e) => {
+      if (e.target.id !== "preloaderSkip") dismiss();
+    });
+
+    /* Auto-dismiss failsafe in 1.8 seconds */
+    setTimeout(dismiss, 1800);
   }
 
   /* ---------- GSAP & LENIS SMOOTH SCROLL ---------- */
@@ -2241,7 +2266,7 @@
     if (!wrap) return;
 
     function fail() {
-      const s = wrap.closest(".clipper-showcase");
+      const s = (wrap.closest ? wrap.closest(".clipper-showcase") : null);
       if (s) s.style.display = "none";
     }
 
@@ -2766,19 +2791,27 @@
   }
 
   /* ---------- INITIALIZATION COORDINATOR ---------- */
-  document.addEventListener("DOMContentLoaded", function () {
-    initGSAP();
-    init3DClipper();
-    initScrollClipper();
-    setTheme(currentTheme, true);
-
+  function boot() {
+    // 1. Start entrance preloader immediately
     initPreloader(() => {
-      // Preloader curtains opened:
-      if (introSeq) introSeq.play();
-      setTimeout(sweep, 450);
-      if (window.ScrollTrigger) ScrollTrigger.refresh();
+      try { if (introSeq) introSeq.play(); } catch (e) {}
+      try { setTimeout(sweep, 450); } catch (e) {}
+      try { if (window.ScrollTrigger) ScrollTrigger.refresh(); } catch (e) {}
     });
-  });
+
+    // 2. Safely initialize all subsystems with independent error guards
+    try { setTheme(currentTheme, true); } catch (e) { console.warn("Theme init error:", e); }
+    try { initGSAP(); } catch (e) { console.warn("GSAP init error:", e); }
+    try { init3DClipper(); } catch (e) { console.warn("3D Clipper init error:", e); }
+    try { initScrollClipper(); } catch (e) { console.warn("Scroll Clipper init error:", e); }
+  }
+
+  // If DOM is already ready (or parsed), run boot immediately!
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
 })();
 </script>
 
