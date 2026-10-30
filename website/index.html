@@ -782,6 +782,15 @@
     border-radius: 8px;
     overflow: hidden;
   }
+  .razor-hand-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    display: block;
+  }
   .razor-stage {
     position: absolute;
     inset: 0;
@@ -790,25 +799,20 @@
     touch-action: pan-y;
     cursor: grab;
     border-radius: 8px;
-    opacity: 0;
-    transition: opacity 0.65s cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
-  .razor-stage.docked {
     opacity: 1;
+    z-index: 2;
   }
   .razor-stage:active { cursor: grabbing; }
   .razor-stage canvas { display: block; width: 100%; height: 100%; }
 
-  /* Seamless Cinematic Overlay: Barber Hand & Lezva loading into 3D position */
-  .razor-cinematic-overlay {
+  .razor-fx-overlay {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: 10;
+    z-index: 3;
     display: block;
-    transition: opacity 0.5s ease;
   }
   .razor-stage-hint {
     position: absolute;
@@ -1326,117 +1330,73 @@
         </div>
 
         <div class="razor-stage-wrap" id="razorStageWrap">
-          <div class="razor-stage" id="razorStage" aria-hidden="true" title="Ustarani 3D ko'rinishda aylantiring"></div>
-
-          <!-- Seamless Cinematic Overlay: Hand Catch & Blade Loading directly docking into 3D model -->
-          <svg class="razor-cinematic-overlay" id="razorCinematicOverlay" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <!-- Barber Hand Layer (Behind 3D Razor) -->
+          <svg class="razor-hand-overlay" id="razorHandOverlay" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
             <defs>
               <linearGradient id="goldGleam" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0%" stop-color="#fff5cc"/>
                 <stop offset="50%" stop-color="#d4af37"/>
                 <stop offset="100%" stop-color="#8a6e18"/>
               </linearGradient>
-
-              <linearGradient id="steelGrd" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#f8fafc"/>
-                <stop offset="35%" stop-color="#cbd5e1"/>
-                <stop offset="70%" stop-color="#94a3b8"/>
-                <stop offset="100%" stop-color="#475569"/>
-              </linearGradient>
-
-              <linearGradient id="bladeEdgeGrd" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#cbd5e1"/>
-                <stop offset="50%" stop-color="#ffffff"/>
-                <stop offset="100%" stop-color="#94a3b8"/>
-              </linearGradient>
-
               <linearGradient id="gloveGrd" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0%" stop-color="#2a2a30"/>
                 <stop offset="50%" stop-color="#18181c"/>
                 <stop offset="100%" stop-color="#0e0e11"/>
               </linearGradient>
-
-              <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="6" result="blur"/>
-                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
             </defs>
 
-            <!-- Precision Alignment Grid -->
+            <!-- Precision Reticle Guide -->
             <g opacity="0.12">
               <circle cx="300" cy="200" r="140" stroke="url(#goldGleam)" stroke-width="0.8" stroke-dasharray="3,6" fill="none"/>
               <line x1="120" y1="200" x2="480" y2="200" stroke="url(#goldGleam)" stroke-width="0.6"/>
               <line x1="300" y1="50" x2="300" y2="350" stroke="url(#goldGleam)" stroke-width="0.6"/>
             </g>
 
-            <!-- Catch Impact Flash -->
-            <g id="catchFlash" transform="translate(300, 200)" opacity="0">
-              <circle cx="0" cy="0" r="75" fill="url(#goldGleam)" opacity="0.4" filter="url(#goldGlow)"/>
-              <line x1="-120" y1="0" x2="120" y2="0" stroke="#fff" stroke-width="2.5"/>
-              <line x1="0" y1="-80" x2="0" y2="80" stroke="url(#goldGleam)" stroke-width="2"/>
-            </g>
-
             <!-- Barber's Gloved Hand (Italian tailored black glove & monogram ring) -->
-            <g id="barberHand" transform="translate(240, 180)">
+            <g id="barberHand" transform="translate(240, 280)" opacity="0">
               <!-- Wrist/Cuff -->
               <path d="M-40 280 C-20 200 10 160 50 140 L130 190 C100 240 60 280 40 300 Z" fill="url(#gloveGrd)" stroke="#383842" stroke-width="2"/>
               <path d="M-30 260 C-5 190 25 155 55 145" stroke="url(#goldGleam)" stroke-width="2" stroke-dasharray="5,4" fill="none" opacity="0.8"/>
-              <!-- Palm -->
+              <!-- Palm cradling from below -->
               <path d="M30 140 C50 100 80 80 130 80 C170 80 190 100 200 130 C180 160 160 180 130 180 C80 180 50 170 30 140 Z" fill="url(#gloveGrd)" stroke="#2f2f38" stroke-width="2"/>
               <!-- Gold Signet Ring with Monogram C -->
               <ellipse cx="145" cy="140" rx="8" ry="11" fill="url(#goldGleam)" stroke="#5e4910" stroke-width="1.2" transform="rotate(-20 145 140)"/>
               <text x="143" y="143" font-family="'Cinzel', serif" font-size="7" font-weight="bold" fill="#1a1403" text-anchor="middle">C</text>
-              <!-- Fingers -->
+              <!-- Supporting Fingers -->
               <path d="M110 140 C130 160 155 160 170 140" stroke="#333" stroke-width="2" fill="none"/>
               <!-- Thumb -->
               <g id="thumbGroup" transform="translate(20, 70)">
                 <path d="M5 35 C15 5 45 0 60 18 C70 32 65 52 45 60 C25 65 10 55 5 35 Z" fill="url(#gloveGrd)" stroke="#444452" stroke-width="2"/>
               </g>
             </g>
+          </svg>
 
-            <!-- Flying Straight Razor & Blade Loading Assembly -->
-            <g id="flyingRazor" transform="translate(300, 200)">
-              <g id="shavetteBody">
-                <!-- Scales (rotates open) -->
-                <g id="animScales" transform="rotate(-30)">
-                  <path d="M-6 -4 L-145 -12 C-160 -13 -165 -2 -160 8 L-4 8 Z" fill="#141417" stroke="#33333d" stroke-width="1.5"/>
-                  <text x="-80" y="2" font-family="'Cinzel', serif" font-size="7" font-weight="bold" fill="url(#goldGleam)" letter-spacing="2" text-anchor="middle">CULTURE</text>
-                  <circle cx="-150" cy="1" r="2.5" fill="url(#steelGrd)"/>
-                </g>
-                <!-- Shank & Lower Blade Bed -->
-                <path d="M0 -6 L145 -6 C155 -6 165 2 160 14 L150 28 L10 28 L0 18 Z" fill="url(#steelGrd)" stroke="#475569" stroke-width="1.5"/>
-                <circle cx="52" cy="11" r="3" fill="#1e293b" stroke="url(#goldGleam)" stroke-width="1.2"/>
-                <circle cx="115" cy="11" r="3" fill="#1e293b" stroke="url(#goldGleam)" stroke-width="1.2"/>
-                <!-- Monkey Tail Spur -->
-                <path d="M0 0 L-20 -4 C-32 -6 -40 4 -36 14 C-33 20 -24 22 -18 16 C-14 11 -12 2 -4 1 Z" fill="url(#steelGrd)" stroke="#475569" stroke-width="1.5"/>
+          <!-- 3D Three.js Straight Razor Stage -->
+          <div class="razor-stage" id="razorStage" aria-hidden="true" title="Ustarani 3D ko'rinishda aylantiring"></div>
 
-                <!-- Razor Blade (Lezva) inserting into shavette -->
-                <g id="animBlade" transform="translate(180, -120) rotate(25)">
-                  <path d="M0 0 L120 0 C123 0 125 2 125 5 L125 27 L0 27 Z" fill="url(#steelGrd)" stroke="#94a3b8" stroke-width="1"/>
-                  <rect x="16" y="6" width="13" height="6" rx="1.5" fill="#0c0c0d"/>
-                  <rect x="54" y="8" width="15" height="5" rx="2" fill="#0c0c0d"/>
-                  <rect x="92" y="6" width="13" height="6" rx="1.5" fill="#0c0c0d"/>
-                  <text x="62" y="21" font-size="6" font-weight="bold" fill="#334155" text-anchor="middle" letter-spacing="1">CULTURE PLATINUM</text>
-                  <!-- Exposed Cutting Edge -->
-                  <polygon points="0,27 125,27 125,32 0,32" fill="url(#bladeEdgeGrd)" stroke="#cbd5e1" stroke-width="0.8"/>
-                  <line x1="0" y1="32" x2="125" y2="32" stroke="#ffffff" stroke-width="1.2"/>
-                  <!-- Edge Gleam Star -->
-                  <g id="gleamStar" transform="translate(62, 32) scale(0)">
-                    <path d="M0 -12 Q0 0 12 0 Q0 0 0 12 Q0 0 -12 0 Q0 0 0 -12 Z" fill="#fff" filter="url(#goldGlow)"/>
-                    <circle cx="0" cy="0" r="3" fill="url(#goldGleam)"/>
-                  </g>
-                </g>
-
-                <!-- Clamping Arm (snaps shut over blade) -->
-                <g id="animClamp" transform="translate(10, -5)">
-                  <path d="M0 0 L140 0 C150 0 155 6 150 14 L145 18 L5 18 Z" fill="#1e293b" stroke="url(#goldGleam)" stroke-width="1.2"/>
-                  <circle cx="8" cy="8" r="2.5" fill="url(#goldGleam)"/>
-                </g>
-
-                <!-- Pivot Screw -->
-                <circle cx="0" cy="0" r="6" fill="url(#goldGleam)"/>
-                <circle cx="0" cy="0" r="4" fill="url(#steelGrd)"/>
-              </g>
+          <!-- FX Layer (Catch Flash & Blade Glint Star on top of 3D Razor) -->
+          <svg class="razor-fx-overlay" id="razorFxOverlay" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <defs>
+              <linearGradient id="fxGoldGleam" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#fff5cc"/>
+                <stop offset="50%" stop-color="#d4af37"/>
+                <stop offset="100%" stop-color="#8a6e18"/>
+              </linearGradient>
+              <filter id="fxGoldGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="6" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <!-- Catch Impact Flash -->
+            <g id="catchFlash" transform="translate(300, 200)" opacity="0">
+              <circle cx="0" cy="0" r="75" fill="url(#fxGoldGleam)" opacity="0.4" filter="url(#fxGoldGlow)"/>
+              <line x1="-120" y1="0" x2="120" y2="0" stroke="#fff" stroke-width="2.5"/>
+              <line x1="0" y1="-80" x2="0" y2="80" stroke="url(#fxGoldGleam)" stroke-width="2"/>
+            </g>
+            <!-- Edge Gleam Star -->
+            <g id="gleamStar" transform="translate(200, 208) scale(0)" opacity="0">
+              <path d="M0 -14 Q0 0 14 0 Q0 0 0 14 Q0 0 -14 0 Q0 0 0 -14 Z" fill="#fff" filter="url(#fxGoldGlow)"/>
+              <circle cx="0" cy="0" r="3.5" fill="url(#fxGoldGleam)"/>
             </g>
           </svg>
 
@@ -1519,9 +1479,9 @@
         <span class="wp-dot"></span>
         <span class="wp-label" id="wpLabelAbout">02 Culture</span>
       </button>
-      <button class="scroll-clipper-wp" style="top: 40%;" data-target="#ustara" title="03 Ustara &amp; Lezva" aria-label="Ustara 3D bo'limiga o'tish">
+      <button class="scroll-clipper-wp" style="top: 40%;" data-target="#ustara" title="03 Ustara" aria-label="3D ustaraga o'tish">
         <span class="wp-dot"></span>
-        <span class="wp-label" id="wpLabelRazor">03 Ustara &amp; Lezva</span>
+        <span class="wp-label" id="wpLabelRazor">03 Ustara</span>
       </button>
       <button class="scroll-clipper-wp" style="top: 60%;" data-target="#narxlar" title="04 Narxlar" aria-label="Narxlar jadvali">
         <span class="wp-dot"></span>
@@ -1537,40 +1497,54 @@
       </button></div>
 
     <!-- Traveling Barber Clipper Vehicle -->
-    <div class="scroll-clipper-vehicle" id="scrollClipperVehicle" role="button" tabindex="0" title="Ustara & Lezva: bosilsa 3D bo'limiga o'tadi" aria-label="3D ustaraga o'tish">
+    <div class="scroll-clipper-vehicle" id="scrollClipperVehicle" role="button" tabindex="0" title="Mashinka: bosilsa 3D bo'limiga o'tadi" aria-label="3D mashinkaga o'tish">
       <div class="clipper-svg-box" id="scrollClipperSvgBox">
-        <!-- Luxury Straight Razor & Blade Silhouette -->
-        <svg viewBox="0 0 46 54" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 52 64" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="vGoldGrd" x1="0" y1="0" x2="46" y2="54" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#fff5cc"/>
+            <linearGradient id="bodyGrd" x1="10" y1="20" x2="42" y2="60" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#2c2d33"/>
+              <stop offset="50%" stop-color="#151518"/>
+              <stop offset="100%" stop-color="#0a0a0c"/>
+            </linearGradient>
+            <linearGradient id="goldGrd" x1="0" y1="0" x2="52" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#f7e59b"/>
               <stop offset="50%" stop-color="#d4af37"/>
               <stop offset="100%" stop-color="#9a7410"/>
             </linearGradient>
-            <linearGradient id="vBladeSteel" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#ffffff"/>
-              <stop offset="50%" stop-color="#cbd5e1"/>
-              <stop offset="100%" stop-color="#64748b"/>
-            </linearGradient>
           </defs>
-          <!-- Curved Scales Handle -->
-          <path d="M12 10 L28 46 C29 48 27 50 25 50 L22 50 C20 50 19 48 18 46 L6 14 C5 12 7 10 9 10 Z" fill="#141417" stroke="url(#vGoldGrd)" stroke-width="1.4"/>
-          <!-- Exposed Platinum Blade -->
-          <path d="M12 10 L38 8 C40 8 42 10 41 12 L37 23 L11 21 Z" fill="url(#vBladeSteel)" stroke="#94a3b8" stroke-width="1"/>
-          <line x1="12" y1="21" x2="37" y2="23" stroke="#ffffff" stroke-width="1.3"/>
-          <!-- Pivot Screw -->
-          <circle cx="11" cy="11" r="3.5" fill="url(#vGoldGrd)"/>
-          <circle cx="11" cy="11" r="1.5" fill="#ffffff"/>
+          <!-- Clipper Handle -->
+          <rect x="15" y="20" width="22" height="34" rx="7" fill="url(#bodyGrd)" stroke="url(#goldGrd)" stroke-width="1.6"/>
+          <!-- Grip Texture Grooves -->
+          <line x1="18" y1="30" x2="34" y2="30" stroke="#38383e" stroke-width="1.4"/>
+          <line x1="18" y1="35" x2="34" y2="35" stroke="url(#goldGrd)" stroke-width="1.2" stroke-opacity="0.8"/>
+          <line x1="18" y1="40" x2="34" y2="40" stroke="#38383e" stroke-width="1.4"/>
+          <line x1="18" y1="45" x2="34" y2="45" stroke="url(#goldGrd)" stroke-width="1.2" stroke-opacity="0.8"/>
+          <!-- Power Switch -->
+          <rect x="23" y="23" width="6" height="5" rx="1.5" fill="url(#goldGrd)"/>
+          <!-- LED power glow -->
+          <circle cx="26" cy="50" r="2" fill="#22d3ee" id="scrollClipperLedDot"/>
+          <!-- Hanging loop at base -->
+          <circle cx="26" cy="58" r="4" stroke="url(#goldGrd)" stroke-width="1.5"/>
+          <!-- Side Taper Lever -->
+          <path d="M37 22L44 26L42 29L37 25Z" fill="url(#goldGrd)"/>
+          <!-- Blade Neck -->
+          <path d="M13 20L17 12H35L39 20H13Z" fill="#1d1d22" stroke="url(#goldGrd)" stroke-width="1.4"/>
+          <!-- Stationary Comb Blade -->
+          <rect x="8" y="7" width="36" height="6" rx="1.5" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1"/>
+          <!-- Oscillating Gold Cutting Blade Teeth -->
+          <g id="scrollClipperTeeth">
+            <path d="M10 7L11.5 2L13 7L14.5 2L16 7L17.5 2L19 7L20.5 2L22 7L23.5 2L25 7L26.5 2L28 7L29.5 2L31 7L32.5 2L34 7L35.5 2L37 7L38.5 2L40 7L41.5 2L43 7" stroke="url(#goldGrd)" stroke-width="1.6" stroke-linecap="round"/>
+          </g>
         </svg>
       </div>
 
-      <!-- Floating Badge -->
+      <!-- Floating Info Badge -->
       <div class="scroll-clipper-badge" id="scrollClipperBadge">
-        <span class="badge-accent">Ustara</span>
-        <span id="scrollClipperBadgeVal">0.1mm</span>
+        <span class="badge-accent">Fade</span>
+        <span id="scrollClipperBadgeVal">0%</span>
       </div>
-    </div></div>
-  </aside>
+    </div>
+  </div></aside>
 
   <!-- ================= FOOTER ================= -->
   <footer class="foot">
@@ -2361,7 +2335,6 @@
     const wrap = document.getElementById("razorStage");
     const toggle = document.getElementById("razorToggle");
     const replayBtn = document.getElementById("razorRitualReplay");
-    const overlaySvg = document.getElementById("razorCinematicOverlay");
     if (!wrap) return;
 
     function fail() {
@@ -2412,6 +2385,14 @@
       roughness: 0.2,
       envMap: env,
       envMapIntensity: 1.3
+    });
+
+    const platinumSteel = new THREE.MeshStandardMaterial({
+      color: 0xf8fafc,
+      metalness: 1,
+      roughness: 0.1,
+      envMap: env,
+      envMapIntensity: 1.6
     });
 
     const handleMat = new THREE.MeshStandardMaterial({
@@ -2470,8 +2451,29 @@
     const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.27, 28), steel);
     pin.rotation.x = Math.PI / 2;
 
+    /* 3D Platinum Razor Blade (Lezva) that slots into the straight razor */
+    const ls = new THREE.Shape();
+    ls.moveTo(0.35, -0.25);
+    ls.lineTo(2.7, -0.25);
+    ls.lineTo(2.7, 0.16);
+    ls.lineTo(0.35, 0.16);
+    ls.closePath();
+
+    const slot = new THREE.Path();
+    slot.moveTo(0.65, -0.03);
+    slot.lineTo(2.4, -0.03);
+    slot.bezierCurveTo(2.45, -0.03, 2.45, 0.03, 2.4, 0.03);
+    slot.lineTo(0.65, 0.03);
+    slot.bezierCurveTo(0.60, 0.03, 0.60, -0.03, 0.65, -0.03);
+    ls.holes.push(slot);
+
+    const lezvaGeo = new THREE.ExtrudeGeometry(ls, { depth: 0.01, bevelEnabled: false });
+    lezvaGeo.translate(0, 0, -0.005);
+    const lezvaMesh = new THREE.Mesh(lezvaGeo, platinumSteel);
+    lezvaMesh.position.set(0, 0, 0.024);
+
     const razor = new THREE.Group();
-    razor.add(blade, handle, pin);
+    razor.add(blade, handle, pin, lezvaMesh);
 
     const holder = new THREE.Group();
     holder.add(razor);
@@ -2533,12 +2535,14 @@
     window.addEventListener("orientationchange", () => setTimeout(size, 200));
 
     function draw(tVal) {
-      const sway = reduce ? 0 : Math.sin(tVal / 1400);
-      holder.rotation.y = -0.45 + state.scrollY + state.dragY;
-      holder.rotation.x = -0.28 + state.dragX;
-      holder.rotation.z = -0.22 + sway * 0.03;
-      holder.position.x = -1.6 * (1 - state.open);
-      handle.rotation.z = Math.PI * 0.97 * state.open;
+      if (isDocked) {
+        const sway = reduce ? 0 : Math.sin(tVal / 1400);
+        holder.rotation.y = -0.45 + state.scrollY + state.dragY;
+        holder.rotation.x = -0.28 + state.dragX;
+        holder.rotation.z = -0.22 + sway * 0.03;
+        holder.position.x = -1.6 * (1 - state.open);
+        handle.rotation.z = Math.PI * 0.97 * state.open;
+      }
       renderer.render(scene, camera);
     }
 
@@ -2583,12 +2587,13 @@
     /* Drag to rotate in 3D space, tap to open / close */
     let down = null;
     wrap.addEventListener("pointerdown", function (e) {
+      if (!isDocked) return;
       down = { x: e.clientX, y: e.clientY, moved: 0 };
       try { wrap.setPointerCapture(e.pointerId); } catch (err) {}
     });
 
     wrap.addEventListener("pointermove", function (e) {
-      if (!down) return;
+      if (!down || !isDocked) return;
       const dx = e.clientX - down.x, dy = e.clientY - down.y;
       down.x = e.clientX;
       down.y = e.clientY;
@@ -2599,7 +2604,7 @@
     });
 
     function up() {
-      if (down && down.moved < 6) flip();
+      if (down && down.moved < 6 && isDocked) flip();
       down = null;
     }
     wrap.addEventListener("pointerup", up);
@@ -2678,105 +2683,180 @@
       } catch (err) {}
     }
 
-    /* ================= SEAMLESS VELIS.UZ DOCKING TIMELINE ================= */
-    const ritualTl = gsap.timeline({ paused: true });
+    /* ================= SCROLL-SCRUBBED 3D RITUAL ENGINE ================= */
+    let lastSoundStep = -1;
 
-    function buildCinematicTimeline() {
-      ritualTl.clear();
+    function applyRitualProgress(p) {
+      const barberHand = document.getElementById("barberHand");
+      const catchFlash = document.getElementById("catchFlash");
+      const gleamStar = document.getElementById("gleamStar");
 
-      ritualTl.set("#barberHand", { y: 280, x: 240, opacity: 0 })
-        .set("#flyingRazor", { x: 500, y: -260, rotation: -85, scale: 0.7, opacity: 0 })
-        .set("#animScales", { rotation: -30 })
-        .set("#animClamp", { rotation: 0, transformOrigin: "0% 0%" })
-        .set("#animBlade", { x: 180, y: -150, rotation: 35, opacity: 0 })
-        .set("#catchFlash", { opacity: 0, scale: 0.2 })
-        .set("#gleamStar", { scale: 0, opacity: 0 })
-        .set(overlaySvg, { opacity: 1, display: "block" });
+      // Sound milestone triggering
+      if (p >= 0.22 && p < 0.45) {
+        if (lastSoundStep < 0) { sfxCatch(); lastSoundStep = 0; }
+      } else if (p >= 0.45 && p < 0.70) {
+        if (lastSoundStep < 1) { sfxSlide(); lastSoundStep = 1; }
+      } else if (p >= 0.70 && p < 0.85) {
+        if (lastSoundStep < 2) { sfxSnap(); lastSoundStep = 2; }
+      } else if (p >= 0.85) {
+        if (lastSoundStep < 3) { sfxGleam(); lastSoundStep = 3; }
+      } else if (p < 0.15) {
+        lastSoundStep = -1;
+      }
 
-      // 1. Hand rises & Razor swoops in from the scroll journey ("cham animatsiya bo'lib tushadi")
-      ritualTl.to("#barberHand", { y: 40, opacity: 1, duration: 0.8, ease: "power3.out" }, 0);
-
-      ritualTl.to("#flyingRazor", { opacity: 1, duration: 0.2 }, 0.25)
-        .to("#flyingRazor", { x: 280, y: 150, rotation: 10, scale: 1, duration: 0.85, ease: "back.out(1.4)" }, 0.25)
-        .to("#animScales", { rotation: -135, duration: 0.65, ease: "power2.out" }, 0.45);
-
-      // Flash & Catch
-      ritualTl.call(sfxCatch, null, 1.0);
-      ritualTl.to("#catchFlash", { opacity: 1, scale: 1.2, duration: 0.15 }, 1.0)
-        .to("#catchFlash", { opacity: 0, scale: 1.6, duration: 0.3 }, 1.15);
-
-      // 2. Clamp opens
-      ritualTl.to("#animClamp", { rotation: -70, duration: 0.5, ease: "back.out(1.5)" }, 1.35);
-
-      // 3. Razor blade (lezva) glides in & seats ("unga lezva o'rnatadi")
-      ritualTl.call(sfxSlide, null, 1.8);
-      ritualTl.to("#animBlade", { opacity: 1, x: 10, y: -1, rotation: 0, duration: 0.9, ease: "power3.inOut" }, 1.8);
-
-      // 4. Clamp snaps shut & Glint sweeps across edge
-      ritualTl.call(sfxSnap, null, 2.7);
-      ritualTl.to("#animClamp", { rotation: 0, duration: 0.28, ease: "power4.in" }, 2.7);
-
-      ritualTl.call(sfxGleam, null, 2.95);
-      ritualTl.to("#gleamStar", { opacity: 1, scale: 1.4, x: 10, duration: 0.12 }, 2.95)
-        .to("#gleamStar", { x: 110, duration: 0.6, ease: "power1.inOut" }, 3.07)
-        .to("#gleamStar", { opacity: 0, scale: 0.2, duration: 0.2 }, 3.6);
-
-      // 5. Signature twirl & Razor glides into final 3D site position ("oxirida lezva saytda pozitsiyaga borsin")
-      ritualTl.to("#barberHand", { y: 160, opacity: 0, duration: 0.7, ease: "power2.in" }, 3.7);
-
-      ritualTl.to("#flyingRazor", {
-        x: 300,
-        y: 200,
-        rotation: 0,
-        scale: 1.18,
-        duration: 0.9,
-        ease: "power3.inOut"
-      }, 3.7);
-
-      // Seamless Hand-off to 3D Model:
-      ritualTl.call(() => {
-        isDocked = true;
-        wrap.classList.add("docked");
-      }, null, 4.4);
-
-      ritualTl.to(overlaySvg, {
-        opacity: 0,
-        duration: 0.45,
-        onComplete: () => {
-          overlaySvg.style.display = "none";
+      // 1. Phase 1: Swoop down & Hand Catch (p: 0 -> 0.25)
+      if (p <= 0.25) {
+        const t = Math.max(0, Math.min(1, p / 0.25));
+        if (barberHand) {
+          const handY = 280 - t * 240; // 280 down to 40
+          barberHand.setAttribute("transform", "translate(240, " + handY + ")");
+          barberHand.style.opacity = Math.min(1, t * 1.5);
         }
-      }, 4.4);
+        // 3D Razor swoops in ("cham animatsiya bo'lib tushadi")
+        holder.position.x = 4.0 * (1 - t);
+        holder.position.y = 3.2 * (1 - t);
+        holder.position.z = 0.4 * (1 - t);
+        holder.rotation.x = -0.5 + t * 0.35;
+        holder.rotation.y = 0.7 - t * 0.6;
+        holder.rotation.z = -1.1 + t * 1.15;
+        handle.rotation.z = Math.PI * 0.15;
+        lezvaMesh.visible = false;
+        isDocked = false;
+        wrap.classList.remove("docked");
+
+        if (catchFlash) {
+          if (t > 0.82) {
+            const ft = (t - 0.82) / 0.18;
+            catchFlash.style.opacity = 1 - ft;
+            catchFlash.setAttribute("transform", "translate(300, 200) scale(" + (0.4 + ft * 0.8) + ")");
+          } else {
+            catchFlash.style.opacity = 0;
+          }
+        }
+        if (gleamStar) gleamStar.style.opacity = 0;
+      }
+      // 2. Phase 2: Scales swing open (p: 0.25 -> 0.45)
+      else if (p <= 0.45) {
+        const t = (p - 0.25) / 0.20;
+        if (barberHand) {
+          barberHand.setAttribute("transform", "translate(240, 40)");
+          barberHand.style.opacity = 1;
+        }
+        holder.position.set(0, 0, 0);
+        holder.rotation.set(-0.15, 0.1, 0.05);
+        // Scales swing open smoothly around pivot pin
+        handle.rotation.z = Math.PI * (0.15 + t * 0.81);
+        lezvaMesh.visible = false;
+        isDocked = false;
+        wrap.classList.remove("docked");
+        if (catchFlash) catchFlash.style.opacity = 0;
+        if (gleamStar) gleamStar.style.opacity = 0;
+      }
+      // 3. Phase 3: 3D Lezva glides into slot (p: 0.45 -> 0.70)
+      else if (p <= 0.70) {
+        const t = (p - 0.45) / 0.25;
+        if (barberHand) {
+          barberHand.setAttribute("transform", "translate(240, 40)");
+          barberHand.style.opacity = 1;
+        }
+        holder.position.set(0, 0, 0);
+        holder.rotation.set(-0.15, 0.1, 0.05);
+        handle.rotation.z = Math.PI * 0.96;
+
+        // Lezva glides into alignment pins ("unga lezva o'rnatadi")
+        lezvaMesh.visible = true;
+        lezvaMesh.position.x = 2.4 - t * 2.4; // 2.4 down to 0
+        lezvaMesh.position.y = 1.6 - t * 1.6; // 1.6 down to 0
+        lezvaMesh.position.z = 0.3 - t * 0.276;
+        lezvaMesh.rotation.z = 0.4 * (1 - t);
+        lezvaMesh.rotation.x = 0.25 * (1 - t);
+        isDocked = false;
+        wrap.classList.remove("docked");
+        if (gleamStar) gleamStar.style.opacity = 0;
+      }
+      // 4. Phase 4: Clamp locks & Gleam star sweeps across cutting edge (p: 0.70 -> 0.85)
+      else if (p <= 0.85) {
+        const t = (p - 0.70) / 0.15;
+        if (barberHand) {
+          barberHand.setAttribute("transform", "translate(240, 40)");
+          barberHand.style.opacity = 1;
+        }
+        holder.position.set(0, 0, 0);
+        holder.rotation.set(-0.15, 0.1, 0.05);
+        handle.rotation.z = Math.PI * 0.97;
+        lezvaMesh.visible = true;
+        lezvaMesh.position.set(0, 0, 0.024);
+        lezvaMesh.rotation.set(0, 0, 0);
+
+        if (gleamStar) {
+          gleamStar.style.opacity = t < 0.85 ? 1 : (1 - (t - 0.85) / 0.15);
+          const starX = 210 + t * 200; // sweeps across cutting edge
+          gleamStar.setAttribute("transform", "translate(" + starX + ", 208) scale(" + (Math.sin(t * Math.PI) * 1.4) + ")");
+        }
+        isDocked = false;
+        wrap.classList.remove("docked");
+      }
+      // 5. Phase 5: Hand lowers & 3D razor glides into site position (p: 0.85 -> 1.0)
+      else {
+        const t = (p - 0.85) / 0.15;
+        if (barberHand) {
+          const handY = 40 + t * 240;
+          barberHand.setAttribute("transform", "translate(240, " + handY + ")");
+          barberHand.style.opacity = 1 - t;
+        }
+        if (gleamStar) gleamStar.style.opacity = 0;
+
+        lezvaMesh.visible = true;
+        lezvaMesh.position.set(0, 0, 0.024);
+        lezvaMesh.rotation.set(0, 0, 0);
+
+        // Smoothly settle into default 3D camera pose ("oxirida lezva saytda pozitsiyaga borsin")
+        holder.position.x = 0;
+        holder.position.y = 0;
+        holder.position.z = 0;
+        holder.rotation.x = -0.15 - t * 0.13; // -0.15 to -0.28
+        holder.rotation.y = 0.1 - t * 0.55;   // 0.1 to -0.45
+        holder.rotation.z = 0.05 - t * 0.27;  // 0.05 to -0.22
+        handle.rotation.z = Math.PI * 0.97 * state.open;
+
+        if (t >= 0.95) {
+          isDocked = true;
+          wrap.classList.add("docked");
+        }
+      }
     }
 
-    buildCinematicTimeline();
-
+    /* Replay button: smoothly animates preview on click */
     if (replayBtn) {
       replayBtn.addEventListener("click", () => {
         getAudioCtx();
-        overlaySvg.style.display = "block";
-        wrap.classList.remove("docked");
-        isDocked = false;
-        ritualTl.restart();
+        lastSoundStep = -1;
+        const anim = { p: 0 };
+        gsap.to(anim, {
+          p: 1,
+          duration: 3.8,
+          ease: "power2.inOut",
+          onUpdate: () => {
+            applyRitualProgress(anim.p);
+          }
+        });
       });
     }
 
-    // Auto-trigger on scroll (velis.uz style connection)
+    /* Pinned Scroll-Driven Ritual: ONLY works when user scrolls (velis.uz style) */
     if (!reduce && window.gsap && window.ScrollTrigger) {
       ScrollTrigger.create({
         trigger: "#ustara",
-        start: "top 70%",
-        once: true,
-        onEnter: () => {
-          ritualTl.play();
+        start: "top 70px",
+        end: "+=1200",
+        pin: true,
+        scrub: 0.8,
+        onUpdate: (self) => {
+          applyRitualProgress(self.progress);
         }
       });
-      // 3D rotation scrub along scroll
-      gsap.fromTo(state, { scrollY: -0.7 }, {
-        scrollY: 0.7, ease: "none",
-        scrollTrigger: { trigger: wrap, start: "top bottom", end: "bottom top", scrub: true }
-      });
     } else {
-      ritualTl.play();
+      applyRitualProgress(1);
     }
   }
 
