@@ -1,3 +1,5 @@
+// API endpoint router: use live backend when running on Firebase Hosting
+const API_BASE = window.API_BASE_URL || (window.location.hostname.includes("web.app") || window.location.hostname.includes("firebaseapp.com") ? "https://culture-barbershop.onrender.com" : "");
 /**
  * Culture Barbershop - Telegram Web App Interactive Booking Logic
  * Multilingual (UZ / RU), Dynamic 18 Services, 3 Tiers (PRO, TOP, VIP)
@@ -541,8 +543,8 @@ const app = {
   async fetchData() {
     try {
       const [barbersRes, servicesRes] = await Promise.all([
-        fetch('/api/barbers'),
-        fetch('/api/services')
+        fetch(API_BASE + "/api/barbers'),
+        fetch(API_BASE + "/api/services')
       ]);
 
       if (barbersRes.ok) {
@@ -802,7 +804,7 @@ const app = {
     grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 24px 10px;">${this.t('slots_loading')}</div>`;
 
     try {
-      const res = await fetch(`/api/slots?barber_id=${this.state.selectedBarber.id}&date=${this.state.selectedDate}`);
+      const res = await fetch(`${API_BASE}/api/slots?barber_id=${this.state.selectedBarber.id}&date=${this.state.selectedDate}`);
       if (!res.ok) throw new Error('Slot error');
       const data = await res.json();
 
@@ -926,7 +928,7 @@ const app = {
     }
 
     try {
-      const res = await fetch('/api/book', {
+      const res = await fetch(API_BASE + "/api/book', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -981,7 +983,7 @@ const app = {
   async fetchMyBookings() {
     if (!this.user.id) return;
     try {
-      const res = await fetch(`/api/my-bookings?telegram_id=${this.user.id}`);
+      const res = await fetch(`${API_BASE}/api/my-bookings?telegram_id=${this.user.id}`);
       if (res.ok) {
         this.state.myBookings = await res.json();
         const dot = document.getElementById('bookingsDot');
@@ -1064,7 +1066,7 @@ const app = {
     }
 
     try {
-      const res = await fetch('/api/cancel-booking', {
+      const res = await fetch(API_BASE + "/api/cancel-booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

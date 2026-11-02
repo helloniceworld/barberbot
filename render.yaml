@@ -18,6 +18,6 @@ services:
       - key: DATABASE_URL
         value: postgresql://postgres:auIPwtnYVuVuXQYkZfvQgHqOyXbPxWlC@hayabusa.proxy.rlwy.net:23861/railway
       - key: WEBAPP_URL
-        value: https://culture-barbershop.onrender.com
+        value: https://culturebarbershop-1ea30.web.app/app
       - key: PORT
         value: 8000
