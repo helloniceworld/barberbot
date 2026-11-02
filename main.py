@@ -8,9 +8,9 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
-
 from aiogram import Dispatcher
+from aiogram.types import Update
+import uvicorn
 
 import config
 import database
@@ -37,6 +37,13 @@ logging.basicConfig(
 )
 logger = logging.getLogger("culture_main")
 
+# ================== DISPATCHERLAR (GLOBAL) ==================
+client_dp = Dispatcher()
+client_dp.include_router(client_router)
+
+staff_dp = Dispatcher()
+staff_dp.include_router(staff_router)
+
 
 # ================== FASTAPI ILOVASI ==================
 
@@ -49,6 +56,13 @@ async def lifespan(app: FastAPI):
     yield
     # Shutdown
     logger.info("Server to'xtatilmoqda...")
+    try:
+        pool = await database.get_pool()
+        if pool:
+            await pool.close()
+    except Exception:
+        pass
+
 
 app = FastAPI(
     title="Culture Barbershop API & WebApp",
@@ -78,6 +92,65 @@ if os.path.exists(WEBSITE_DIR):
 app.include_router(api_router)
 
 
+# ================== TELEGRAM BOT WEBHOOKS (FIREBASE / SERVERLESS 24/7) ==================
+
+@app.post("/api/webhook/client")
+async def client_bot_webhook(update: dict):
+    """Client Telegram Bot (@culturebarbersbot) webhook qabul qiluvchi"""
+    try:
+        bot = services.get_client_bot()
+        tg_update = Update.model_validate(update, context={"bot": bot})
+        await client_dp.feed_update(bot, tg_update)
+        return {"ok": True}
+    except Exception as e:
+        logger.error(f"Client webhook xatosi: {e}")
+        return {"ok": False, "error": str(e)}
+
+
+@app.post("/api/webhook/staff")
+async def staff_bot_webhook(update: dict):
+    """Staff Telegram Bot (@culturestaffbot) webhook qabul qiluvchi"""
+    try:
+        bot = services.get_staff_bot()
+        tg_update = Update.model_validate(update, context={"bot": bot})
+        await staff_dp.feed_update(bot, tg_update)
+        return {"ok": True}
+    except Exception as e:
+        logger.error(f"Staff webhook xatosi: {e}")
+        return {"ok": False, "error": str(e)}
+
+
+@app.get("/api/setup_webhooks")
+async def setup_webhooks_endpoint(base_url: str = None):
+    """
+    Telegram botlarni Webhook rejimiga o'tkazish (Firebase / 24/7 serverless).
+    Bu endpoint ochilganda botlar Telegramga o'z webhook URL-larini avtomatik ro'yxatdan o'tkazadi.
+    """
+    url = (base_url or config.WEBAPP_URL).rstrip("/")
+    c_bot = services.get_client_bot()
+    s_bot = services.get_staff_bot()
+
+    client_hook = f"{url}/api/webhook/client"
+    staff_hook = f"{url}/api/webhook/staff"
+
+    c_res = await c_bot.set_webhook(client_hook, drop_pending_updates=True)
+    s_res = await s_bot.set_webhook(staff_hook, drop_pending_updates=True)
+
+    return {
+        "status": "success",
+        "client_bot": {
+            "username": config.CLIENT_BOT_USERNAME,
+            "webhook": client_hook,
+            "registered": c_res
+        },
+        "staff_bot": {
+            "username": config.STAFF_BOT_USERNAME,
+            "webhook": staff_hook,
+            "registered": s_res
+        }
+    }
+
+
 # Asosiy sahifa - Telegram Web App (To'liq bron qilish ilovasi)
 @app.get("/")
 async def serve_webapp():
@@ -99,7 +172,7 @@ async def health_check():
     return {"status": "ok", "service": "Culture Barbershop Multi-Bot & WebApp"}
 
 
-# ================== ASOSIY ASINXRON FUNKSIYA ==================
+# ================== ASINXRON POLLING FUNKSIYALARI (LOKAL VA STANDALONE) ==================
 
 async def run_client_bot(dp: Dispatcher, bot):
     try:
@@ -149,21 +222,14 @@ async def main():
     c_bot = services.get_client_bot()
     s_bot = services.get_staff_bot()
 
-    # 3. Dispatcherlarni sozlash
-    client_dp = Dispatcher()
-    client_dp.include_router(client_router)
-
-    staff_dp = Dispatcher()
-    staff_dp.include_router(staff_router)
-
-    # 4. Eski kutilayotgan update'larni tozalash (drop pending updates)
+    # 3. Eski kutilayotgan update'larni tozalash (drop pending updates)
     try:
         await c_bot.delete_webhook(drop_pending_updates=True)
         await s_bot.delete_webhook(drop_pending_updates=True)
     except Exception as e:
         logger.warning(f"Webhook tozalashda ogohlantirish: {e}")
 
-    # 5. Hammasini bir vaqtda ishga tushirish (Web Server + Client Bot + Staff Bot)
+    # 4. Hammasini bir vaqtda ishga tushirish (Web Server + Client Bot + Staff Bot)
     try:
         await asyncio.gather(
             run_web_server(),
@@ -175,7 +241,8 @@ async def main():
         await c_bot.session.close()
         await s_bot.session.close()
         pool = await database.get_pool()
-        await pool.close()
+        if pool:
+            await pool.close()
         logger.info("Barcha xizmatlar to'xtatildi.")
 
 
