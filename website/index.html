@@ -243,13 +243,16 @@
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
-    background: #08080A;
+    background: transparent;
     cursor: pointer;
   }
   .preloader.preloader-finished {
     display: none !important;
     visibility: hidden !important;
     pointer-events: none !important;
+  }
+  .preloader.preloader-dismiss {
+    pointer-events: none;
   }
   .preloader-curtain {
     position: absolute;
@@ -1363,18 +1366,84 @@
       </div>
     </div>
 
-    <button class="preloader-skip" id="preloaderSkip" type="button" onclick="var p=document.getElementById('preloader');if(p){p.classList.add('preloader-dismiss');setTimeout(function(){p.classList.add('preloader-finished')},600);}">O‘tkazib yuborish &rsaquo;</button>
+    <button class="preloader-skip" id="preloaderSkip" type="button" onclick="if(window.__preloaderFinish){window.__preloaderFinish();}else{var p=document.getElementById('preloader');if(p){p.classList.add('preloader-dismiss');setTimeout(function(){p.classList.add('preloader-finished');p.style.display='none';},600);}}">O‘tkazib yuborish &rsaquo;</button>
   </div>
 </div>
 <script>
-  /* Immediate preloader emergency safety */
-  setTimeout(function() {
+  /* Culture Barbershop - Autonomous High-Performance Preloader */
+  (function () {
     var p = document.getElementById('preloader');
-    if (p && !p.classList.contains('preloader-finished')) {
+    if (!p) return;
+    var bar = document.getElementById('preloaderBar');
+    var pct = document.getElementById('preloaderPct');
+    var status = document.getElementById('preloaderStatus');
+    var skipBtn = document.getElementById('preloaderSkip');
+    var dismissed = false;
+
+    window.__preloaderDone = false;
+    window.__preloaderFinish = finish;
+
+    function finish() {
+      if (dismissed) return;
+      dismissed = true;
+      window.__preloaderDone = true;
+
+      if (bar) bar.style.width = '100%';
+      if (pct) pct.textContent = '100%';
+      if (status) status.textContent = (document.documentElement.lang === 'ru' ? 'Добро пожаловать' : 'Xush kelibsiz');
+
       p.classList.add('preloader-dismiss');
-      setTimeout(function() { p.classList.add('preloader-finished'); }, 600);
+
+      try {
+        if (typeof window.__onPreloaderDismiss === 'function') {
+          window.__onPreloaderDismiss();
+        }
+      } catch (e) {}
+
+      setTimeout(function () {
+        p.classList.add('preloader-finished');
+        p.style.display = 'none';
+        p.style.visibility = 'hidden';
+        p.style.pointerEvents = 'none';
+      }, 550);
     }
-  }, 2000);
+
+    // Smooth real-time progress: 0% -> 100% in 800ms
+    var start = performance.now();
+    var dur = 650;
+
+    function tick(now) {
+      if (dismissed) return;
+      var el = now - start;
+      var progress = Math.min(1, el / dur);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var val = Math.min(100, Math.round(eased * 100));
+
+      if (bar) bar.style.width = val + '%';
+      if (pct) pct.textContent = val + '%';
+
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        finish();
+      }
+    }
+    requestAnimationFrame(tick);
+
+    // Interactive skip buttons
+    if (skipBtn) {
+      skipBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        finish();
+      });
+    }
+    p.addEventListener('click', function (e) {
+      if (e.target !== skipBtn) finish();
+    });
+
+    // Guaranteed failsafe: never freeze or stay visible more than 1100ms
+    setTimeout(finish, 1000);
+  })();
 </script>
 
 <!-- BARBER POLE TOP STRIPE -->
@@ -1897,9 +1966,12 @@
   }
 
   function applyTranslations() {
-    document.getElementById("preloaderTagline").textContent = t("preloader_tagline");
-    document.getElementById("preloaderStatus").textContent = t("preloader_loading");
-    document.getElementById("preloaderSkip").textContent = t("preloader_skip");
+    const pTagline = document.getElementById("preloaderTagline");
+    if (pTagline) pTagline.textContent = t("preloader_tagline");
+    const pStatus = document.getElementById("preloaderStatus");
+    if (pStatus) pStatus.textContent = t("preloader_loading");
+    const pSkip = document.getElementById("preloaderSkip");
+    if (pSkip) pSkip.textContent = t("preloader_skip");
     document.getElementById("navPrices").textContent = t("nav_prices");
     document.getElementById("navBooking").textContent = t("nav_booking");
     document.getElementById("navLocation").textContent = t("nav_location");
@@ -2311,69 +2383,15 @@
   });
 
   /* ---------- ENTRANCE PRELOADER LOGIC ---------- */
-  let preloaderDismissed = false;
   function initPreloader(onComplete) {
-    const preloader = document.getElementById("preloader");
-    if (!preloader) {
+    if (window.__preloaderDone) {
       if (onComplete) onComplete();
       return;
     }
-    const bar = document.getElementById("preloaderBar");
-    const pct = document.getElementById("preloaderPct");
-    const status = document.getElementById("preloaderStatus");
-    const skipBtn = document.getElementById("preloaderSkip");
-
-    let animFrame = null;
-    const dur = 1200;
-    const start = performance.now();
-
-    function dismiss() {
-      if (preloaderDismissed) return;
-      preloaderDismissed = true;
-      if (animFrame) cancelAnimationFrame(animFrame);
-
-      if (bar) bar.style.width = "100%";
-      if (pct) pct.textContent = "100%";
-      if (status) status.textContent = t("preloader_ready");
-
-      preloader.classList.add("preloader-dismiss");
-
-      setTimeout(() => {
-        if (onComplete) onComplete();
-      }, 350);
-
-      setTimeout(() => {
-        preloader.classList.add("preloader-finished");
-      }, 900);
-    }
-
-    function loop(now) {
-      if (preloaderDismissed) return;
-      const el = now - start;
-      const p = Math.min(1, el / dur);
-      const eased = 1 - Math.pow(1 - p, 3);
-      const val = Math.min(100, Math.round(eased * 100));
-
-      if (bar) bar.style.width = val + "%";
-      if (pct) pct.textContent = val + "%";
-
-      if (p < 1) {
-        animFrame = requestAnimationFrame(loop);
-      } else {
-        dismiss();
-      }
-    }
-    animFrame = requestAnimationFrame(loop);
-
-    if (skipBtn) {
-      skipBtn.addEventListener("click", (e) => { e.stopPropagation(); dismiss(); });
-    }
-    preloader.addEventListener("click", (e) => {
-      if (e.target.id !== "preloaderSkip") dismiss();
-    });
-
-    /* Auto-dismiss failsafe in 1.8 seconds */
-    setTimeout(dismiss, 1800);
+    window.__onPreloaderDismiss = onComplete;
+    setTimeout(function() {
+      if (onComplete) onComplete();
+    }, 1200);
   }
 
   /* ---------- GSAP & LENIS SMOOTH SCROLL ---------- */
@@ -2408,12 +2426,17 @@
       /* Intro sequence paused until preloader opens */
       introSeq = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
       introSeq
-        .from(".bar-name, .bar-logo-img", { y: -14, opacity: 0, duration: 0.6, clearProps: "opacity,transform" })
-        .from(".bar-links a, .lang-toggle-wrap, .nav-cta-btn", { y: -14, opacity: 0, stagger: 0.05, duration: 0.5 }, "<0.1")
-        .from(".lockup", { letterSpacing: "1.3em", opacity: 0, duration: 1.2 }, 0.2)
-        .from(".hero-line", { y: 24, opacity: 0, duration: 0.8 }, 0.6)
-        .from(".hero-act > *", { y: 18, opacity: 0, stagger: 0.08, duration: 0.6 }, 0.8)
-        .from(".hero-meta", { opacity: 0, duration: 0.6 }, 1.0);
+        .from(".bar-name, .bar-logo-img", { y: -14, opacity: 0, duration: 0.6, clearProps: "all" })
+        .from(".bar-links a, .lang-toggle-wrap, .nav-cta-btn", { y: -14, opacity: 0, stagger: 0.05, duration: 0.5, clearProps: "all" }, "<0.1")
+        .from(".lockup", { letterSpacing: "1.3em", opacity: 0, duration: 1.2, clearProps: "all" }, 0.2)
+        .from(".hero-line", { y: 24, opacity: 0, duration: 0.8, clearProps: "all" }, 0.6)
+        .from(".hero-act > *", { y: 18, opacity: 0, stagger: 0.08, duration: 0.6, clearProps: "all" }, 0.8)
+        .from(".hero-meta", { opacity: 0, duration: 0.6, clearProps: "all" }, 1.0);
+
+      // If preloader already completed before GSAP initialized, trigger immediately!
+      if (window.__preloaderDone) {
+        introSeq.play();
+      }
 
       /* Scroll progress line */
       gsap.to("#prog", { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: 0.2 } });
@@ -3373,18 +3396,35 @@
     const nameEl = document.querySelector(".bar-name");
     if (logoEl) { logoEl.style.opacity = "1"; logoEl.style.visibility = "visible"; }
     if (nameEl) { nameEl.style.opacity = "1"; nameEl.style.visibility = "visible"; }
-    // 1. Start entrance preloader immediately
-    initPreloader(() => {
-      try { if (introSeq) introSeq.play(); } catch (e) {}
-      try { setTimeout(sweep, 450); } catch (e) {}
-      try { if (window.ScrollTrigger) ScrollTrigger.refresh(); } catch (e) {}
-    });
 
-    // 2. Safely initialize all subsystems with independent error guards
+    // 1. Safely initialize all subsystems with independent error guards
     try { setTheme(currentTheme, true); } catch (e) { console.warn("Theme init error:", e); }
     try { initGSAP(); } catch (e) { console.warn("GSAP init error:", e); }
     try { init3DRazor(); } catch (e) { console.warn("3D Razor init error:", e); }
     try { initScrollClipper(); } catch (e) { console.warn("Scroll Clipper init error:", e); }
+
+    // 2. Coordinate intro sequence with preloader completion
+    function triggerIntro() {
+      try { if (introSeq) introSeq.play(); } catch (e) {}
+      try { setTimeout(sweep, 450); } catch (e) {}
+      try { if (window.ScrollTrigger) ScrollTrigger.refresh(); } catch (e) {}
+    }
+
+    if (window.__preloaderDone) {
+      triggerIntro();
+    } else {
+      initPreloader(triggerIntro);
+    }
+
+    // 3. Universal visibility guarantee
+    setTimeout(function() {
+      document.querySelectorAll(".bar-name, .bar-logo-img, .bar-links a, .lang-toggle-wrap, .nav-cta-btn, .lockup, .hero-line, .hero-act > *, .hero-meta").forEach(function(el) {
+        if (el) {
+          el.style.opacity = "1";
+          el.style.visibility = "visible";
+        }
+      });
+    }, 1500);
   }
 
   // If DOM is already ready (or parsed), run boot immediately!
